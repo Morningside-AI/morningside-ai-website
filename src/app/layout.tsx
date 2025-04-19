@@ -1,6 +1,6 @@
-import Preloader from "@/components/preloader/preloader";
+import PreloaderWrapper from "@/components/generic/preloaderWrapper";
+import AnimatedMeshBackground from "@/components/generic/AnimatedMeshBackground";
 import "@/styles/globals.css";
-
 import { type Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 
@@ -21,15 +21,14 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 });
 
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${dmSans.variable}`}>
-      <body className="bg-black">
-        <Preloader />
-        {children}
+      <body className="bg-black relative">
+        <AnimatedMeshBackground />
+        <PreloaderWrapper>{children}</PreloaderWrapper>
       </body>
     </html>
   );

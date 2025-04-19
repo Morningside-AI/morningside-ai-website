@@ -16,12 +16,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@shadergradient/react": "^2.0.25",
     "@t3-oss/env-nextjs": "^0.12.0",
+    "drei": "^2.2.21",
     "gsap": "^3.12.7",
     "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
+    "three": "^0.175.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -31,6 +34,7 @@
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.175.0",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.2.3",
     "postcss": "^8.5.3",
