@@ -61,7 +61,7 @@ const RotatingText = () => {
   return (
     <div
       ref={containerRef}
-      className="text-9xl green-text flex gap-[0.02em]"
+      className="text-9xl green-text flex gap-[0.02em] tracking-[-0.08em]"
       style={{ fontFamily: "DM-Mono-Italic" }}
     >
       {currentWord?.split("").map((char, index) => (
