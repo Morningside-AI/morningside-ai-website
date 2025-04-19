@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 385.4 70">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #189d6d;
+      }
+
+      .cls-2 {
+        display: none;
+      }
+
+      .cls-3 {
+        font-family: BrasleyDemo-Medium, 'Brasley Demo';
+        font-size: 42.4px;
+        font-weight: 500;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.1, SVG Export Plug-In . SVG Version: 1.2.0 Build 142)  -->
+  <g>
+    <g id="Layer_1">
+      <image class="cls-2" width="500" height="129" transform="translate(-9.4 -14.8) scale(.8)" xlink:href="../Morningside White.png"/>
+      <g>
+        <path class="cls-1" d="M94.7,63.1h31.6v-31.6h-31.6v31.6Z"/>
+        <path class="cls-1" d="M47.3,31.6v31.6l47.3-31.6V0l-47.3,31.6Z"/>
+        <path class="cls-1" d="M0,31.6v31.6l47.3-31.6V0L0,31.6Z"/>
+      </g>
+    </g>
+    <g id="Layer_2">
+      <text class="cls-3" transform="translate(134.1 59.5)"><tspan x="0" y="0">morningside</tspan></text>
+    </g>
+  </g>
+</svg>
