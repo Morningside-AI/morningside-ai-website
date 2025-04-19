@@ -11,7 +11,7 @@ const Center = () => {
   const touchStartY = useRef(0);
 
   useEffect(() => {
-    const threshold = 50;
+    const threshold = 20;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
