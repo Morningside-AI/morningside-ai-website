@@ -1,12 +1,18 @@
-import "~/styles/globals.css";
+import "@/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist, DM_Sans, DM_Mono } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Morningside AI",
   description: "Morningside AI",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [
+    { rel: "icon", type: "image/png", sizes: "96x96", url: "/favicon-96x96.png" },
+    { rel: "icon", type: "image/svg+xml", url: "/favicon.svg" },
+    { rel: "shortcut icon", url: "/favicon.ico" },
+    { rel: "apple-touch-icon", sizes: "180x180", url: "/apple-touch-icon.png" },
+  ],
+  manifest: "/site.webmanifest",
 };
 
 const dmSans = DM_Sans({
@@ -20,7 +26,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${dmSans.variable}`}>
-      <body>{children}</body>
+      <body className="bg-black">{children}</body>
     </html>
   );
 }
