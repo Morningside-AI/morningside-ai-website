@@ -8,55 +8,130 @@ gsap.registerPlugin(ScrollToPlugin);
 
 const Center = () => {
   const centerRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef(0);
 
   useEffect(() => {
-    const threshold = 150;
+    const threshold = 50;
     let accumulated = 0;
     let hasSnapped = false;
+    let scrollLocked = false;
+    let scrollCooldown = false;
+
+    const disableScroll = () => {
+      if (!scrollLocked) {
+        scrollLocked = true;
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+      }
+    };
+
+    const enableScroll = () => {
+      scrollLocked = false;
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+
+    const isInView = () => {
+      const el = centerRef.current;
+      if (!el) return false;
+      const rect = el.getBoundingClientRect();
+      return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+    };
+
+    const scrollToSection = (targetId: string) => {
+      if (scrollCooldown) return;
+
+      scrollCooldown = true;
+      hasSnapped = true;
+      accumulated = 0;
+
+      gsap.to(window, {
+        scrollTo: targetId,
+        duration: 1.4,
+        ease: "power4.out",
+        overwrite: "auto",
+        onComplete: () => {
+          enableScroll();
+          setTimeout(() => {
+            scrollCooldown = false;
+          }, 800); // prevent double triggering
+        },
+      });
+    };
+
+    const handleIntent = (delta: number) => {
+      if (!isInView() || hasSnapped) return;
+
+      disableScroll();
+      accumulated += delta;
+
+      if (accumulated >= threshold) {
+        scrollToSection("#stats-section");
+      } else if (accumulated <= -threshold) {
+        scrollToSection("#hero-section");
+      }
+    };
 
     const handleWheel = (e: WheelEvent) => {
-      const el = centerRef.current;
-      if (!el || hasSnapped) return;
-
-      const rect = el.getBoundingClientRect();
-      const isInView =
-        rect.top <= window.innerHeight * 0.5 &&
-        rect.bottom > window.innerHeight * 0.25;
-
-      if (!isInView) return;
-
       e.preventDefault();
-      e.stopPropagation();
+      handleIntent(e.deltaY);
+    };
 
-      accumulated += e.deltaY;
-
-      // Scroll down to next section
-      if (accumulated >= threshold && e.deltaY > 0) {
-        hasSnapped = true;
-        gsap.to(window, {
-          scrollTo: "#stats-section",
-          duration: 1,
-          ease: "power2.out",
-        });
-        window.removeEventListener("wheel", handleWheel);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "PageDown") {
+        if (isInView()) {
+          e.preventDefault();
+          disableScroll();
+          handleIntent(60);
+        }
+      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        if (isInView()) {
+          e.preventDefault();
+          disableScroll();
+          handleIntent(-60);
+        }
       }
+    };
 
-      // Scroll up to previous section
-      if (accumulated <= -threshold && e.deltaY < 0) {
-        hasSnapped = true;
-        gsap.to(window, {
-          scrollTo: "#hero-section",
-          duration: 1,
-          ease: "power2.out",
-        });
-        window.removeEventListener("wheel", handleWheel);
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches.item(0);
+      if (touch) {
+        touchStartY.current = touch.clientY;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches.item(0);
+      if (touch) {
+        const deltaY = touchStartY.current - touch.clientY;
+        handleIntent(deltaY);
       }
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          hasSnapped = false;
+          accumulated = 0;
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (centerRef.current) observer.observe(centerRef.current);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      observer.disconnect();
+      enableScroll();
     };
   }, []);
 
@@ -64,7 +139,7 @@ const Center = () => {
     <div
       id="center-section"
       ref={centerRef}
-      className="w-full h-screen flex flex-col justify-center items-center text-white tracking-[-0.04em] leading-[90%]"
+      className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%]"
     >
       <p className="text-7xl text-center">
         <span className="white-silver-animated-text">
