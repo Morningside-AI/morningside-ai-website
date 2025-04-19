@@ -4,3 +4,26 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+.green-text {
+  color: #469c71;
+}
+
+.white-silver-animated-text {
+  color: #fff;
+  animation: white-silver-animation 8s linear infinite;
+  animation-fill-mode: none;
+  animation-delay: 0s;
+}
+
+@keyframes white-silver-animation {
+
+  0%,
+  100% {
+    color: white;
+  }
+
+  50% {
+    color: silver;
+  }
+}

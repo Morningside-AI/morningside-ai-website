@@ -6,3 +6,67 @@
     font-display: swap;
   }
   
+
+@font-face {
+    font-family: "DM-Sans";
+    src: url("../fonts/dm-sans/DMSans.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Sans-Italic";
+    src: url("../fonts/dm-sans/DMSans-Italic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Mono-Light";
+    src: url("../fonts/dm-mono/DMMono-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Mono-Italic";
+    src: url("../fonts/dm-mono/DMMono-Italic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Mono-Light-Italic";
+    src: url("../fonts/dm-mono/DMMono-LightItalic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Mono-Medium";
+    src: url("../fonts/dm-mono/DMMono-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Mono-Medium-Italic";
+    src: url("../fonts/dm-mono/DMMono-MediumItalic.ttf") format("truetype");
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM-Mono-Regular";
+    src: url("../fonts/dm-mono/DMMono-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
