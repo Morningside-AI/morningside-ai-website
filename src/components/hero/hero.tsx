@@ -13,7 +13,7 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const threshold = 200; // how much to scroll before snapping
+    const threshold = 150; // how much to scroll before snapping
     let accumulated = 0;
     let hasSnapped = false;
   

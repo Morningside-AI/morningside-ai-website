@@ -10,7 +10,7 @@ const Center = () => {
   const centerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const threshold = 200;
+    const threshold = 150;
     let accumulated = 0;
     let hasSnapped = false;
 

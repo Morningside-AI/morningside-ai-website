@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
 import Center from "@/components/center/center";
 import TestSection from "@/components/test/testSection";
+import Stats from "@/components/stats/stats";
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <Navbar />
       <Hero />
       <Center />
+      <Stats />
       <TestSection />
     </main>
   );
