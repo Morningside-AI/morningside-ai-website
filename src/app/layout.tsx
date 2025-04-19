@@ -1,3 +1,4 @@
+import Preloader from "@/components/preloader/preloader";
 import "@/styles/globals.css";
 
 import { type Metadata } from "next";
@@ -26,7 +27,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${dmSans.variable}`}>
-      <body className="bg-black">{children}</body>
+      <body className="bg-black">
+        <Preloader />
+        {children}
+      </body>
     </html>
   );
 }
