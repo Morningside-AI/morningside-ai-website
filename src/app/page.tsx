@@ -3,7 +3,6 @@
 import Navbar from "@/components/navbar/navbar";
 import Hero from "@/components/hero/hero";
 import Center from "@/components/center/center";
-import TestSection from "@/components/test/testSection";
 import Stats from "@/components/stats/stats";
 import Partnership from "@/components/partnership/partnership";
 import Footer from "@/components/footer/footer";
@@ -16,7 +15,6 @@ export default function HomePage() {
       <Stats />
       <Partnership />
       <Footer />
-      <TestSection />
     </main>
   );
 }

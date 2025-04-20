@@ -2,10 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollToPlugin, } from "gsap/ScrollToPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Logo from "@/assets/images/morningside-assets/logo-FullWhite.svg";
 import { GoArrowUpRight } from "react-icons/go";
 
+gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(ScrollToPlugin);
 
 const Footer = () => {
@@ -67,9 +69,7 @@ const Footer = () => {
             disableScroll();
             accumulated += delta;
 
-            if (accumulated >= threshold) {
-                scrollToSection("#test-section");
-            } else if (accumulated <= -threshold) {
+            if (accumulated <= -threshold) {
                 scrollToSection("#partnership-section");
             }
         };
@@ -127,6 +127,61 @@ const Footer = () => {
 
         if (footerRef.current) observer.observe(footerRef.current);
 
+        const contactEl = document.querySelector(".footer-contact");
+        const followEl = document.querySelector(".footer-follow");
+
+        if (contactEl && followEl && footerRef.current) {
+            gsap.set(contactEl, { opacity: 0, y: 60 });
+            gsap.set(followEl, { opacity: 0, x: 60 });
+          
+            const trigger = ScrollTrigger.create({
+              trigger: footerRef.current,
+              start: "top 70%",
+              end: "bottom top",
+              toggleActions: "play none none reverse",
+              onEnter: animateIn,
+              onEnterBack: animateIn,
+              onLeaveBack: animateOut,
+            });
+          
+            function animateIn() {
+              gsap.to(contactEl, {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power4.out",
+              });
+              gsap.to(followEl, {
+                opacity: 1,
+                x: 0,
+                duration: 1.2,
+                ease: "power4.out",
+                delay: 0.4,
+              });
+            }
+          
+            function animateOut() {
+              gsap.to(contactEl, {
+                opacity: 0,
+                y: 60,
+                duration: 0.8,
+                ease: "power2.inOut",
+              });
+              gsap.to(followEl, {
+                opacity: 0,
+                x: 60,
+                duration: 0.8,
+                ease: "power2.inOut",
+              });
+            }
+          
+            ScrollTrigger.refresh();
+          
+            return () => {
+              trigger.kill();
+            };
+          }
+
         return () => {
             window.removeEventListener("wheel", handleWheel);
             window.removeEventListener("keydown", handleKeyDown);
@@ -153,7 +208,7 @@ const Footer = () => {
                 <Logo className="w-48 h-10 mt-4" />
             </div>
             <div className="w-full flex md:flex-row flex-col justify-between md:mb-2 mb-16 tracking-wider text-sm">
-                <div className="flex flex-col gap-2 order-3 md:order-1">
+                <div className="flex flex-col gap-2 order-3 md:order-1 footer-contact">
                     <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
                     <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                     <div className="flex flex-row gap-1">
@@ -179,7 +234,7 @@ const Footer = () => {
                     <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Terms & Conditions</p>
                     <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Privacy Policy</p>
                 </div>
-                <div className="flex flex-col justify-end gap-4 order-3 md:order-1 text-left">
+                <div className="flex flex-col justify-end gap-4 order-3 md:order-1 text-left footer-follow">
                     <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Follow</p>
                     <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Linkedin</p>
                     <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Youtube</p>
