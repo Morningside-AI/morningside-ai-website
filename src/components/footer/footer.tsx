@@ -229,23 +229,23 @@ const Footer = () => {
         <Logo className="w-48 h-10 mt-4 hidden lg:block" />
       </div>
 
-      <div className="w-full flex md:flex-row flex-col-reverse justify-between md:mb-2 mb-16 pb-10 lg:pb-0 tracking-wider text-sm">
+      <div className="w-full flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between lg:mb-0 mb-16 pb-10 lg:pb-0 tracking-wider text-sm relative">
         <div className="flex flex-col gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
           <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
           <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
           <div className="flex flex-row gap-1">
-            <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+            <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
               Get In Touch
               <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
             </button>
-            <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+            <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
               Explore Careers
               <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
             </button>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row lg:items-end gap-2 order-3 md:order-1 my-8">
+        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end lg:justify-center gap-2 order-3 lg:order-1 my-8">
           <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Terms & Conditions</p>
           <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Privacy Policy</p>
         </div>
