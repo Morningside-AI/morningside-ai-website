@@ -305,7 +305,7 @@ const OneSlideFixedSlider = () => {
 
                             <div
                                 ref={boxRef}
-                                className="w-full flex flex-row items-center justify-center absolute bottom-[-20vh] mt-[20vh] z-10"
+                                className="w-full flex flex-row items-center justify-center absolute bottom-0 lg:bottom-[-20vh] mt-[20vh] z-10"
                             >
                                 <Step3 className="w-[60vw] h-[50vw] lg:w-[25vw] lg:h-[25vw]" />
                             </div>
