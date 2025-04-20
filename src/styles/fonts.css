@@ -33,7 +33,7 @@
 
   @font-face {
     font-family: "DM-Mono-Italic";
-    src: url("../fonts/dm-mono/DMMono-Italic.ttf") format("truetype");
+    src: url("/fonts/DMMono-Italic.woff2") format("woff2");
     font-weight: 400;
     font-style: italic;
     font-display: swap;
