@@ -2,6 +2,7 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import "@/styles/fonts.css";
 
 const words = ["Consultancy", "Education", "Development"];
 
@@ -64,7 +65,11 @@ const RotatingText = () => {
       className="text-5xl md:text-7xl lg:text-9xl green-text flex gap-[0.02em] tracking-[0.05em]"
     >
       {currentWord?.split("").map((char, index) => (
-        <span key={index} data-letter className="inline-block opacity-0" style={{ fontFamily: "DM-Mono-Italic" }}>
+        <span key={index} data-letter className="inline-block opacity-0" style={{
+          fontFamily: "DM-Mono-Italic, monospace",
+          fontStyle: "italic",
+        }}
+        >
           {char}
         </span>
       ))}

@@ -171,7 +171,7 @@ const Hero = () => {
     >
       <div>
         <p className="text-5xl md:text-7xl lg:text-9xl white-silver-animated-text">We are not an AI</p>
-        <div className="h-14 md:h-20 lg:h-32">
+        <div className="h-16 md:h-20 lg:h-32 flex flex-row items-center">
           <RotatingText />
         </div>
         <p className="text-5xl md:text-7xl lg:text-9xl white-silver-animated-text">Company</p>
