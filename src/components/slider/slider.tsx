@@ -59,7 +59,7 @@ const OneSlideFixedSlider = () => {
             start: "top top",
             end: `+=${(totalSlides - 1) * 100}vh`,
             pin: slider,
-            scrub: true,
+            scrub: 0.1,
             onUpdate: (self) => {
                 const index = Math.round(self.progress * (totalSlides - 1));
                 setActiveIndex((prev) => (prev !== index ? index : prev));
@@ -122,59 +122,66 @@ const OneSlideFixedSlider = () => {
     const preventDefault = (e: TouchEvent) => e.preventDefault();
 
     const handleScrollIntent = (direction: "up" | "down") => {
-        if (isAnimating.current) return;
+        if (isAnimating.current || scrollCooldown) return;
+        scrollCooldown = true;
+    
         isAnimating.current = true;
-
+    
         const isFirst = activeIndex === 0;
         const isLast = activeIndex === slides.length - 1;
-
+    
         if (direction === "up" && isFirst) {
-            disableScroll();
-            if (scrollCooldown) return;
-            scrollCooldown = true;
-
+            // Scroll to center section
+            const centerSectionTop = document.querySelector("#center-section")?.getBoundingClientRect().top ?? 0;
+            const targetY = window.scrollY + centerSectionTop;
+    
             gsap.to(window, {
-                scrollTo: "#center-section",
-                duration: 0.3,
-                ease: "power2.inOut",
+                scrollTo: { y: targetY, autoKill: false },
+                duration: 0.4,
+                ease: "power2.out",
                 onComplete: () => {
                     enableScroll();
                     isAnimating.current = false;
+                    setTimeout(() => {
+                        scrollCooldown = false;
+                    }, 200);
                 },
             });
+    
             return;
         }
-
+    
         if (direction === "down" && isLast) {
-            disableScroll();
-            if (scrollCooldown) return;
-            scrollCooldown = true;
-
+            // Scroll to stats section
+            const statsSectionTop = document.querySelector("#stats-section")?.getBoundingClientRect().top ?? 0;
+            const targetY = window.scrollY + statsSectionTop;
+    
             gsap.to(window, {
-                scrollTo: "#stats-section",
-                duration: 0.3,
-                ease: "power2.inOut",
+                scrollTo: { y: targetY, autoKill: false },
+                duration: 0.4,
+                ease: "power2.out",
                 onComplete: () => {
                     enableScroll();
                     setTimeout(() => {
                         scrollCooldown = false;
-                    }, 100);
+                    }, 200);
                     isAnimating.current = false;
                 },
             });
+    
             return;
         }
-
+    
         const nextIndex = activeIndex + (direction === "down" ? 1 : -1);
         const st = ScrollTrigger.getById("slider-scroll");
         if (!st) {
             isAnimating.current = false;
             return;
         }
-
+    
         const progress = nextIndex / (slides.length - 1);
         gsap.to(window, {
-            scrollTo: st.start + (st.end - st.start) * progress,
+            scrollTo: { y: st.start + (st.end - st.start) * progress, autoKill: false },
             duration: 0.3,
             ease: "power2.out",
             onComplete: () => {
@@ -182,6 +189,7 @@ const OneSlideFixedSlider = () => {
             },
         });
     };
+    
 
     useEffect(() => {
         const slider = sliderRef.current;
@@ -288,31 +296,6 @@ const OneSlideFixedSlider = () => {
                     ))}
                 </div>
                 {/* Slide content */}
-                {
-                    activeIndex == 0 && (
-                        <div className="w-full h-screen flex flex-col items-center justify-center gap-8 clip">
-
-                            <div ref={textRef} className="text-content flex flex-col gap-6 items-center justify-center">
-                                <p className="text-5xl md:text-6xl lg:text-7xl text-center">
-                                    <span className="white-silver-animated-text">
-                                        We spend our days doing<br />
-                                    </span>
-                                    <span className="white-silver-animated-text1">&nbsp;these</span>
-                                    <span className="green-text"> three</span>
-                                    <span className="white-silver-animated-text1">&nbsp;things</span>
-                                </p>
-                            </div>
-
-                            <div
-                                ref={boxRef}
-                                className="w-full flex flex-row items-center justify-center absolute bottom-0 lg:bottom-[-20vh] mt-[20vh] z-10"
-                            >
-                                <Step3 className="w-[60vw] h-[50vw] lg:w-[25vw] lg:h-[25vw]" />
-                            </div>
-                        </div>
-                    )
-                }
-
                 {
                     activeIndex == 1 && (
                         <div className="w-full flex flex-col items-center justify-center gap-8">
