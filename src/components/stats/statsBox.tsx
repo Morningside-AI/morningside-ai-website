@@ -37,7 +37,6 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
         end: "bottom 10%",
         toggleActions: "play reverse play reverse",
         onLeave: () => {
-          // Fade out all elements when leaving
           gsap.to([numberEl, textEl, linkEl], {
             opacity: 0,
             duration: 0.4,
@@ -45,7 +44,6 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
           });
         },
         onEnterBack: () => {
-          // Reset the counter and reanimate
           obj.val = 0;
 
           gsap.fromTo(
@@ -72,7 +70,6 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
       },
     });
 
-    // Initial entry animation
     tl.fromTo(
       [textEl, linkEl],
       { opacity: 0, x: -20 },
