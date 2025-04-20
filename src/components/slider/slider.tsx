@@ -28,7 +28,7 @@ const OneSlideFixedSlider = () => {
             alignment: Alignment.Center,
         }),
     });
-    
+
     const { RiveComponent: BuildRive } = useRive({
         src: "/rive/animation2.riv",
         autoplay: true,
@@ -86,22 +86,22 @@ const OneSlideFixedSlider = () => {
     useEffect(() => {
         const boxEl = boxRef.current;
         const textEl = textRef.current;
-    
+
         if (!boxEl || !textEl) return;
-    
+
         // Only animate on slides that visibly use boxRef
         const shouldAnimate = [1, 2, 3].includes(activeIndex);
-    
+
         if (!shouldAnimate) return;
-    
+
         gsap.fromTo(
             textEl,
             { opacity: 0, y: 40, rotateX: 80, transformOrigin: "bottom center" },
             { opacity: 1, y: 0, rotateX: 0, duration: 0.9, ease: "power3.out" }
         );
-    
+
     }, [activeIndex]);
-    
+
 
     const disableScroll = () => {
         document.body.style.overflow = "hidden";
@@ -276,28 +276,26 @@ const OneSlideFixedSlider = () => {
                 {/* Labels */}
                 <div
                     ref={labelRef}
-                    className="fixed left-10 top-1/2 -translate-y-1/2 z-20 space-y-4 opacity-0 pointer-events-none"
+                    className={`z-20 space-y-4 opacity-0 pointer-events-none fixed top-10 left-1/2 -translate-y-1/2 md:space-y-4 md:top-1/2 md:left-10 md:-translate-y-1/2 flex flex-row  -translate-x-1/2 space-x-4 md:flex-col md:space-x-0 md:translate-x-0`}
                 >
                     {slides.map((label, i) => (
                         <div
                             key={label}
-                            className={`font-thin lg:text-xl md:text-lg text-base ${i === 0 ? 'hidden' : ''} font-mono uppercase transition-opacity duration-300 ${activeIndex === i ? "opacity-100" : "opacity-40"
-                                }`}
+                            className={`font-thin text-base md:text-lg lg:text-xl font-mono uppercase transition-opacity duration-300 ${i === 0 ? "hidden" : ""} ${activeIndex === i ? "opacity-100" : "opacity-40"}`}
                         >
                             {label}
                         </div>
                     ))}
                 </div>
-
                 {/* Slide content */}
                 {
                     activeIndex == 1 && (
                         <div className="w-full flex flex-col items-center justify-center gap-8">
-                             <div ref={boxRef} className="w-full flex flex-row items-center justify-center" >
-                                <Step3 className="w-[20vw] h-[20vw]" />
+                            <div ref={boxRef} className="w-full flex flex-row items-center justify-center" >
+                                <Step3 className="w-[50vw] h-[40vw] lg:w-[20vw] lg:h-[20vw]" />
                             </div>
                             <div ref={textRef} className="text-content flex flex-col gap-6 items-center justify-center">
-                                <p className="lg:text-9xl md:text-8xl text-7xl font-light text-center capitalize">
+                                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
                                     Gain Clarity
                                 </p>
                                 <p className="lg:text-xl md:text-lg text-base font-light text-center max-w-[700px] mx-auto text-[#A0A4A1]">
@@ -313,7 +311,7 @@ const OneSlideFixedSlider = () => {
                             ref={boxRef}
                             className="relative w-full flex flex-row items-center justify-center gap-8"
                         >
-                            <div className="w-[700px] h-[300px]">
+                            <div className="w-[100vw] h-[250px] lg:w-[700px] lg:h-[300px]">
                                 <LearnRive />
                             </div>
                         </div>
@@ -322,7 +320,7 @@ const OneSlideFixedSlider = () => {
                             ref={textRef}
                             className="text-content flex flex-col gap-6 items-center justify-center"
                         >
-                            <p className="lg:text-9xl md:text-8xl text-7xl font-light text-center capitalize">
+                            <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
                                 Learn AI
                             </p>
                             <p className="lg:text-xl md:text-lg text-base font-light text-center max-w-[700px] mx-auto text-[#A0A4A1]">
@@ -338,15 +336,15 @@ const OneSlideFixedSlider = () => {
                     activeIndex == 3 && (
                         <div className="w-full flex flex-col items-center justify-center gap-8">
                             <div
-                            ref={boxRef}
-                            className="relative w-full flex flex-row items-center justify-center gap-8"
-                        >
-                            <div className="w-[700px] h-[400px]">
-                                <BuildRive />
+                                ref={boxRef}
+                                className="relative w-full flex flex-row items-center justify-center gap-8"
+                            >
+                                <div className="w-[100vw] h-[250px] lg:w-[700px] lg:h-[400px]">
+                                    <BuildRive />
+                                </div>
                             </div>
-                        </div>
                             <div ref={textRef} className="text-content flex flex-col gap-6 items-center justify-center">
-                                <p className="lg:text-9xl md:text-8xl text-7xl font-light text-center capitalize">
+                                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
                                     Build Solutions
                                 </p>
                                 <p className="lg:text-xl md:text-lg text-base font-light text-center max-w-[700px] mx-auto text-[#A0A4A1]">
