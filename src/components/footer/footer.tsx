@@ -250,15 +250,27 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="w-full flex flex-col lg:flex-row items-start lg:items-end lg:justify-center gap-2 order-3 lg:order-1 my-8">
-                    <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Terms & Conditions</p>
-                    <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Privacy Policy</p>
+                <div className="w-full flex flex-col lg:flex-row items-start lg:items-end lg:justify-center gap-2 lg:gap-4 order-3 lg:order-1 my-8">
+                    <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">
+                        <Link href="/terms-and-conditions" target="_blank" className="w-full cursor-pointer">
+                            Terms & Conditions
+                        </Link>
+                    </p>
+                    <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">
+                        <Link href="/privacy-policy" target="_blank" className="w-full cursor-pointer">
+                            Privacy Policy
+                        </Link>
+                    </p>
                 </div>
 
                 <div className="flex flex-col justify-end gap-2 lg:gap-4 order-3 md:order-1 text-left footer-follow">
                     <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Follow</p>
-                    <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Linkedin</p>
-                    <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Youtube</p>
+                    <Link href="https://www.linkedin.com/company/morningside-ai/posts/?feedView=all" target="_blank" className="w-full cursor-pointer">
+                        <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Linkedin</p>
+                    </Link>
+                    <Link href="https://www.youtube.com/@LiamOttley" target="_blank" className="w-full cursor-pointer">
+                        <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Youtube</p>
+                    </Link>
                 </div>
             </div>
         </div>
