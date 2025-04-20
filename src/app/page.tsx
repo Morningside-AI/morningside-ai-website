@@ -13,8 +13,8 @@ export default function HomePage() {
       <Navbar />
       <Hero />
       <Center />
-      <Stats />
       <OneSlideFixedSlider />
+      <Stats />
       <Partnership />
       <Footer />
     </main>

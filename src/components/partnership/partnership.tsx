@@ -81,24 +81,7 @@ const Partnership = () => {
         scrollToSection("#footer-section");
       } else if (accumulated <= -threshold) {
         disableScroll();
-        const sliderTrigger = ScrollTrigger.getById("slider-scroll");
-
-        if (sliderTrigger) {
-          const progress = 1; // last slide
-          const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * progress;
-
-          gsap.to(window, {
-            scrollTo: targetScroll,
-            duration: 0.4,
-            ease: "power2.inOut",
-            onComplete: () => {
-              enableScroll();
-              setTimeout(() => {
-                scrollCooldown = false;
-              }, 100);
-            },
-          });
-        }
+        scrollToSection("#stats-section");
       }
     };
 

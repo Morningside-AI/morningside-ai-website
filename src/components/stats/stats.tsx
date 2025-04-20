@@ -10,59 +10,88 @@ import "@/styles/fonts.css";
 gsap.registerPlugin(ScrollToPlugin);
 
 const Stats = () => {
-    const statsRef = useRef<HTMLDivElement>(null);
-    const touchStartY = useRef(0);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef(0);
 
-    useEffect(() => {
-        const threshold = 12; // same as Hero
-        let accumulated = 0;
-        let hasSnapped = false;
-        let scrollLocked = false;
-        let scrollCooldown = false;
-    
-        const preventDefault = (e: TouchEvent): void => {
-          e.preventDefault();
-        };
-    
-        const disableScroll = () => {
-          if (!scrollLocked) {
-            scrollLocked = true;
-            document.body.style.overflow = "hidden";
-            document.documentElement.style.overflow = "hidden";
-            document.body.style.touchAction = "none";
-            document.documentElement.style.touchAction = "none";
-            window.addEventListener("touchmove", preventDefault, { passive: false });
-          }
-        };
-    
-        const enableScroll = () => {
-          scrollLocked = false;
-          document.body.style.overflow = "";
-          document.documentElement.style.overflow = "";
-          document.body.style.touchAction = "";
-          document.documentElement.style.touchAction = "";
-          window.removeEventListener("touchmove", preventDefault);
-        };
-    
-        const isInView = () => {
-          const el = statsRef.current;
-          if (!el) return false;
-          const rect = el.getBoundingClientRect();
-          return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
-        };
-    
-        const scrollToSection = (targetId: string) => {
-          if (scrollCooldown) return;
-    
-          scrollCooldown = true;
-          hasSnapped = true;
-          accumulated = 0;
-    
+  useEffect(() => {
+    const threshold = 12; // same as Hero
+    let accumulated = 0;
+    let hasSnapped = false;
+    let scrollLocked = false;
+    let scrollCooldown = false;
+
+    const preventDefault = (e: TouchEvent): void => {
+      e.preventDefault();
+    };
+
+    const disableScroll = () => {
+      if (!scrollLocked) {
+        scrollLocked = true;
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.touchAction = "none";
+        document.documentElement.style.touchAction = "none";
+        window.addEventListener("touchmove", preventDefault, { passive: false });
+      }
+    };
+
+    const enableScroll = () => {
+      scrollLocked = false;
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.touchAction = "";
+      document.documentElement.style.touchAction = "";
+      window.removeEventListener("touchmove", preventDefault);
+    };
+
+    const isInView = () => {
+      const el = statsRef.current;
+      if (!el) return false;
+      const rect = el.getBoundingClientRect();
+      return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+    };
+
+    const scrollToSection = (targetId: string) => {
+      if (scrollCooldown) return;
+
+      scrollCooldown = true;
+      hasSnapped = true;
+      accumulated = 0;
+
+      gsap.to(window, {
+        scrollTo: targetId,
+        duration: 0.3,
+        ease: "linear",
+        overwrite: "auto",
+        onComplete: () => {
+          enableScroll();
+          setTimeout(() => {
+            scrollCooldown = false;
+          }, 100);
+        },
+      });
+    };
+
+    const handleIntent = (delta: number) => {
+      if (!isInView() || hasSnapped) return;
+
+      accumulated += delta;
+
+      if (accumulated >= threshold) {
+        disableScroll();
+        scrollToSection("#partnership-section");
+      } else if (accumulated <= -threshold) {
+        disableScroll();
+        const sliderTrigger = ScrollTrigger.getById("slider-scroll");
+
+        if (sliderTrigger) {
+          const progress = 1; // last slide
+          const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * progress;
+
           gsap.to(window, {
-            scrollTo: targetId,
-            duration: 0.3,
-            ease: "linear",
-            overwrite: "auto",
+            scrollTo: targetScroll,
+            duration: 0.4,
+            ease: "power2.inOut",
             onComplete: () => {
               enableScroll();
               setTimeout(() => {
@@ -70,145 +99,134 @@ const Stats = () => {
               }, 100);
             },
           });
-        };
-    
-        const handleIntent = (delta: number) => {
-          if (!isInView() || hasSnapped) return;
-    
-          accumulated += delta;
-    
-          if (accumulated >= threshold) {
-            disableScroll();
-            scrollToSection("#slider-section");
-          } else if (accumulated <= -threshold) {
-            disableScroll();
-            scrollToSection("#center-section");
-          }
-        };
-    
-        const handleWheel = (e: WheelEvent) => {
-          e.preventDefault();
-          handleIntent(e.deltaY);
-        };
-    
-        const handleKeyDown = (e: KeyboardEvent) => {
-          if (e.key === "ArrowDown" || e.key === "PageDown") {
-            if (isInView()) {
-              e.preventDefault();
-              disableScroll();
-              handleIntent(60);
-            }
-          } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-            if (isInView()) {
-              e.preventDefault();
-              disableScroll();
-              handleIntent(-60);
-            }
-          }
-        };
-    
-        const handleTouchStart = (e: TouchEvent) => {
-          const touch = e.touches.item(0);
-          if (touch) {
-            touchStartY.current = touch.clientY;
-            disableScroll();
-          }
-        };
-        
-        const handleTouchMove = (e: TouchEvent) => {
-          const touch = e.touches.item(0);
-          if (touch) {
-            handleIntent(touchStartY.current - touch.clientY);
-          }
-        };
-        
-    
-        const handleTouchEnd = () => {
-          enableScroll();
-        };
-    
-        window.addEventListener("wheel", handleWheel, { passive: false });
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("touchstart", handleTouchStart, { passive: false });
-        window.addEventListener("touchmove", handleTouchMove, { passive: false });
-        window.addEventListener("touchend", handleTouchEnd);
-    
-        const observer = new IntersectionObserver(
-          ([entry]) => {
-            if (entry?.isIntersecting) {
-              hasSnapped = false;
-              accumulated = 0;
-            }
-          },
-          { threshold: 0.5 }
-        );
-    
-        if (statsRef.current) observer.observe(statsRef.current);
-    
-        return () => {
-          window.removeEventListener("wheel", handleWheel);
-          window.removeEventListener("keydown", handleKeyDown);
-          window.removeEventListener("touchstart", handleTouchStart);
-          window.removeEventListener("touchmove", handleTouchMove);
-          window.removeEventListener("touchend", handleTouchEnd);
-          observer.disconnect();
-          enableScroll();
-        };
-      }, []);
 
-    return (
-        <div
-            ref={statsRef}
-            id="stats-section"
-            className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
-        >
-            <div
-                className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1] opacity-[0.03]"
-                style={{
-                    backgroundImage: `url(${LogoMarkWhite})`,
-                    backgroundSize: "110%",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center",
-                }}
-            />
-            <p className="white-silver-animated-text">
-                <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.</span>
-                <span className="md:text-5xl text-4xl white-silver-animated-text">&nbsp;We sell&nbsp;</span>
-                <span
-                    style={{
-                        fontFamily: "DM-Mono-Italic, monospace",
-                        fontStyle: "italic",
-                      }}
-                    className="md:text-5xl text-4xl white-silver-animated-text2"
-                >
-                    Results.
-                </span>
-            </p>
-            <div className="flex flex-col lg:flex-row justify-start items-start gap-4">
-                <StatsBox
-                    number={17}
-                    numberText="M+"
-                    text="Individuals Educated on AI via Our Platforms"
-                    link="https://www.youtube.com/@LiamOttley"
-                    linkText="Watch our content here"
-                />
-                <StatsBox
-                    number={435}
-                    numberText="+"
-                    text="AI Solutions Identified by MorningSide AI"
-                    link=""
-                    linkText=""
-                />
-                <StatsBox
-                    number={55}
-                    numberText="+"
-                    text="Bespoke AI Solutions Developed"
-                    link=""
-                    linkText=""
-                />
-            </div>
-        </div>
+        }
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      handleIntent(e.deltaY);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "PageDown") {
+        if (isInView()) {
+          e.preventDefault();
+          disableScroll();
+          handleIntent(60);
+        }
+      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        if (isInView()) {
+          e.preventDefault();
+          disableScroll();
+          handleIntent(-60);
+        }
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches.item(0);
+      if (touch) {
+        touchStartY.current = touch.clientY;
+        disableScroll();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches.item(0);
+      if (touch) {
+        handleIntent(touchStartY.current - touch.clientY);
+      }
+    };
+
+
+    const handleTouchEnd = () => {
+      enableScroll();
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          hasSnapped = false;
+          accumulated = 0;
+        }
+      },
+      { threshold: 0.5 }
     );
+
+    if (statsRef.current) observer.observe(statsRef.current);
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      observer.disconnect();
+      enableScroll();
+    };
+  }, []);
+
+  return (
+    <div
+      ref={statsRef}
+      id="stats-section"
+      className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
+    >
+      <div
+        className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1] opacity-[0.03]"
+        style={{
+          backgroundImage: `url(${LogoMarkWhite})`,
+          backgroundSize: "110%",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+        }}
+      />
+      <p className="white-silver-animated-text">
+        <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.</span>
+        <span className="md:text-5xl text-4xl white-silver-animated-text">&nbsp;We sell&nbsp;</span>
+        <span
+          style={{
+            fontFamily: "DM-Mono-Italic, monospace",
+            fontStyle: "italic",
+          }}
+          className="md:text-5xl text-4xl white-silver-animated-text2"
+        >
+          Results.
+        </span>
+      </p>
+      <div className="flex flex-col lg:flex-row justify-start items-start gap-4">
+        <StatsBox
+          number={17}
+          numberText="M+"
+          text="Individuals Educated on AI via Our Platforms"
+          link="https://www.youtube.com/@LiamOttley"
+          linkText="Watch our content here"
+        />
+        <StatsBox
+          number={435}
+          numberText="+"
+          text="AI Solutions Identified by MorningSide AI"
+          link=""
+          linkText=""
+        />
+        <StatsBox
+          number={55}
+          numberText="+"
+          text="Bespoke AI Solutions Developed"
+          link=""
+          linkText=""
+        />
+      </div>
+    </div>
+  );
 };
 
 export default Stats;

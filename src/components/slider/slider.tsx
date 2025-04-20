@@ -151,7 +151,7 @@ const OneSlideFixedSlider = () => {
             scrollCooldown = true;
 
             gsap.to(window, {
-                scrollTo: "#partnership-section",
+                scrollTo: "#stats-section",
                 duration: 0.3,
                 ease: "power2.inOut",
                 onComplete: () => {
