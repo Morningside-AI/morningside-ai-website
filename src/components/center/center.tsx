@@ -161,14 +161,14 @@ const Center = () => {
       ref={centerRef}
       className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
     >
-      <p className="hidden md:visible text-5xl md:text-6xl lg:text-7xl text-center">
+      <p className="hidden md:block text-5xl md:text-6xl lg:text-7xl text-center">
         <span className="white-silver-animated-text">
           We put AI at the centre of<br />
         </span>
         <span className="green-text">everything</span>
         <span className="white-silver-animated-text">&nbsp;we do</span>
       </p>
-      <p className="visible md:hidden text-5xl md:text-6xl lg:text-7xl text-center -mt-4">
+      <p className="block md:hidden text-5xl md:text-6xl lg:text-7xl text-center -mt-4">
         <span className="white-silver-animated-text">
           We put AI<br />
         </span>

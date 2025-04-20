@@ -78,11 +78,11 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
   }, [number]);
 
   return (
-    <div ref={contentRef} className="flex flex-col w-1/3 md:mb-0 mb-2 gap-4 opacity-0">
+    <div ref={contentRef} className="flex flex-col w-full lg:w-1/3 md:mb-0 mb-2 gap-1 lg:gap-4 opacity-0">
       <p className="lg:text-8xl md:text-7xl text-6xl tracking-widest">
         <span ref={numberRef}>0</span>{numberText}
       </p>
-      <hr className="border-[#325E43] border-1 md:my-4 my-1" />
+      <hr className="border-[#325E43] border-1 md:my-4 my-0" />
       <p className="text-lg text-white">{text}</p>
       {link && linkText && (
         <Link href={link} target="_blank" className="decoration-none flex flex-row items-center gap-1">

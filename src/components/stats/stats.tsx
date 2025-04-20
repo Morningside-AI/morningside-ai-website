@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import StatsBox from "./statsBox";
 import LogoMarkWhite from "@/assets/images/morningside-assets/Logomark-White.svg?url";
+import "@/styles/fonts.css";
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -13,17 +14,24 @@ const Stats = () => {
     const touchStartY = useRef(0);
 
     useEffect(() => {
-        const threshold = 20;
+        const threshold = 12;
         let accumulated = 0;
         let hasSnapped = false;
         let scrollLocked = false;
         let scrollCooldown = false;
+
+        const preventDefault = (e: TouchEvent): void => {
+            e.preventDefault();
+        };
 
         const disableScroll = () => {
             if (!scrollLocked) {
                 scrollLocked = true;
                 document.body.style.overflow = "hidden";
                 document.documentElement.style.overflow = "hidden";
+                document.body.style.touchAction = "none";
+                document.documentElement.style.touchAction = "none";
+                window.addEventListener("touchmove", preventDefault, { passive: false });
             }
         };
 
@@ -31,6 +39,9 @@ const Stats = () => {
             scrollLocked = false;
             document.body.style.overflow = "";
             document.documentElement.style.overflow = "";
+            document.body.style.touchAction = "";
+            document.documentElement.style.touchAction = "";
+            window.removeEventListener("touchmove", preventDefault);
         };
 
         const isInView = () => {
@@ -49,7 +60,7 @@ const Stats = () => {
 
             gsap.to(window, {
                 scrollTo: targetId,
-                duration: 1.4,
+                duration: 0.9,
                 ease: "power4.out",
                 overwrite: "auto",
                 onComplete: () => {
@@ -64,12 +75,13 @@ const Stats = () => {
         const handleIntent = (delta: number) => {
             if (!isInView() || hasSnapped) return;
 
-            disableScroll();
             accumulated += delta;
 
             if (accumulated >= threshold) {
+                disableScroll();
                 scrollToSection("#partnership-section");
             } else if (accumulated <= -threshold) {
+                disableScroll();
                 scrollToSection("#center-section");
             }
         };
@@ -82,9 +94,11 @@ const Stats = () => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowDown" || e.key === "PageDown") {
                 e.preventDefault();
+                disableScroll();
                 handleIntent(60);
             } else if (e.key === "ArrowUp" || e.key === "PageUp") {
                 e.preventDefault();
+                disableScroll();
                 handleIntent(-60);
             }
         };
@@ -92,22 +106,30 @@ const Stats = () => {
         const handleTouchStart = (e: TouchEvent) => {
             const touch = e.touches.item(0);
             if (touch) {
+                e.preventDefault();
                 touchStartY.current = touch.clientY;
+                disableScroll();
             }
         };
 
         const handleTouchMove = (e: TouchEvent) => {
             const touch = e.touches.item(0);
             if (touch) {
+                e.preventDefault();
                 const deltaY = touchStartY.current - touch.clientY;
                 handleIntent(deltaY);
             }
         };
 
+        const handleTouchEnd = () => {
+            enableScroll();
+        };
+
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("touchstart", handleTouchStart, { passive: true });
+        window.addEventListener("touchstart", handleTouchStart, { passive: false });
         window.addEventListener("touchmove", handleTouchMove, { passive: false });
+        window.addEventListener("touchend", handleTouchEnd);
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -126,6 +148,7 @@ const Stats = () => {
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("touchstart", handleTouchStart);
             window.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("touchend", handleTouchEnd);
             observer.disconnect();
             enableScroll();
         };
@@ -135,10 +158,10 @@ const Stats = () => {
         <div
             ref={statsRef}
             id="stats-section"
-            className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative"
+            className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
         >
             <div
-                className="absolute top-0 left-0 w-full h-full z-[-1] opacity-[0.03]"
+                className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1] opacity-[0.03]"
                 style={{
                     backgroundImage: `url(${LogoMarkWhite})`,
                     backgroundSize: "110%",
@@ -150,13 +173,16 @@ const Stats = () => {
                 <span className="md:text-5xl text-4xl">We don&apos;t sell AI.</span>
                 <span className="md:text-5xl text-4xl">&nbsp;We sell&nbsp;</span>
                 <span
-                    style={{ fontFamily: "DM-Mono-Italic" }}
+                    style={{
+                        fontFamily: "DM-Mono-Italic, monospace",
+                        fontStyle: "italic",
+                      }}
                     className="md:text-5xl text-4xl"
                 >
                     Results.
                 </span>
             </p>
-            <div className="flex flex-row justify-start items-start gap-4">
+            <div className="flex flex-col lg:flex-row justify-start items-start gap-4">
                 <StatsBox
                     number={17}
                     numberText="M+"
