@@ -62,24 +62,25 @@ const Hero = () => {
 
     const goToNext = () => {
       if (scrollCooldown) return;
-
+    
       scrollCooldown = true;
       hasSnapped = true;
       accumulated = 0;
-
+    
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 1.4,
-        ease: "power4.out",
+        duration: 0.9, // faster scroll
+        ease: "power3.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 800); // cooldown to prevent double trigger
+          }, 600); // shorter cooldown since animation is faster
         },
       });
     };
+    
 
     const handleIntent = (delta: number) => {
       if (!isHeroInView() || hasSnapped || delta <= 0) return;

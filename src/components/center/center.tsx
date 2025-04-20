@@ -11,17 +11,24 @@ const Center = () => {
   const touchStartY = useRef(0);
 
   useEffect(() => {
-    const threshold = 20;
+    const threshold = 12; // same as Hero
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
     let scrollCooldown = false;
+
+    const preventDefault = (e: TouchEvent): void => {
+      e.preventDefault();
+    };
 
     const disableScroll = () => {
       if (!scrollLocked) {
         scrollLocked = true;
         document.body.style.overflow = "hidden";
         document.documentElement.style.overflow = "hidden";
+        document.body.style.touchAction = "none";
+        document.documentElement.style.touchAction = "none";
+        window.addEventListener("touchmove", preventDefault, { passive: false });
       }
     };
 
@@ -29,6 +36,9 @@ const Center = () => {
       scrollLocked = false;
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      document.body.style.touchAction = "";
+      document.documentElement.style.touchAction = "";
+      window.removeEventListener("touchmove", preventDefault);
     };
 
     const isInView = () => {
@@ -47,14 +57,14 @@ const Center = () => {
 
       gsap.to(window, {
         scrollTo: targetId,
-        duration: 1.4,
+        duration: 0.9,
         ease: "power4.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 800); // prevent double triggering
+          }, 800);
         },
       });
     };
@@ -62,12 +72,13 @@ const Center = () => {
     const handleIntent = (delta: number) => {
       if (!isInView() || hasSnapped) return;
 
-      disableScroll();
       accumulated += delta;
 
       if (accumulated >= threshold) {
+        disableScroll();
         scrollToSection("#stats-section");
       } else if (accumulated <= -threshold) {
+        disableScroll();
         scrollToSection("#hero-section");
       }
     };
@@ -96,22 +107,30 @@ const Center = () => {
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
+        e.preventDefault();
         touchStartY.current = touch.clientY;
+        disableScroll();
       }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
+        e.preventDefault();
         const deltaY = touchStartY.current - touch.clientY;
         handleIntent(deltaY);
       }
     };
 
+    const handleTouchEnd = () => {
+      enableScroll();
+    };
+
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
     window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -130,6 +149,7 @@ const Center = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
       observer.disconnect();
       enableScroll();
     };
@@ -139,16 +159,26 @@ const Center = () => {
     <div
       id="center-section"
       ref={centerRef}
-      className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%]"
+      className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
     >
-      <p className="text-7xl text-center">
+      <p className="hidden md:visible text-5xl md:text-6xl lg:text-7xl text-center">
         <span className="white-silver-animated-text">
           We put AI at the centre of<br />
         </span>
         <span className="green-text">everything</span>
         <span className="white-silver-animated-text">&nbsp;we do</span>
       </p>
-      <p className="text-2xl text-center mt-12 text-[#C0C0C0]">
+      <p className="visible md:hidden text-5xl md:text-6xl lg:text-7xl text-center -mt-4">
+        <span className="white-silver-animated-text">
+          We put AI<br />
+        </span>
+        <span className="white-silver-animated-text">
+          at the center of<br />
+        </span>
+        <span className="green-text">everything</span>
+        <span className="white-silver-animated-text">&nbsp;we do</span>
+      </p>
+      <p className="text-xl lg:text-2xl text-center mt-12 text-[#C0C0C0]">
         One trusted partner to guide you <br /> through your entire AI journey.
       </p>
     </div>
