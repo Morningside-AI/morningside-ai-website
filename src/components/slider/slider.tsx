@@ -289,6 +289,31 @@ const OneSlideFixedSlider = () => {
                 </div>
                 {/* Slide content */}
                 {
+                    activeIndex == 0 && (
+                        <div className="w-full h-screen flex flex-col items-center justify-center gap-8 clip">
+
+                            <div ref={textRef} className="text-content flex flex-col gap-6 items-center justify-center">
+                                <p className="text-5xl md:text-6xl lg:text-7xl text-center">
+                                    <span className="white-silver-animated-text">
+                                        We spend our days doing<br />
+                                    </span>
+                                    <span className="white-silver-animated-text1">&nbsp;these</span>
+                                    <span className="green-text"> three</span>
+                                    <span className="white-silver-animated-text1">&nbsp;things</span>
+                                </p>
+                            </div>
+
+                            <div
+                                ref={boxRef}
+                                className="w-full flex flex-row items-center justify-center absolute bottom-[-20vh] mt-[20vh] z-10"
+                            >
+                                <Step3 className="w-[60vw] h-[50vw] lg:w-[25vw] lg:h-[25vw]" />
+                            </div>
+                        </div>
+                    )
+                }
+
+                {
                     activeIndex == 1 && (
                         <div className="w-full flex flex-col items-center justify-center gap-8">
                             <div ref={boxRef} className="w-full flex flex-row items-center justify-center" >

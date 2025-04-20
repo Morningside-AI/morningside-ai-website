@@ -226,7 +226,7 @@ const Footer = () => {
                     <span className="white-silver-animated-text">
                         We look forward to helping<br />
                     </span>
-                    <span className="white-silver-animated-text">&nbsp;your business</span>
+                    <span className="green-text">&nbsp;your business</span>
                 </p>
                 <p className="lg:text-6xl text-5xl text-leftblock lg:hidden">
                     <span className="white-silver-animated-text">
@@ -235,7 +235,7 @@ const Footer = () => {
                     <span className="white-silver-animated-text">
                         helping<br />
                     </span>
-                    <span className="white-silver-animated-text">your business</span>
+                    <span className="green-text">your business</span>
                 </p>
                 <Logo className="w-48 h-10 mt-4 hidden lg:block" />
             </div>

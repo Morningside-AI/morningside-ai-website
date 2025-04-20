@@ -19,31 +19,31 @@ const PartnershipMarquee = () => {
                 overflow: 'hidden'
             }}>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner1} alt="Partner 1" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner1} alt="Partner 1" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner2} alt="Partner 2" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-44 mx-4 mb-3 object-contain" />
+                    <Image src={Partner2} alt="Partner 2" width={200} height={200} className="md:mr-6 mr-0 w-36 md:w-44 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner3} alt="Partner 3" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner3} alt="Partner 3" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner4} alt="Partner 4" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner4} alt="Partner 4" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner5} alt="Partner 5" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner5} alt="Partner 5" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner6} alt="Partner 6" width={200} height={200} className="md:mr-6 mr-0 w-14 md:w-24 mx-4 mb-3 object-contain" />
+                    <Image src={Partner6} alt="Partner 6" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-24 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner8} alt="Partner 8" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner8} alt="Partner 8" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner9} alt="Partner 9" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner9} alt="Partner 9" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner10} alt="Partner 10" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
+                    <Image src={Partner10} alt="Partner 10" width={200} height={200} className="md:mr-6 mr-0 w-28 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 
             </Marquee>
