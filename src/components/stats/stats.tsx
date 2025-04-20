@@ -60,14 +60,14 @@ const Stats = () => {
     
           gsap.to(window, {
             scrollTo: targetId,
-            duration: 0.9,
-            ease: "power4.out",
+            duration: 0.5,
+            ease: "linear",
             overwrite: "auto",
             onComplete: () => {
               enableScroll();
               setTimeout(() => {
                 scrollCooldown = false;
-              }, 800);
+              }, 300);
             },
           });
         };
