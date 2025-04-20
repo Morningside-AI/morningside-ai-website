@@ -14,7 +14,7 @@ import Image from "next/image";
 const PartnershipMarquee = () => {
     return (
         <div>
-            <Marquee speed={120} direction="right" pauseOnHover style={{
+            <Marquee speed={120} direction="right" style={{
                 position: 'relative',
                 zIndex: 1,
                 overflow: 'hidden'

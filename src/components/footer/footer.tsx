@@ -3,13 +3,13 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import Logo from "@/assets/images/morningside-assets/logo-FullWhite.svg";
 import { GoArrowUpRight } from "react-icons/go";
-import PartnershipMarquee from "./partnersMarquee";
 
 gsap.registerPlugin(ScrollToPlugin);
 
-const Partnership = () => {
-    const centerRef = useRef<HTMLDivElement>(null);
+const Footer = () => {
+    const footerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const Partnership = () => {
         };
 
         const isInView = () => {
-            const el = centerRef.current;
+            const el = footerRef.current;
             if (!el) return false;
             const rect = el.getBoundingClientRect();
             return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
@@ -68,9 +68,9 @@ const Partnership = () => {
             accumulated += delta;
 
             if (accumulated >= threshold) {
-                scrollToSection("#footer-section");
+                scrollToSection("#test-section");
             } else if (accumulated <= -threshold) {
-                scrollToSection("#stats-section");
+                scrollToSection("#partnership-section");
             }
         };
 
@@ -125,7 +125,7 @@ const Partnership = () => {
             { threshold: 0.5 }
         );
 
-        if (centerRef.current) observer.observe(centerRef.current);
+        if (footerRef.current) observer.observe(footerRef.current);
 
         return () => {
             window.removeEventListener("wheel", handleWheel);
@@ -139,32 +139,54 @@ const Partnership = () => {
 
     return (
         <div
-            id="partnership-section"
-            ref={centerRef}
-            className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 relative"
+            id="footer-section"
+            ref={footerRef}
+            className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6"
         >
-            <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
-                <PartnershipMarquee />
+            <div className="w-full flex felx-row justify-between">
+                <p className="lg:text-6xl text-5xl text-left">
+                    <span className="white-silver-animated-text">
+                        We look forward to helping<br />
+                    </span>
+                    <span className="white-silver-animated-text">&nbsp;your business</span>
+                </p>
+                <Logo className="w-48 h-10 mt-4" />
             </div>
-            <p className="text-7xl text-center">
-                <span className="white-silver-animated-text">
-                    The best AI systems<br />
-                </span>
-                <span className="white-silver-animated-text">&nbsp;are built </span>
-                <span className="green-text">side by side</span>
-            </p>
-            <div className="w-full flex flex-row items-center justify-center">
-                <button className="flex items-center gap-1 px-8 py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-                    <p className="text-5xl">Let&apos;s Partner Up</p>
-                    <GoArrowUpRight
-                        size={32}
-                        strokeWidth={1}
-                        className="mt-1 transition-all duration-300"
-                    />
-                </button>
+            <div className="w-full flex md:flex-row flex-col justify-between md:mb-2 mb-16 tracking-wider text-sm">
+                <div className="flex flex-col gap-2 order-3 md:order-1">
+                    <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
+                    <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
+                    <div className="flex flex-row gap-1">
+                        <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+                            Get In Touch
+                            <GoArrowUpRight
+                                size={18}
+                                strokeWidth={1}
+                                className="mt-1 transition-all duration-300"
+                            />
+                        </button>
+                        <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+                            Explore Careers
+                            <GoArrowUpRight
+                                size={18}
+                                strokeWidth={1}
+                                className="mt-1 transition-all duration-300"
+                            />
+                        </button>
+                    </div>
+                </div>
+                <div className="flex flex-row items-end gap-2 order-3 md:order-1">
+                    <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Terms & Conditions</p>
+                    <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Privacy Policy</p>
+                </div>
+                <div className="flex flex-col justify-end gap-4 order-3 md:order-1 text-left">
+                    <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Follow</p>
+                    <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Linkedin</p>
+                    <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Youtube</p>
+                </div>
             </div>
         </div>
     );
 };
 
-export default Partnership;
+export default Footer;
