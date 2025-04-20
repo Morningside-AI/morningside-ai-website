@@ -2,12 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import StatsBox from "./statsBox";
 import LogoMarkWhite from "@/assets/images/morningside-assets/Logomark-White.svg?url";
 import "@/styles/fonts.css";
 
-gsap.registerPlugin(ScrollToPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Stats = () => {
   const statsRef = useRef<HTMLDivElement>(null);
@@ -78,15 +79,14 @@ const Stats = () => {
       accumulated += delta;
 
       if (accumulated >= threshold) {
-        disableScroll();
+        disableScroll(); // ✅ lock scroll before going down
         scrollToSection("#partnership-section");
       } else if (accumulated <= -threshold) {
-        disableScroll();
         const sliderTrigger = ScrollTrigger.getById("slider-scroll");
 
         if (sliderTrigger) {
-          const progress = 1; // last slide
-          const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * progress;
+          disableScroll(); // ✅ lock scroll before going up
+          const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * 1;
 
           gsap.to(window, {
             scrollTo: targetScroll,
@@ -103,6 +103,7 @@ const Stats = () => {
         }
       }
     };
+
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
