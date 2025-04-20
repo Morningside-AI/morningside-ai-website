@@ -20,22 +20,24 @@ const Footer = () => {
         let scrollLocked = false;
         let scrollCooldown = false;
 
+        const preventDefault = (e: TouchEvent) => e.preventDefault();
+
         const disableScroll = () => {
-            if (!scrollLocked && footerRef.current) {
-              scrollLocked = true;
-              footerRef.current.style.overflow = "hidden";
-              footerRef.current.style.touchAction = "none";
+            if (!scrollLocked) {
+                scrollLocked = true;
+                document.body.style.overflow = "hidden";
+                document.documentElement.style.overflow = "hidden";
             }
-          };
-          
-          const enableScroll = () => {
+        };
+
+        const enableScroll = () => {
             scrollLocked = false;
-            if (footerRef.current) {
-              footerRef.current.style.overflow = "";
-              footerRef.current.style.touchAction = "";
-            }
-          };
-          
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+            document.body.style.touchAction = "";
+            document.documentElement.style.touchAction = "";
+            window.removeEventListener("touchmove", preventDefault);
+        };
 
         const isInView = () => {
             const el = footerRef.current;
@@ -95,9 +97,12 @@ const Footer = () => {
             }
         };
 
+        let isSwiping = false;
+
         const handleTouchStart = (e: TouchEvent) => {
             const touch = e.touches[0];
             if (touch) {
+                isSwiping = false;
                 touchStartY.current = touch.clientY;
             }
         };
@@ -105,12 +110,20 @@ const Footer = () => {
         const handleTouchMove = (e: TouchEvent) => {
             const touch = e.touches[0];
             if (!touch) return;
-          
+
             const deltaY = touchStartY.current - touch.clientY;
-          
-            handleIntent(deltaY);
-          };
-          
+
+            // ✅ Only lock scroll if the user is swiping significantly
+            if (!isSwiping && Math.abs(deltaY) > 10) {
+                isSwiping = true;
+                //disableScroll(); // only now
+            }
+
+            if (isSwiping) {
+                e.preventDefault();
+                handleIntent(deltaY);
+            }
+        };
 
 
 
@@ -121,7 +134,7 @@ const Footer = () => {
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("touchstart", handleTouchStart, { passive: false });
-        window.addEventListener("touchmove", handleTouchMove); // remove passive: false
+        window.addEventListener("touchmove", handleTouchMove, { passive: false });
         window.addEventListener("touchend", handleTouchEnd);
 
         const observer = new IntersectionObserver(
@@ -205,7 +218,8 @@ const Footer = () => {
         <div
             id="footer-section"
             ref={footerRef}
-            className="w-full h-screen touch-auto flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6"
+            style={{ touchAction: "auto", pointerEvents: "auto" }}
+            className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden"
         >
             <div className="w-full flex flex-row justify-between">
                 <p className="lg:text-6xl text-5xl text-left hidden lg:block">

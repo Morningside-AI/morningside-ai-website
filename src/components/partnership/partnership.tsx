@@ -126,20 +126,18 @@ const Partnership = () => {
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
-        e.preventDefault();
         touchStartY.current = touch.clientY;
         disableScroll();
       }
     };
-
+    
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
-        e.preventDefault();
-        const deltaY = touchStartY.current - touch.clientY;
-        handleIntent(deltaY);
+        handleIntent(touchStartY.current - touch.clientY);
       }
     };
+    
 
     const handleTouchEnd = () => {
       enableScroll();
