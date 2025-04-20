@@ -18,100 +18,74 @@ interface StatsBoxProps {
 
 const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) => {
   const numberRef = useRef<HTMLSpanElement>(null);
-  const textRef = useRef<HTMLParagraphElement>(null);
-  const linkRef = useRef<HTMLAnchorElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!numberRef.current || !textRef.current) return;
-
     const numberEl = numberRef.current;
-    const textEl = textRef.current;
-    const linkEl = linkText && link ? linkRef.current : null;
+    const contentEl = contentRef.current;
+
+    if (!numberEl || !contentEl) return;
 
     const obj = { val: 0 };
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: numberEl,
+        trigger: contentEl,
         start: "top 80%",
-        end: "bottom 10%",
-        toggleActions: "play reverse play reverse",
-        onLeave: () => {
-          gsap.to([numberEl, textEl, linkEl], {
-            opacity: 0,
-            duration: 0.4,
-            ease: "power1.out",
-          });
+        end: "bottom 30%",
+        toggleActions: "restart none none reverse",
+        onLeaveBack: () => {
+          numberEl.textContent = "0";
+          gsap.to(contentEl, { opacity: 0, y: 20, duration: 0.3, ease: "power1.out" });
         },
         onEnterBack: () => {
           obj.val = 0;
-
-          gsap.fromTo(
-            [textEl, linkEl],
-            { opacity: 0, x: -20 },
-            {
-              opacity: 1,
-              x: 0,
-              stagger: 0.15,
-              duration: 0.8,
-              ease: "power2.out",
-            }
-          );
-
           gsap.to(obj, {
             val: number,
-            duration: 1.6,
+            duration: 1.5,
             ease: "power3.out",
             onUpdate: () => {
-              if (numberEl) numberEl.textContent = Math.floor(obj.val).toLocaleString();
+              numberEl.textContent = Math.floor(obj.val).toLocaleString();
             },
           });
+          gsap.to(contentEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
         },
       },
     });
 
-    tl.fromTo(
-      [textEl, linkEl],
-      { opacity: 0, x: -20 },
+    tl.fromTo(obj, 
+      { val: 0 },
       {
-        opacity: 1,
-        x: 0,
-        stagger: 0.15,
-        duration: 0.8,
-        ease: "power2.out",
+        val: number,
+        duration: 1.5,
+        ease: "power3.out",
+        onUpdate: () => {
+          numberEl.textContent = Math.floor(obj.val).toLocaleString();
+        },
       }
     );
 
-    tl.to(obj, {
-      val: number,
-      duration: 1.6,
-      ease: "power3.out",
-      onUpdate: () => {
-        if (numberEl) numberEl.textContent = Math.floor(obj.val).toLocaleString();
-      },
-    }, "<");
+    tl.fromTo(
+      contentEl,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+      "<"
+    );
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      tl.kill();
     };
-  }, [number, linkText, link]);
+  }, [number]);
 
   return (
-    <div className="flex flex-col w-1/3 md:mb-0 mb-2 gap-4">
+    <div ref={contentRef} className="flex flex-col w-1/3 md:mb-0 mb-2 gap-4 opacity-0">
       <p className="lg:text-8xl md:text-7xl text-6xl tracking-widest">
         <span ref={numberRef}>0</span>{numberText}
       </p>
       <hr className="border-[#325E43] border-1 md:my-4 my-1" />
-      <p ref={textRef} className="text-lg text-white">
-        {text}
-      </p>
+      <p className="text-lg text-white">{text}</p>
       {link && linkText && (
-        <Link
-          ref={linkRef}
-          href={link}
-          target="_blank"
-          className="decoration-none flex flex-row items-center gap-1"
-        >
+        <Link href={link} target="_blank" className="decoration-none flex flex-row items-center gap-1">
           <p className="text-md green-text font-bold">{linkText}</p>
           <GoArrowUpRight className="mt-1" strokeWidth={1} color="#325E43" size={18} />
         </Link>

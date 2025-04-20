@@ -68,7 +68,7 @@ const Stats = () => {
             accumulated += delta;
 
             if (accumulated >= threshold) {
-                scrollToSection("#test-section");
+                scrollToSection("#partnership-section");
             } else if (accumulated <= -threshold) {
                 scrollToSection("#center-section");
             }
