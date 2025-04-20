@@ -20,15 +20,23 @@ const OneSlideFixedSlider = () => {
     const labelRef = useRef<HTMLDivElement>(null);
 
 
-    const { RiveComponent } = useRive({
-        src: "/rive/testAnimation.riv",
+    const { RiveComponent: LearnRive } = useRive({
+        src: "/rive/animation1.riv",
         autoplay: true,
         layout: new Layout({
             fit: Fit.Cover,
             alignment: Alignment.Center,
         }),
     });
-
+    
+    const { RiveComponent: BuildRive } = useRive({
+        src: "/rive/animation2.riv",
+        autoplay: true,
+        layout: new Layout({
+            fit: Fit.Cover,
+            alignment: Alignment.Center,
+        }),
+    });
 
 
 
@@ -273,7 +281,7 @@ const OneSlideFixedSlider = () => {
                     {slides.map((label, i) => (
                         <div
                             key={label}
-                            className={`text-sm ${i === 0 ? 'hidden' : ''} font-mono uppercase transition-opacity duration-300 ${activeIndex === i ? "opacity-100" : "opacity-40"
+                            className={`font-thin lg:text-xl md:text-lg text-base ${i === 0 ? 'hidden' : ''} font-mono uppercase transition-opacity duration-300 ${activeIndex === i ? "opacity-100" : "opacity-40"
                                 }`}
                         >
                             {label}
@@ -306,7 +314,7 @@ const OneSlideFixedSlider = () => {
                             className="relative w-full flex flex-row items-center justify-center gap-8"
                         >
                             <div className="w-[700px] h-[300px]">
-                                <RiveComponent />
+                                <LearnRive />
                             </div>
                         </div>
 
@@ -329,9 +337,14 @@ const OneSlideFixedSlider = () => {
                 {
                     activeIndex == 3 && (
                         <div className="w-full flex flex-col items-center justify-center gap-8">
-                            <div ref={boxRef} className="w-full flex flex-row items-center justify-center" >
-
+                            <div
+                            ref={boxRef}
+                            className="relative w-full flex flex-row items-center justify-center gap-8"
+                        >
+                            <div className="w-[700px] h-[400px]">
+                                <BuildRive />
                             </div>
+                        </div>
                             <div ref={textRef} className="text-content flex flex-col gap-6 items-center justify-center">
                                 <p className="lg:text-9xl md:text-8xl text-7xl font-light text-center capitalize">
                                     Build Solutions

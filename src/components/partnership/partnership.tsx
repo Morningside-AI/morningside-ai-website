@@ -99,7 +99,6 @@ const Partnership = () => {
             },
           });
         }
-
       }
     };
 
@@ -232,11 +231,11 @@ const Partnership = () => {
           "+=0.1" // slight delay after word animation
         );
       }
-
+      
 
       function animateOut() {
         if (!textEl || !buttonEl) return;
-
+      
         const spans = textEl.querySelectorAll("span");
         gsap.to([spans, buttonEl], {
           opacity: 0,
