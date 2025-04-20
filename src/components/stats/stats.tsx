@@ -14,145 +14,149 @@ const Stats = () => {
     const touchStartY = useRef(0);
 
     useEffect(() => {
-        const threshold = 12;
+        const threshold = 12; // same as Hero
         let accumulated = 0;
         let hasSnapped = false;
         let scrollLocked = false;
         let scrollCooldown = false;
-
+    
         const preventDefault = (e: TouchEvent): void => {
-            e.preventDefault();
+          e.preventDefault();
         };
-
+    
         const disableScroll = () => {
-            if (!scrollLocked) {
-                scrollLocked = true;
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-                document.body.style.touchAction = "none";
-                document.documentElement.style.touchAction = "none";
-                window.addEventListener("touchmove", preventDefault, { passive: false });
-            }
+          if (!scrollLocked) {
+            scrollLocked = true;
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.touchAction = "none";
+            document.documentElement.style.touchAction = "none";
+            window.addEventListener("touchmove", preventDefault, { passive: false });
+          }
         };
-
+    
         const enableScroll = () => {
-            scrollLocked = false;
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-            document.body.style.touchAction = "";
-            document.documentElement.style.touchAction = "";
-            window.removeEventListener("touchmove", preventDefault);
+          scrollLocked = false;
+          document.body.style.overflow = "";
+          document.documentElement.style.overflow = "";
+          document.body.style.touchAction = "";
+          document.documentElement.style.touchAction = "";
+          window.removeEventListener("touchmove", preventDefault);
         };
-
+    
         const isInView = () => {
-            const el = statsRef.current;
-            if (!el) return false;
-            const rect = el.getBoundingClientRect();
-            return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+          const el = statsRef.current;
+          if (!el) return false;
+          const rect = el.getBoundingClientRect();
+          return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
         };
-
+    
         const scrollToSection = (targetId: string) => {
-            if (scrollCooldown) return;
-
-            scrollCooldown = true;
-            hasSnapped = true;
-            accumulated = 0;
-
-            gsap.to(window, {
-                scrollTo: targetId,
-                duration: 0.9,
-                ease: "power4.out",
-                overwrite: "auto",
-                onComplete: () => {
-                    enableScroll();
-                    setTimeout(() => {
-                        scrollCooldown = false;
-                    }, 800);
-                },
-            });
+          if (scrollCooldown) return;
+    
+          scrollCooldown = true;
+          hasSnapped = true;
+          accumulated = 0;
+    
+          gsap.to(window, {
+            scrollTo: targetId,
+            duration: 0.9,
+            ease: "power4.out",
+            overwrite: "auto",
+            onComplete: () => {
+              enableScroll();
+              setTimeout(() => {
+                scrollCooldown = false;
+              }, 800);
+            },
+          });
         };
-
+    
         const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped) return;
-
-            accumulated += delta;
-
-            if (accumulated >= threshold) {
-                disableScroll();
-                scrollToSection("#partnership-section");
-            } else if (accumulated <= -threshold) {
-                disableScroll();
-                scrollToSection("#center-section");
-            }
+          if (!isInView() || hasSnapped) return;
+    
+          accumulated += delta;
+    
+          if (accumulated >= threshold) {
+            disableScroll();
+            scrollToSection("#partnership-section");
+          } else if (accumulated <= -threshold) {
+            disableScroll();
+            scrollToSection("#center-section");
+          }
         };
-
+    
         const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            handleIntent(e.deltaY);
+          e.preventDefault();
+          handleIntent(e.deltaY);
         };
-
+    
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "ArrowDown" || e.key === "PageDown") {
-                e.preventDefault();
-                disableScroll();
-                handleIntent(60);
-            } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-                e.preventDefault();
-                disableScroll();
-                handleIntent(-60);
+          if (e.key === "ArrowDown" || e.key === "PageDown") {
+            if (isInView()) {
+              e.preventDefault();
+              disableScroll();
+              handleIntent(60);
             }
+          } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+            if (isInView()) {
+              e.preventDefault();
+              disableScroll();
+              handleIntent(-60);
+            }
+          }
         };
-
+    
         const handleTouchStart = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                e.preventDefault();
-                touchStartY.current = touch.clientY;
-                disableScroll();
-            }
+          const touch = e.touches.item(0);
+          if (touch) {
+            e.preventDefault();
+            touchStartY.current = touch.clientY;
+            disableScroll();
+          }
         };
-
+    
         const handleTouchMove = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                e.preventDefault();
-                const deltaY = touchStartY.current - touch.clientY;
-                handleIntent(deltaY);
-            }
+          const touch = e.touches.item(0);
+          if (touch) {
+            e.preventDefault();
+            const deltaY = touchStartY.current - touch.clientY;
+            handleIntent(deltaY);
+          }
         };
-
+    
         const handleTouchEnd = () => {
-            enableScroll();
+          enableScroll();
         };
-
+    
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("touchstart", handleTouchStart, { passive: false });
         window.addEventListener("touchmove", handleTouchMove, { passive: false });
         window.addEventListener("touchend", handleTouchEnd);
-
+    
         const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry?.isIntersecting) {
-                    hasSnapped = false;
-                    accumulated = 0;
-                }
-            },
-            { threshold: 0.5 }
+          ([entry]) => {
+            if (entry?.isIntersecting) {
+              hasSnapped = false;
+              accumulated = 0;
+            }
+          },
+          { threshold: 0.5 }
         );
-
+    
         if (statsRef.current) observer.observe(statsRef.current);
-
+    
         return () => {
-            window.removeEventListener("wheel", handleWheel);
-            window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("touchstart", handleTouchStart);
-            window.removeEventListener("touchmove", handleTouchMove);
-            window.removeEventListener("touchend", handleTouchEnd);
-            observer.disconnect();
-            enableScroll();
+          window.removeEventListener("wheel", handleWheel);
+          window.removeEventListener("keydown", handleKeyDown);
+          window.removeEventListener("touchstart", handleTouchStart);
+          window.removeEventListener("touchmove", handleTouchMove);
+          window.removeEventListener("touchend", handleTouchEnd);
+          observer.disconnect();
+          enableScroll();
         };
-    }, []);
+      }, []);
 
     return (
         <div
