@@ -57,14 +57,14 @@ const Center = () => {
 
       gsap.to(window, {
         scrollTo: targetId,
-        duration: 0.5,
+        duration: 0.2,
         ease: "linear",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 300);
+          }, 100);
         },
       });
     };
