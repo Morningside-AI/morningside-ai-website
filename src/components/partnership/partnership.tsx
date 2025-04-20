@@ -59,7 +59,7 @@ const Partnership = () => {
 
       gsap.to(window, {
         scrollTo: targetId,
-        duration: 0.2,
+        duration: 0.3,
         ease: "linear",
         overwrite: "auto",
         onComplete: () => {
@@ -81,7 +81,25 @@ const Partnership = () => {
         scrollToSection("#footer-section");
       } else if (accumulated <= -threshold) {
         disableScroll();
-        scrollToSection("#stats-section");
+        const sliderTrigger = ScrollTrigger.getById("slider-scroll");
+
+        if (sliderTrigger) {
+          const progress = 1; // last slide
+          const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * progress;
+
+          gsap.to(window, {
+            scrollTo: targetScroll,
+            duration: 0.4,
+            ease: "power2.inOut",
+            onComplete: () => {
+              enableScroll();
+              setTimeout(() => {
+                scrollCooldown = false;
+              }, 100);
+            },
+          });
+        }
+
       }
     };
 
@@ -214,11 +232,11 @@ const Partnership = () => {
           "+=0.1" // slight delay after word animation
         );
       }
-      
+
 
       function animateOut() {
         if (!textEl || !buttonEl) return;
-      
+
         const spans = textEl.querySelectorAll("span");
         gsap.to([spans, buttonEl], {
           opacity: 0,

@@ -6,7 +6,6 @@ import Partner3 from '@/assets/images/partners/3.webp'
 import Partner4 from '@/assets/images/partners/4.webp'
 import Partner5 from '@/assets/images/partners/5.webp'
 import Partner6 from '@/assets/images/partners/6.webp'
-import Partner7 from '@/assets/images/partners/7.webp'
 import Partner8 from '@/assets/images/partners/8.webp'
 import Partner9 from '@/assets/images/partners/9.webp'
 import Partner10 from '@/assets/images/partners/10.webp'
@@ -36,9 +35,6 @@ const PartnershipMarquee = () => {
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
                     <Image src={Partner6} alt="Partner 6" width={200} height={200} className="md:mr-6 mr-0 w-14 md:w-24 mx-4 mb-3 object-contain" />
-                </div>
-                <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
-                    <Image src={Partner7} alt="Partner 7" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-4 h-36 mx-4" >
                     <Image src={Partner8} alt="Partner 8" width={200} height={200} className="md:mr-6 mr-0 w-20 md:w-32 mx-4 mb-3 object-contain" />

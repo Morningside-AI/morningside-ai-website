@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@rive-app/react-canvas": "^4.18.8",
     "@shadergradient/react": "^2.0.25",
     "@t3-oss/env-nextjs": "^0.12.0",
     "drei": "^2.2.21",

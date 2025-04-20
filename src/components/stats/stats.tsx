@@ -60,7 +60,7 @@ const Stats = () => {
     
           gsap.to(window, {
             scrollTo: targetId,
-            duration: 0.2,
+            duration: 0.3,
             ease: "linear",
             overwrite: "auto",
             onComplete: () => {
@@ -79,7 +79,7 @@ const Stats = () => {
     
           if (accumulated >= threshold) {
             disableScroll();
-            scrollToSection("#partnership-section");
+            scrollToSection("#slider-section");
           } else if (accumulated <= -threshold) {
             disableScroll();
             scrollToSection("#center-section");
