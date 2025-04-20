@@ -209,13 +209,13 @@ const Hero = () => {
         <div className="h-16 md:h-20 lg:h-32 flex flex-row items-center">
           <RotatingText />
         </div>
-        <p className="text-5xl md:text-7xl lg:text-9xl white-silver-animated-text">
+        <p className="text-5xl md:text-7xl lg:text-9xl white-silver-animated-text1">
           Company
         </p>
       </div>
       <p
         ref={paragraphRef}
-        className="text-2xl md:text-3xl lg:text-4xl mt-12 tracking-normal white-silver-animated-text"
+        className="text-2xl md:text-3xl lg:text-4xl mt-12 tracking-normal white-silver-animated-text2"
       >
         We are all of the above.
       </p>

@@ -221,17 +221,17 @@ const Center = () => {
             We put AI at the centre of<br />
           </span>
           <span className="green-text">everything</span>
-          <span className="white-silver-animated-text">&nbsp;we do</span>
+          <span className="white-silver-animated-text1">&nbsp;we do</span>
         </p>
         <p className="block md:hidden text-5xl md:text-6xl lg:text-7xl text-center -mt-4">
           <span className="white-silver-animated-text">
             We put AI<br />
           </span>
-          <span className="white-silver-animated-text">
+          <span className="white-silver-animated-text1">
             at the center of<br />
           </span>
           <span className="green-text">everything</span>
-          <span className="white-silver-animated-text">&nbsp;we do</span>
+          <span className="white-silver-animated-text2">&nbsp;we do</span>
         </p>
       </div>
       <p

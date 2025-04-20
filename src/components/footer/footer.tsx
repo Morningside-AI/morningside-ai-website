@@ -20,27 +20,22 @@ const Footer = () => {
         let scrollLocked = false;
         let scrollCooldown = false;
 
-        const preventDefault = (e: TouchEvent) => e.preventDefault();
-
         const disableScroll = () => {
-            if (!scrollLocked) {
-                scrollLocked = true;
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-                document.body.style.touchAction = "none";
-                document.documentElement.style.touchAction = "none";
-                window.addEventListener("touchmove", preventDefault, { passive: false });
+            if (!scrollLocked && footerRef.current) {
+              scrollLocked = true;
+              footerRef.current.style.overflow = "hidden";
+              footerRef.current.style.touchAction = "none";
             }
-        };
-
-        const enableScroll = () => {
+          };
+          
+          const enableScroll = () => {
             scrollLocked = false;
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-            document.body.style.touchAction = "";
-            document.documentElement.style.touchAction = "";
-            window.removeEventListener("touchmove", preventDefault);
-        };
+            if (footerRef.current) {
+              footerRef.current.style.overflow = "";
+              footerRef.current.style.touchAction = "";
+            }
+          };
+          
 
         const isInView = () => {
             const el = footerRef.current;
@@ -101,22 +96,23 @@ const Footer = () => {
         };
 
         const handleTouchStart = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
+            const touch = e.touches[0];
             if (touch) {
-                e.preventDefault();
                 touchStartY.current = touch.clientY;
-                disableScroll();
             }
         };
 
         const handleTouchMove = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                e.preventDefault();
-                const deltaY = touchStartY.current - touch.clientY;
-                handleIntent(deltaY);
-            }
-        };
+            const touch = e.touches[0];
+            if (!touch) return;
+          
+            const deltaY = touchStartY.current - touch.clientY;
+          
+            handleIntent(deltaY);
+          };
+          
+
+
 
         const handleTouchEnd = () => {
             enableScroll();
@@ -125,7 +121,7 @@ const Footer = () => {
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("touchstart", handleTouchStart, { passive: false });
-        window.addEventListener("touchmove", handleTouchMove, { passive: false });
+        window.addEventListener("touchmove", handleTouchMove); // remove passive: false
         window.addEventListener("touchend", handleTouchEnd);
 
         const observer = new IntersectionObserver(
@@ -209,7 +205,7 @@ const Footer = () => {
         <div
             id="footer-section"
             ref={footerRef}
-            className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden touch-none"
+            className="w-full h-screen touch-auto flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6"
         >
             <div className="w-full flex flex-row justify-between">
                 <p className="lg:text-6xl text-5xl text-left hidden lg:block">
@@ -236,7 +232,7 @@ const Footer = () => {
                     <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">
                         <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                     </Link>
-                    <div className="flex flex-row gap-1">
+                    <div className="flex flex-row gap-1 relative z-10">
                         <button className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                             Get In Touch
                             <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />

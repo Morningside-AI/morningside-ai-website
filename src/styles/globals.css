@@ -40,21 +40,61 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .white-silver-animated-text {
-  color: #fff;
-  animation: white-silver-animation 8s linear infinite;
-  animation-fill-mode: none;
-  animation-delay: 0s;
+  background: linear-gradient(
+    90deg,
+    #999999 0%,
+    #ffffff 50%,
+    #999999 100%
+  );
+  background-size: 250% 100%;
+  background-position: 0% 0%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: white-silver-gradient 8s linear infinite;
 }
 
-@keyframes white-silver-animation {
+.white-silver-animated-text1 {
+  background: linear-gradient(
+    90deg,
+    #999999 0%,
+    #ffffff 50%,
+    #999999 100%
+  );
+  background-size: 300% 100%;
+  background-position: 0% 0%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: white-silver-gradient 6s ease-in-out infinite;
+}
 
-  0%,
+.white-silver-animated-text2 {
+  background: linear-gradient(
+    90deg,
+    #999999 0%,
+    #ffffff 50%,
+    #999999 100%
+  );
+  background-size: 300% 100%;
+  background-position: 0% 0%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: white-silver-gradient 9s ease infinite;
+}
+
+
+@keyframes white-silver-gradient {
+  0% {
+    background-position: 0% 0%;
+  }
   100% {
-    color: white;
-  }
-
-  50% {
-    color: #c0c0c0;
+    background-position: 300% 0%;
   }
 }
+
 

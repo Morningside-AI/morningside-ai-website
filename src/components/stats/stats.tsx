@@ -174,14 +174,14 @@ const Stats = () => {
                 }}
             />
             <p className="white-silver-animated-text">
-                <span className="md:text-5xl text-4xl">We don&apos;t sell AI.</span>
-                <span className="md:text-5xl text-4xl">&nbsp;We sell&nbsp;</span>
+                <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.</span>
+                <span className="md:text-5xl text-4xl white-silver-animated-text">&nbsp;We sell&nbsp;</span>
                 <span
                     style={{
                         fontFamily: "DM-Mono-Italic, monospace",
                         fontStyle: "italic",
                       }}
-                    className="md:text-5xl text-4xl"
+                    className="md:text-5xl text-4xl white-silver-animated-text2"
                 >
                     Results.
                 </span>
