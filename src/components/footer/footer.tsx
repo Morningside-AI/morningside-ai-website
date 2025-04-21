@@ -107,6 +107,13 @@ const Footer = () => {
             }
         };
 
+        const handleSpaceButton = (e: KeyboardEvent) => {
+            if (e.key === " ") {
+              disableScroll();
+              handleIntent(60);
+            }
+          }
+
         let isSwiping = false;
 
         const handleTouchStart = (e: TouchEvent) => {
@@ -143,6 +150,7 @@ const Footer = () => {
 
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("keydown", handleSpaceButton);
         window.addEventListener("touchstart", handleTouchStart, { passive: false });
         window.addEventListener("touchmove", handleTouchMove, { passive: false });
         window.addEventListener("touchend", handleTouchEnd);
@@ -216,6 +224,7 @@ const Footer = () => {
         return () => {
             window.removeEventListener("wheel", handleWheel);
             window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keydown", handleSpaceButton);
             window.removeEventListener("touchstart", handleTouchStart);
             window.removeEventListener("touchmove", handleTouchMove);
             window.removeEventListener("touchend", handleTouchEnd);
