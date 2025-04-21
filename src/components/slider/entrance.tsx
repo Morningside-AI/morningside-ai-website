@@ -62,15 +62,28 @@ const Entrance = () => {
         direction: "forward" | "backward"
     ) => {
         if (!canTransition()) return;
-
+    
         lastTransitionTime.current = Date.now();
         const fromRef = contentRefs[fromIndex]?.current;
         const toRef = contentRefs[toIndex]?.current;
         if (!fromRef || !toRef) return;
-
+    
         document.body.style.overflow = "hidden";
         document.documentElement.style.overflow = "hidden";
-
+    
+        if (toIndex === 2 && rive1) {
+            setTimeout(() => {
+                rive1.reset();
+                rive1.play();
+            }, 300);
+        }
+        if (toIndex === 3 && rive2) {
+            setTimeout(() => {
+                rive2.reset();
+                rive2.play();
+            }, 300);
+        }
+    
         gsap.to(fromRef, {
             opacity: 0,
             x: direction === "forward" ? -100 : 100,
@@ -79,10 +92,7 @@ const Entrance = () => {
             onComplete: () => {
                 fromRef.style.display = "none";
                 toRef.style.display = "flex";
-
-                if (rive1Ready && rive1) rive1.play();
-                if (rive2Ready && rive2) rive2.play();
-
+    
                 gsap.fromTo(
                     toRef,
                     { opacity: 0, x: direction === "forward" ? 150 : -150 },
@@ -99,8 +109,7 @@ const Entrance = () => {
                 );
             },
         });
-
-        // Update both state and ref
+    
         setActiveStep(toIndex);
         entranceStepRef.current = toIndex;
     }, [rive1, rive2, rive1Ready, rive2Ready, canTransition]);
@@ -183,16 +192,29 @@ const Entrance = () => {
             direction: "forward" | "backward"
         ) => {
             if (!canTransition()) return;
-
+        
             lastTransitionTime.current = Date.now();
             const fromRef = contentRefs[fromIndex]?.current;
             const toRef = contentRefs[toIndex]?.current;
             if (!fromRef || !toRef) return;
-
+        
+            if (toIndex === 2 && rive1) {
+                setTimeout(() => {
+                    rive1.reset();
+                    rive1.play();
+                }, 300);
+            }
+            if (toIndex === 3 && rive2) {
+                setTimeout(() => {
+                    rive2.reset();
+                    rive2.play();
+                }, 300);
+            }
+        
             disableScroll();
             hasSnapped = true;
             accumulated = 0;
-
+        
             gsap.to(fromRef, {
                 opacity: 0,
                 x: direction === "forward" ? -100 : 100,
@@ -201,10 +223,7 @@ const Entrance = () => {
                 onComplete: () => {
                     fromRef.style.display = "none";
                     toRef.style.display = "flex";
-
-                    if (rive1Ready && rive1) rive1.play();
-                    if (rive2Ready && rive2) rive2.play();
-
+        
                     gsap.fromTo(
                         toRef,
                         { opacity: 0, x: direction === "forward" ? 150 : -150 },
@@ -221,11 +240,10 @@ const Entrance = () => {
                     );
                 },
             });
-
-            // Update both the local entranceStep and the ref
+        
             entranceStep = toIndex;
             entranceStepRef.current = toIndex;
-            setActiveStep(toIndex); // This ensures button highlights stay in sync
+            setActiveStep(toIndex);
         };
 
         const handleIntent = (delta: number) => {
