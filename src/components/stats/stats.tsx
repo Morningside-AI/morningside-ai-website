@@ -82,9 +82,11 @@ const Stats = () => {
         disableScroll(); // ✅ lock scroll before going down
         scrollToSection("#partnership-section");
       } else if (accumulated <= -threshold) {
-        const sliderTrigger = ScrollTrigger.getById("slider-scroll");
+        disableScroll(); // ✅ lock scroll before going down
+        scrollToSection("#center-section");
+        //const sliderTrigger = ScrollTrigger.getById("slider-scroll");
 
-        if (sliderTrigger) {
+        /*if (sliderTrigger) {
           disableScroll(); // ✅ lock scroll before going up
           const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * 1;
 
@@ -99,8 +101,7 @@ const Stats = () => {
               }, 100);
             },
           });
-
-        }
+        }*/
       }
     };
 

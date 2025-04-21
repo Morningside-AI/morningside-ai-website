@@ -75,7 +75,7 @@ const Center = () => {
 
       if (accumulated >= threshold) {
         disableScroll();
-        scrollToSection("#slider-section");
+        scrollToSection("#stats-section");
       } else if (accumulated <= -threshold) {
         disableScroll();
         scrollToSection("#hero-section");
