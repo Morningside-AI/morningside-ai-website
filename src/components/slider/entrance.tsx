@@ -181,7 +181,7 @@ const Entrance = () => {
                     enableScroll();
                     setTimeout(() => {
                         scrollCooldown = false;
-                    }, 8);
+                    }, 6);
                 },
             });
         };
