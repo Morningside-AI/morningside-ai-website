@@ -6,20 +6,19 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 import Step3 from "@/assets/images/animation/entrance.svg";
+import Step32 from "@/assets/images/animation/step3.svg";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 const Entrance = () => {
     const mtd = new MagicTrackpadDetector();
     const centerRef = useRef<HTMLDivElement>(null);
-    const headingRef = useRef<HTMLDivElement>(null);
-    const subTextRef = useRef<HTMLParagraphElement>(null);
-    const textRef = useRef<HTMLHeadingElement>(null);
-    const boxRef = useRef<HTMLDivElement>(null);
-    const step3Ref = useRef<SVGElement>(null); // Reference for the Step3 SVG element
+    const content1Ref = useRef<HTMLDivElement>(null);
+    const content2Ref = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
 
     useEffect(() => {
+        let entranceStep = 0;
         const threshold = 12;
         let accumulated = 0;
         let hasSnapped = false;
@@ -81,39 +80,88 @@ const Entrance = () => {
 
             if (accumulated >= threshold) {
                 disableScroll();
-                scrollToSection("#first-slide-section");
+
+                if (entranceStep === 0) {
+                    entranceStep = 1;
+                    gsap.to(content1Ref.current, {
+                        opacity: 0,
+                        x: -100,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            content1Ref.current!.style.display = "none";
+                            content2Ref.current!.style.display = "flex";
+                            gsap.fromTo(
+                                content2Ref.current,
+                                { opacity: 0, x: 150 },
+                                {
+                                    opacity: 1,
+                                    x: 0,
+                                    duration: 0.6,
+                                    ease: "power2.out",
+                                    onComplete: () => {
+                                        enableScroll();
+                                        entranceStep = 2; // Now ready to go to next section on second scroll
+                                    },
+                                }
+                            );
+                        },
+                    });
+                } else if (entranceStep === 2) {
+                    scrollToSection("#second-slide-section");
+                } else {
+                    enableScroll();
+                }
             } else if (accumulated <= -threshold) {
                 disableScroll();
-                scrollToSection("#center-section");
+
+                // If we’re not at step 0, go back to content1
+                if (entranceStep > 0) {
+                    entranceStep = 0;
+                    gsap.to(content2Ref.current, {
+                        opacity: 0,
+                        x: 150,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            content2Ref.current!.style.display = "none";
+                            content1Ref.current!.style.display = "flex";
+                            gsap.fromTo(
+                                content1Ref.current,
+                                { opacity: 0, x: -100 },
+                                {
+                                    opacity: 1,
+                                    x: 0,
+                                    duration: 0.6,
+                                    ease: "power2.out",
+                                    onComplete: enableScroll,
+                                }
+                            );
+                        },
+                    });
+                } else {
+                    scrollToSection("#center-section");
+                }
             }
         };
 
+
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-
-            // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
-            if (mtd.inertial(e)) {
-                // If it's an inertial scroll event, we return early and don't process the scroll
-                return;
-            }
-
+            if (mtd.inertial(e)) return;
             const deltaY = e.deltaY;
-
-            // Normalize the delta to handle macOS touchpad sensitivity
-            const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
-
-            // Handle the scroll intent (up or down) based on the normalized delta
+            const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY;
             handleIntent(normalizedDelta);
         };
 
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "ArrowDown" || e.key === "PageDown") {
+            if (["ArrowDown", "PageDown"].includes(e.key)) {
                 if (isInView()) {
                     e.preventDefault();
                     disableScroll();
                     handleIntent(60);
                 }
-            } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+            } else if (["ArrowUp", "PageUp"].includes(e.key)) {
                 if (isInView()) {
                     e.preventDefault();
                     disableScroll();
@@ -164,112 +212,9 @@ const Entrance = () => {
         );
         if (centerRef.current) observer.observe(centerRef.current);
 
-        // Animate main heading and subtext with GSAP (fade in from bottom)
-        if (headingRef.current && subTextRef.current) {
-            gsap.set(headingRef.current, { opacity: 0, y: 0, x: -120 });
-            gsap.set(subTextRef.current, { opacity: 0, y: 0, x: -120 });
-            gsap.set(step3Ref.current, { opacity: 0, y: 0, x: -120, scale: 0.5 });  // Initial state of the SVG
-
-            ScrollTrigger.create({
-                trigger: centerRef.current,
-                start: "top center",
-                end: "bottom top",
-                onEnter: () => {
-                    // Fade in and slide up text
-                    gsap.to(headingRef.current, {
-                        opacity: 1,
-                        y: 0,
-                        x: 0,
-                        duration: 1.2,
-                        ease: "power4.out",
-                    });
-                    gsap.to(subTextRef.current, {
-                        opacity: 1,
-                        y: 0,
-                        x: 0,
-                        duration: 1.4,
-                        ease: "power4.out",
-                        delay: 0.4,
-                    });
-
-                    // Animate Step3 SVG (fade-in from bottom)
-                    gsap.to(step3Ref.current, {
-                        opacity: 1,
-                        y: 0,
-                        x: 0,
-                        scale: 1,
-                        duration: 1.4,
-                        ease: "power4.out",
-                    });
-                },
-                onEnterBack: () => {
-                    // Fade in and slide up text
-                    gsap.to(headingRef.current, {
-                        opacity: 1,
-                        y: 0,
-                        x: 0,
-                        duration: 1.2,
-                        ease: "power4.out",
-                    });
-                    gsap.to(subTextRef.current, {
-                        opacity: 1,
-                        y: 0,
-                        x: 0,
-                        duration: 1.4,
-                        ease: "power4.out",
-                        delay: 0.4,
-                    });
-
-                    // Animate Step3 SVG (fade-in from bottom)
-                    gsap.to(step3Ref.current, {
-                        opacity: 1,
-                        y: 0,
-                        x: 0,
-                        scale: 1,
-                        duration: 1.4,
-                        ease: "power4.out",
-                    });
-                },
-                onLeave: () => {
-                    // Move and scale up the SVG (fade out and move towards the bottom)
-                    gsap.to([headingRef.current, subTextRef.current], {
-                        opacity: 0,
-                        y: 0,
-                        x: -120,
-                        duration: 0.6,
-                        ease: "power2.inOut",
-                    });
-
-                    gsap.to(step3Ref.current, {
-                        opacity: 0,
-                        y: 0,  // Move towards the bottom
-                        x: -120,
-                        scale: 1.4,  // Scale up by 40%
-                        duration: 1.2,
-                        ease: "power2.inOut",
-                    });
-                },
-                onLeaveBack: () => {
-                    // Move and scale up the SVG (fade out and move towards the bottom)
-                    gsap.to([headingRef.current, subTextRef.current], {
-                        opacity: 0,
-                        y: 0,
-                        x: -120,
-                        duration: 0.6,
-                        ease: "power2.inOut",
-                    });
-
-                    gsap.to(step3Ref.current, {
-                        opacity: 0,
-                        y: 0,  // Move towards the bottom
-                        x: -120,
-                        scale: 1.4,  // Scale up by 40%
-                        duration: 1.2,
-                        ease: "power2.inOut",
-                    });
-                },
-            });
-        }
+        // Ensure initial visibility
+        content1Ref.current!.style.display = "flex";
+        content2Ref.current!.style.display = "none";
 
         return () => {
             window.removeEventListener("wheel", handleWheel);
@@ -289,36 +234,40 @@ const Entrance = () => {
             ref={centerRef}
             className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
         >
-           <div className="w-full flex flex-col items-start justify-start gap-24 lg:gap-8">
-                <div ref={textRef} className="text-content flex flex-col items-start justify-start">
-                <p className="hidden md:block text-4xl md:text-5xl lg:text-6xl text-left" ref={headingRef}>
-                        <span className="white-silver-animated-text">
-                            We spend our days guiding<br />
-                        </span>
-                        <span className="white-silver-animated-text">
-                            companies through these<br />
-                        </span>
-                        <span className="white-silver-animated-text">
-                            three core stages
-                        </span>
-                    </p>
-                    <p className="block md:hidden text-4xl md:text-5xl lg:text-6xl text-left" ref={subTextRef}>
-                        <span className="white-silver-animated-text">
-                            We spend our days <br />
-                        </span>
-                        <span className="white-silver-animated-text">
-                            guiding companies<br />
-                        </span>
-                        <span className="white-silver-animated-text">
-                            through these<br />
-                        </span>
-                        <span className="white-silver-animated-text">
-                            three core stages
-                        </span>
+            {/* First content */}
+            <div
+                ref={content1Ref}
+                className="w-full flex flex-col items-start justify-start gap-24 lg:gap-8"
+            >
+                <div className="text-content flex flex-col items-start justify-start">
+                    <p className="text-4xl md:text-5xl lg:text-6xl text-left">
+                        We spend our days guiding<br />
+                        companies through these<br />
+                        three core stages
                     </p>
                 </div>
-                <div ref={boxRef} className="w-full flex flex-row items-center justify-center lg:justify-end">
-                    <Step3 ref={step3Ref} className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
+                <div className="w-full flex flex-row items-center justify-center lg:justify-end">
+                    <Step3 className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
+                </div>
+            </div>
+
+            {/* Second content */}
+            <div
+                ref={content2Ref}
+                className="w-full hidden flex-col items-center justify-center gap-8"
+            >
+                <div className="w-full flex flex-row items-center justify-center">
+                    <Step32 className="w-[50vw] h-[40vw] lg:w-[20vw] lg:h-[20vw]" />
+                </div>
+                <div className="text-content flex flex-col gap-6 items-center justify-center">
+                    <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
+                        Gain Clarity
+                    </p>
+                    <p className="lg:text-xl md:text-lg text-base font-light text-center max-w-[700px] mx-auto text-[#A0A4A1]">
+                        We analyze your business operations, define high-impact AI
+                        Opportunities and co-design the AI Transformation Strategy that
+                        aligns with your goals.
+                    </p>
                 </div>
             </div>
         </div>

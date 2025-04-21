@@ -17,7 +17,6 @@ export default function HomePage() {
       <Hero />
       <Center />
       <Entrance />
-      <Slide1 />
       <Slide2 />
       <Slide3 />
       <Stats />

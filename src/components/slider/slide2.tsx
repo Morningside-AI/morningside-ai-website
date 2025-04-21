@@ -93,7 +93,7 @@ const Slide2 = () => {
                 scrollToSection("#third-slide-section");
             } else if (accumulated <= -threshold) {
                 disableScroll();
-                scrollToSection("#first-slide-section");
+                scrollToSection("#entrance-section");
             }
         };
 
