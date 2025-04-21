@@ -345,7 +345,7 @@ const Partnership = () => {
         direction='right'
         className='msaiDrawer'
         lockBackgroundScroll
-        duration={1200}
+        duration={600}
         overlayOpacity={0.5}
         style={{
           width: '98vw',
