@@ -216,8 +216,9 @@ const Stats = () => {
         }}
       />
       <p className="white-silver-animated-text">
-        <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.</span>
-        <span className="md:text-5xl text-4xl white-silver-animated-text">&nbsp;We sell&nbsp;</span>
+        <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.&nbsp;</span>
+        <br className="block lg:hidden" />
+        <span className="md:text-5xl text-4xl white-silver-animated-text">We sell&nbsp;</span>
         <span
           style={{
             fontFamily: "DM-Mono-Italic, monospace",

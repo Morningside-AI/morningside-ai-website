@@ -12,7 +12,7 @@ import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 
 const LABELS = [
     { title: "Introduction", index: 0 },
-    { title: "Clarity", index: 1 },
+    { title: "Clarify", index: 1 },
     { title: "Learn", index: 2 },
     { title: "Build", index: 3 },
 ];
@@ -400,7 +400,7 @@ const Entrance = () => {
             <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-24 lg:gap-8">
                 <div>
                     <p
-                        className="text-5xl md:text-6xl lg:text-7xl text-left whitespace-pre-wrap"
+                        className="text-3xl md:text-5xl lg:text-6xl text-left whitespace-pre-wrap"
                         ref={animTextRef}
                     >
                         <span className="white-silver-animated-text">We </span>
@@ -411,12 +411,11 @@ const Entrance = () => {
                         <span className="white-silver-animated-text1">guiding </span>
                         <br className="hidden lg:block" />
                         <span className="white-silver-animated-text">companies </span>
-                        <br className="block lg:hidden" />
                         <span className="white-silver-animated-text1">through </span>
+                        <br className="block lg:hidden" />
                         <span className="white-silver-animated-text2">these </span>
                         <br className="hidden lg:block" />
                         <span className="white-silver-animated-text1">three </span>
-                        <br className="block lg:hidden" />
                         <span className="white-silver-animated-text">core </span>
                         <span className="white-silver-animated-text1">stages</span>
                     </p>
