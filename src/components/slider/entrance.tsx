@@ -24,7 +24,7 @@ const Entrance = () => {
         useRef<HTMLDivElement>(null),
     ];
     const touchStartY = useRef(0);
-    let entranceStep = 0;
+    
 
     const { rive: rive1, RiveComponent: LearnRive } = useRive({
         src: "/rive/animation1.riv",
@@ -49,187 +49,200 @@ const Entrance = () => {
     }, [rive1, rive2]);
 
     useEffect(() => {
-        const threshold = 12;
-        let accumulated = 0;
-        let hasSnapped = false;
-        let scrollLocked = false;
-        let scrollCooldown = false;
+        const threshold = 60; // Increased threshold for better control
+    let accumulated = 0;
+    let hasSnapped = false;
+    let scrollLocked = false;
+    let scrollCooldown = false;
+    let entranceStep = 0;
+    let lastTransitionTime = 0;
+    const TRANSITION_COOLDOWN = 800; // Minimum time between transitions in ms
 
-        const preventDefault = (e: TouchEvent): void => e.preventDefault();
+    const preventDefault = (e: TouchEvent): void => e.preventDefault();
 
-        const disableScroll = () => {
-            if (!scrollLocked) {
-                scrollLocked = true;
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-                document.body.style.touchAction = "none";
-                document.documentElement.style.touchAction = "none";
-                window.addEventListener("touchmove", preventDefault, { passive: false });
-            }
-        };
+    const disableScroll = () => {
+        if (!scrollLocked) {
+            scrollLocked = true;
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.touchAction = "none";
+            document.documentElement.style.touchAction = "none";
+            window.addEventListener("touchmove", preventDefault, { passive: false });
+        }
+    };
 
-        const enableScroll = () => {
+    const enableScroll = () => {
+        if (scrollLocked) {
             scrollLocked = false;
             document.body.style.overflow = "";
             document.documentElement.style.overflow = "";
             document.body.style.touchAction = "";
             document.documentElement.style.touchAction = "";
             window.removeEventListener("touchmove", preventDefault);
-        };
+        }
+    };
 
-        const isInView = () => {
-            const el = centerRef.current;
-            if (!el) return false;
-            const rect = el.getBoundingClientRect();
-            return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
-        };
+    const isInView = () => {
+        const el = centerRef.current;
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+    };
 
-        const scrollToSection = (targetId: string) => {
-            if (scrollCooldown) return;
-            scrollCooldown = true;
-            hasSnapped = true;
-            accumulated = 0;
+    const scrollToSection = (targetId: string) => {
+        if (scrollCooldown) return;
+        scrollCooldown = true;
+        hasSnapped = true;
+        accumulated = 0;
 
-            gsap.to(window, {
-                scrollTo: targetId,
-                duration: 0.3,
-                ease: "linear",
-                overwrite: "auto",
-                onComplete: () => {
-                    enableScroll();
-                    setTimeout(() => {
-                        scrollCooldown = false;
-                    }, 100);
-                },
-            });
-        };
+        gsap.to(window, {
+            scrollTo: targetId,
+            duration: 0.5,
+            ease: "power2.out",
+            overwrite: "auto",
+            onComplete: () => {
+                enableScroll();
+                setTimeout(() => {
+                    scrollCooldown = false;
+                }, 100);
+            },
+        });
+    };
 
-        const transition = (
-            fromIndex: number,
-            toIndex: number,
-            direction: "forward" | "backward"
-        ) => {
-            const fromRef = contentRefs[fromIndex]?.current;
-            const toRef = contentRefs[toIndex]?.current;
-            if (!fromRef || !toRef) return;
+    const canTransition = () => {
+        return Date.now() - lastTransitionTime > TRANSITION_COOLDOWN;
+    };
 
-            gsap.to(fromRef, {
-                opacity: 0,
-                x: direction === "forward" ? -100 : 100,
-                duration: 0.6,
-                ease: "power2.out",
-                onComplete: () => {
-                    fromRef.style.display = "none";
-                    toRef.style.display = "flex";
+    const transition = (
+        fromIndex: number,
+        toIndex: number,
+        direction: "forward" | "backward"
+    ) => {
+        if (!canTransition()) return;
+        
+        lastTransitionTime = Date.now();
+        const fromRef = contentRefs[fromIndex]?.current;
+        const toRef = contentRefs[toIndex]?.current;
+        if (!fromRef || !toRef) return;
 
-                    // Ensure Rive 1 is available before playing the animation
-                    if (rive1Ready && rive1) {
-                        console.log("Rive1: Playing");
-                        rive1.reset();
-                        rive1.play();
-                    } else {
-                        console.log("Rive1: Not available or not initialized yet");
-                    }
+        disableScroll();
+        hasSnapped = true;
+        accumulated = 0;
 
-                    // Ensure Rive 2 is available before playing the animation
-                    if (rive2Ready && rive2) {
-                        console.log("Rive2: Playing");
-                        rive2.reset();
-                        rive2.play();
-                    } else {
-                        console.log("Rive2: Not available or not initialized yet");
-                    }
+        gsap.to(fromRef, {
+            opacity: 0,
+            x: direction === "forward" ? -100 : 100,
+            duration: 0.8, // Slightly longer duration
+            ease: "power2.out",
+            onComplete: () => {
+                fromRef.style.display = "none";
+                toRef.style.display = "flex";
 
-                    gsap.fromTo(
-                        toRef,
-                        { opacity: 0, x: direction === "forward" ? 150 : -150 },
-                        {
-                            opacity: 1,
-                            x: 0,
-                            duration: 0.6,
-                            ease: "power2.out",
-                            onComplete: () => {
+                if (rive1Ready && rive1) {
+                    rive1.reset();
+                    rive1.play();
+                }
+                if (rive2Ready && rive2) {
+                    rive2.reset();
+                    rive2.play();
+                }
+
+                gsap.fromTo(
+                    toRef,
+                    { opacity: 0, x: direction === "forward" ? 150 : -150 },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            hasSnapped = false;
+                            setTimeout(() => {
                                 enableScroll();
-                            },
-                        }
-                    );
-                },
-            });
-        };
+                            }, 300);
+                        },
+                    }
+                );
+            },
+        });
+    };
 
-        const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped) return;
-            accumulated += delta;
+    const handleIntent = (delta: number) => {
+        if (!isInView() || hasSnapped || !canTransition()) return;
+        
+        accumulated += delta;
 
-            if (accumulated >= threshold) {
-                disableScroll();
-                if (entranceStep < contentRefs.length - 1) {
-                    transition(entranceStep, entranceStep + 1, "forward");
-                    entranceStep += 1;
-                } else {
-                    scrollToSection("#stats-section");
-                }
-            } else if (accumulated <= -threshold) {
-                disableScroll();
-                if (entranceStep > 0) {
-                    transition(entranceStep, entranceStep - 1, "backward");
-                    entranceStep -= 1;
-                } else {
-                    scrollToSection("#center-section");
-                }
+        if (accumulated >= threshold) {
+            if (entranceStep < contentRefs.length - 1) {
+                transition(entranceStep, entranceStep + 1, "forward");
+                entranceStep += 1;
+            } else {
+                scrollToSection("#stats-section");
             }
-        };
+        } else if (accumulated <= -threshold) {
+            if (entranceStep > 0) {
+                transition(entranceStep, entranceStep - 1, "backward");
+                entranceStep -= 1;
+            } else {
+                scrollToSection("#center-section");
+            }
+        }
+    };
 
-        const handleWheel = (e: WheelEvent) => {
+    const handleWheel = (e: WheelEvent) => {
+        e.preventDefault();
+        if (mtd.inertial(e)) return;
+
+        // Slower wheel sensitivity
+        const deltaY = e.deltaY * 0.3; // Reduced multiplier
+        handleIntent(deltaY);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (!isInView()) return;
+        
+        e.preventDefault();
+        
+        if (e.key === "ArrowDown" || e.key === "PageDown") {
+            handleIntent(threshold + 5); // Scroll down
+        } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+            handleIntent(-(threshold + 5)); // Scroll up
+        }
+    };
+
+    const handleSpaceButton = (e: KeyboardEvent) => {
+        if (e.key === " " && isInView()) {
             e.preventDefault();
-            if (mtd.inertial(e)) {
-                return;
-            }
+            handleIntent(threshold + 5); // Scroll down
+        }
+    };
 
-            const deltaY = e.deltaY;
-            const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY;
-            handleIntent(normalizedDelta);
-        };
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "ArrowDown" || e.key === "PageDown") {
-                if (isInView()) {
-                    e.preventDefault();
-                    disableScroll();
-                    handleIntent(60);
-                }
-            } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-                if (isInView()) {
-                    e.preventDefault();
-                    disableScroll();
-                    handleIntent(-60);
-                }
-            }
-        };
-
-        const handleSpaceButton = (e: KeyboardEvent) => {
-            if (e.key === " ") {
-                disableScroll();
-                handleIntent(60);
-            }
-        };
-
-        const handleTouchStart = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
+    const handleTouchStart = (e: TouchEvent) => {
+        if (isInView() && e.touches && e.touches.length > 0) {
+            const touch = e.touches[0];
             if (touch) {
                 touchStartY.current = touch.clientY;
                 disableScroll();
             }
-        };
+        }
+    };
 
-        const handleTouchMove = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
+    const handleTouchMove = (e: TouchEvent) => {
+        if (isInView() && e.touches && e.touches.length > 0 && touchStartY.current !== 0) {
+            // Slower touch sensitivity with momentum reduction
+            const touch = e.touches[0];
             if (touch) {
-                handleIntent(touchStartY.current - touch.clientY);
+                const deltaY = (touchStartY.current - touch.clientY) * 0.5;
+                handleIntent(deltaY);
+                touchStartY.current = touch.clientY;
             }
-        };
+        }
+    };
 
-        const handleTouchEnd = () => enableScroll();
+    const handleTouchEnd = () => {
+        touchStartY.current = 0;
+        // Don't enable scroll immediately - let the transition complete it
+    };
 
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
