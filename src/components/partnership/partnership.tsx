@@ -345,6 +345,14 @@ const Partnership = () => {
         direction='right'
         className='msaiDrawer'
         lockBackgroundScroll
+        duration={1200}
+        overlayOpacity={0.5}
+        style={{
+          width: '98vw',
+          maxWidth: '35vw',
+          background: 'transparent',
+          boxShadow: 'none',
+        }}
       >
         <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
           <div className="flex flex-row justify-between items-start">
