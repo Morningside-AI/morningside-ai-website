@@ -381,7 +381,7 @@ const Footer = () => {
                             </div> 
                         </div>
                     </div>
-                    <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80 transition-all duration-300" >Send</button>
+                    <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" >Send</button>
                 </div>
             </Drawer>
         </>
