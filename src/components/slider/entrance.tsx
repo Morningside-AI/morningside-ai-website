@@ -81,7 +81,7 @@ const Entrance = () => {
             setTimeout(() => {
                 rive2.reset();
                 rive2.play();
-            }, 300);
+            }, 450);
         }
     
         gsap.to(fromRef, {
@@ -208,7 +208,7 @@ const Entrance = () => {
                 setTimeout(() => {
                     rive2.reset();
                     rive2.play();
-                }, 300);
+                }, 450);
             }
         
             disableScroll();
