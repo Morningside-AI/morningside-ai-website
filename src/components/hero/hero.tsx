@@ -61,20 +61,20 @@ const Hero = () => {
 
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.1,
-        ease: "linear",
+        duration: 0.12,
+        ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 10);
+          }, 6);
         },
       });
     };
 
     const handleIntent = (delta: number) => {
-      if (!isHeroInView() || hasSnapped || delta <= 0) return;
+      if (!isHeroInView() || hasSnapped || delta <= 16) return;
       accumulated += delta;
       if (accumulated >= threshold) {
         disableScroll();
@@ -94,7 +94,7 @@ const Hero = () => {
       const deltaY = e.deltaY;
 
       // Normalize the delta to handle macOS touchpad sensitivity
-      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
+      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 20 : deltaY * 0.7; // Adjust 30 based on your preference for sensitivity
 
       // Handle the scroll intent (up or down) based on the normalized delta
       handleIntent(normalizedDelta);

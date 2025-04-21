@@ -174,14 +174,14 @@ const Entrance = () => {
 
             gsap.to(window, {
                 scrollTo: targetId,
-                duration: 0.1,
+                duration: 0.08,
                 ease: "power2.out",
                 overwrite: "auto",
                 onComplete: () => {
                     enableScroll();
                     setTimeout(() => {
                         scrollCooldown = false;
-                    }, 10);
+                    }, 8);
                 },
             });
         };
@@ -450,7 +450,7 @@ const Entrance = () => {
             <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-24 lg:gap-8">
                 <div>
                     <p
-                        className="text-3xl md:text-5xl lg:text-6xl text-left whitespace-pre-wrap"
+                        className="text-3xl md:text-5xl lg:text-6xl leading-tight text-left whitespace-pre-wrap"
                         ref={animTextRef}
                     >
                         <span className="white-silver-animated-text">We </span>
@@ -483,7 +483,7 @@ const Entrance = () => {
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
                     Gain Clarity
                 </p>
-                <p className="text-base font-light text-center max-w-[700px] text-[#A0A4A1]">
+                <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
                     We analyze your business operations and co-design your AI strategy.
                 </p>
             </div>
@@ -496,7 +496,7 @@ const Entrance = () => {
                     </div>
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Learn AI</p>
-                <p className="text-base font-light text-center max-w-[700px] text-[#A0A4A1]">
+                <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
                     We equip your team with the tools and knowledge to lead AI adoption.
                 </p>
             </div>
@@ -509,7 +509,7 @@ const Entrance = () => {
                     </div>
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Build Solutions</p>
-                <p className="text-base font-light text-center max-w-[700px] text-[#A0A4A1]">
+                <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
                     We design and develop custom AI systems aligned with your goals.
                 </p>
             </div>

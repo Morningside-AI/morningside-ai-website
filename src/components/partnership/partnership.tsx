@@ -95,14 +95,14 @@ const Partnership = () => {
 
       gsap.to(window, {
         scrollTo: targetId,
-        duration: 0.1,
+        duration: 0.12,
         ease: "linear",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 10);
+          }, 6);
         },
       });
     };
