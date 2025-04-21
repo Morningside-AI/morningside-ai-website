@@ -300,6 +300,7 @@ const Footer = () => {
                 onClose={toggleDrawer}
                 direction='right'
                 className='msaiDrawer'
+                lockBackgroundScroll
             >
                 <div className="flex flex-col gap-4 w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
                     <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
