@@ -1,6 +1,6 @@
 "use client";
 
-
+import "@/styles/fonts.css";
 import Step3 from "@/assets/images/animation/entrance.svg";
 import Step32 from "@/assets/images/animation/step3.svg";
 import { useEffect, useRef, useState } from "react";
@@ -9,11 +9,21 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 
+const LABELS = [
+    { title: "Introduction", index: 0 },
+    { title: "Clarity", index: 1 },
+    { title: "Learn", index: 2 },
+    { title: "Build", index: 3 },
+  ];
+  
+
 gsap.registerPlugin(ScrollToPlugin);
 
 const Entrance = () => {
     const [rive1Ready, setRive1Ready] = useState(false);
     const [rive2Ready, setRive2Ready] = useState(false);
+    const [activeStep, setActiveStep] = useState(0);
+    const entranceStepRef = useRef(0);
 
     const mtd = new MagicTrackpadDetector();
     const centerRef = useRef<HTMLDivElement>(null);
@@ -176,6 +186,7 @@ const Entrance = () => {
             if (entranceStep < contentRefs.length - 1) {
                 transition(entranceStep, entranceStep + 1, "forward");
                 entranceStep += 1;
+                setActiveStep(entranceStep);
             } else {
                 scrollToSection("#stats-section");
             }
@@ -183,10 +194,24 @@ const Entrance = () => {
             if (entranceStep > 0) {
                 transition(entranceStep, entranceStep - 1, "backward");
                 entranceStep -= 1;
+                setActiveStep(entranceStep);
             } else {
                 scrollToSection("#center-section");
             }
         }
+    };
+
+    const goToStep = (targetIndex: number) => {
+        if (!canTransition() || 
+            targetIndex === entranceStepRef.current ||
+            targetIndex < 0 || 
+            targetIndex >= contentRefs.length
+        ) return;
+
+        const direction = targetIndex > entranceStepRef.current ? "forward" : "backward";
+        transition(entranceStepRef.current, targetIndex, direction);
+        entranceStepRef.current = targetIndex;
+        setActiveStep(targetIndex);
     };
 
     const handleWheel = (e: WheelEvent) => {
@@ -286,6 +311,25 @@ const Entrance = () => {
             ref={centerRef}
             className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
         >
+            {/* Labels Column */}
+            <div className="absolute w-full md:w-fit left-1/2 md:left-2 md:top-1/2 top-4 -translate-x-1/2 md:-translate-y-1/2 flex flex-row items-center justify-center md:flex-col md:gap-2 gap-6 z-10">
+                {LABELS.map((label, index) => (
+                    <button
+                        key={label.title}
+                        
+                        className={`text-left ${index === 0 ? "hidden" : ""} transition-all duration-300 ${
+                            activeStep === index 
+                                ? "text-md text-white md:text-2xl opacity-100"
+                                : "text-md text-gray-400 md:text-xl opacity-50 hover:opacity-70"
+                        }`}
+                        style={{
+                            fontFamily: "DM-Mono-Light, monospace",
+                          }}
+                    >
+                        {label.title}
+                    </button>
+                ))}
+            </div>
             {/* Content 1 */}
             <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-24 lg:gap-8">
                 <p className="text-4xl md:text-5xl lg:text-6xl text-left">
