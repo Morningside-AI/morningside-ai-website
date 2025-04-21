@@ -350,7 +350,7 @@ useEffect(() => {
                 <div className="flex flex-row justify-between items-start">
                         <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
                         <button onClick={toggleDrawer} className="p-3 cursor-pointer">
-                            <IoMdClose size={24} />
+                            <IoMdClose size={28} />
                         </button>
                     </div>
                     <div
