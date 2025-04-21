@@ -310,10 +310,10 @@ const Entrance = () => {
                             guiding companies<br />
                         </span>
                         <span className="white-silver-animated-text">
-                            through three&nbsp;
+                            through these<br />
                         </span>
                         <span className="white-silver-animated-text">
-                            core stages
+                            three core stages
                         </span>
                     </p>
                 </div>
