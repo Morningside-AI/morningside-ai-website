@@ -302,37 +302,37 @@ const Footer = () => {
                 className='msaiDrawer'
             >
                 <div className="flex flex-col gap-4 w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
-                    <h2 className="text-2xl font-bold">Get In Touch</h2>
+                    <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
                     <div className="w-full flex flex-col items-center gap-6 overflow-y-auto">
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-1/2 flex flex-col gap-2">
-                                <p>Name</p>
+                                <p className="text-md font-bold">What is your name?</p>
                                 <input type="text" placeholder="Name" />
                             </div>
                             <div className="w-1/2 flex flex-col gap-2">
-                                <p>Email</p>
+                                <p className="text-md font-bold">What is your email?</p>
                                 <input type="email" placeholder="Email" />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
-                                <p>Role</p>
+                                <p className="text-md font-bold">What is your role in the company?</p>
                                 <input type="text" placeholder="Enter role" />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-1/2 flex flex-col gap-2">
-                                <p>Company Name</p>
+                                <p className="text-md font-bold">Company Name</p>
                                 <input type="text" placeholder="Enter company name" />
                             </div>
                             <div className="w-1/2 flex flex-col gap-2">
-                                <p>Company Website</p>
+                                <p className="text-md font-bold">Company Website</p>
                                 <input type="text" placeholder="Enter company website" />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-1/2 flex flex-col gap-2">
-                                <p>Company Size</p>
+                                <p className="text-md font-bold">Company Size</p>
                                 <select name="company-size" id="company-size">
                                     <option value="1-10">Less than 20</option>
                                     <option value="11-50">20-50</option>
@@ -342,7 +342,7 @@ const Footer = () => {
                                 </select>
                             </div>
                             <div className="w-1/2 flex flex-col gap-2">
-                                <p>Company&apos;s Annual Revenue</p>
+                                <p className="text-md font-bold">Company&apos;s Annual Revenue</p>
                                 <select name="company-revenue" id="company-revenue">
                                     <option value="1-10">Less than $100K</option>
                                     <option value="11-50">$100K-$500K</option>
@@ -354,7 +354,7 @@ const Footer = () => {
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
-                                <p>Project Budget</p>
+                                <p className="text-md font-bold">Project budget</p>
                                 <select name="project-budget" id="project-budget">
                                     <option value="1-10">Less than $10K</option>
                                     <option value="11-50">$10K-$50K</option>
@@ -365,7 +365,7 @@ const Footer = () => {
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
-                                <p>What services are you interested in?</p>
+                                <p className="text-md font-bold">What services are you interested in?</p>
                                 <select name="project-goals" id="project-goals">
                                     <option value="1-10">Getting clarity and identifying AI opportunities</option>
                                     <option value="11-50">Educating your team on AI</option>
@@ -375,9 +375,9 @@ const Footer = () => {
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
-                                <p>Message</p>
-                                <textarea name="message" id="message" placeholder="Enter message" />
-                            </div>
+                                <p className="text-md font-bold">Message</p>
+                                <textarea rows={5} name="message" id="message" placeholder="Enter message" />
+                            </div> 
                         </div>
                     </div>
                     <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80 transition-all duration-300" >Send</button>
