@@ -166,9 +166,9 @@ const Slide1 = () => {
 
         // Animate main heading and subtext with GSAP (fade in from bottom)
         if (headingRef.current && subTextRef.current) {
-            gsap.set(headingRef.current, { opacity: 0, y: 80 });
-            gsap.set(subTextRef.current, { opacity: 0, y: 60 });
-            gsap.set(step3Ref.current, { opacity: 0, y: 60, scale: 0.5 });  // Initial state of the SVG
+            gsap.set(headingRef.current, { opacity: 0, y: 0, x: 120 });
+            gsap.set(subTextRef.current, { opacity: 0, y: 0, x: 120 });
+            gsap.set(step3Ref.current, { opacity: 0, y: 0, x: 120, scale: 0.5 });  // Initial state of the SVG
 
             ScrollTrigger.create({
                 trigger: centerRef.current,
@@ -179,12 +179,14 @@ const Slide1 = () => {
                     gsap.to(headingRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.2,
                         ease: "power4.out",
                     });
                     gsap.to(subTextRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.4,
                         ease: "power4.out",
                         delay: 0.4,
@@ -194,6 +196,7 @@ const Slide1 = () => {
                     gsap.to(step3Ref.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         scale: 1,
                         duration: 1.4,
                         ease: "power4.out",
@@ -204,12 +207,14 @@ const Slide1 = () => {
                     gsap.to(headingRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.2,
                         ease: "power4.out",
                     });
                     gsap.to(subTextRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.4,
                         ease: "power4.out",
                         delay: 0.4,
@@ -219,6 +224,7 @@ const Slide1 = () => {
                     gsap.to(step3Ref.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         scale: 1,
                         duration: 1.4,
                         ease: "power4.out",
@@ -228,14 +234,16 @@ const Slide1 = () => {
                     // Move and scale up the SVG (fade out and move towards the bottom)
                     gsap.to([headingRef.current, subTextRef.current], {
                         opacity: 0,
-                        y: 80,
+                        y: 0,
+                        x: 120,
                         duration: 0.6,
                         ease: "power2.inOut",
                     });
 
                     gsap.to(step3Ref.current, {
                         opacity: 0,
-                        y: 200,  // Move towards the bottom
+                        y: 0,  // Move towards the bottom
+                        x: 120,
                         scale: 1.4,  // Scale up by 40%
                         duration: 1.2,
                         ease: "power2.inOut",
@@ -245,14 +253,16 @@ const Slide1 = () => {
                     // Move and scale up the SVG (fade out and move towards the bottom)
                     gsap.to([headingRef.current, subTextRef.current], {
                         opacity: 0,
-                        y: 80,
+                        y: 0,
+                        x: 120,
                         duration: 0.6,
                         ease: "power2.inOut",
                     });
 
                     gsap.to(step3Ref.current, {
                         opacity: 0,
-                        y: 200,  // Move towards the bottom
+                        y: 0,  // Move towards the bottom
+                        x: 120,
                         scale: 1.4,  // Scale up by 40%
                         duration: 1.2,
                         ease: "power2.inOut",
@@ -271,7 +281,7 @@ const Slide1 = () => {
             observer.disconnect();
             enableScroll();
         };
-    }, [mtd]);
+    }, []);
 
     return (
         <div

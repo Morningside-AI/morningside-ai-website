@@ -252,7 +252,7 @@ const Slide2 = () => {
             observer.disconnect();
             enableScroll();
         };
-    }, [mtd]); // Empty dependency array to run once on mount
+    }, [rive]); // Empty dependency array to run once on mount
 
     return (
         <div

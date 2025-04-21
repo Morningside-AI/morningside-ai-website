@@ -250,7 +250,7 @@ const Slide2 = () => {
             observer.disconnect();
             enableScroll();
         };
-    }, [mtd]);
+    }, [rive]);
 
     return (
         <div

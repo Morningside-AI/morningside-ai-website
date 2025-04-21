@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
-import Step2 from "@/assets/images/animation/entrance.svg"; // Import your SVG
+import Step3 from "@/assets/images/animation/entrance.svg";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
@@ -16,7 +16,7 @@ const Entrance = () => {
     const subTextRef = useRef<HTMLParagraphElement>(null);
     const textRef = useRef<HTMLHeadingElement>(null);
     const boxRef = useRef<HTMLDivElement>(null);
-    const step2Ref = useRef<SVGElement>(null); // Correct reference for SVG
+    const step3Ref = useRef<SVGElement>(null); // Reference for the Step3 SVG element
     const touchStartY = useRef(0);
 
     useEffect(() => {
@@ -93,6 +93,7 @@ const Entrance = () => {
 
             // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
             if (mtd.inertial(e)) {
+                // If it's an inertial scroll event, we return early and don't process the scroll
                 return;
             }
 
@@ -163,13 +164,12 @@ const Entrance = () => {
         );
         if (centerRef.current) observer.observe(centerRef.current);
 
-        // Set initial state
-        if (headingRef.current && subTextRef.current && step2Ref.current) {
-            gsap.set(headingRef.current, { opacity: 0, y: 80 });
-            gsap.set(subTextRef.current, { opacity: 0, y: 60 });
-            gsap.set(step2Ref.current, { opacity: 0, y: 60, rotation: 0 }); // Initial state of the SVG
+        // Animate main heading and subtext with GSAP (fade in from bottom)
+        if (headingRef.current && subTextRef.current) {
+            gsap.set(headingRef.current, { opacity: 0, y: 0, x: -120 });
+            gsap.set(subTextRef.current, { opacity: 0, y: 0, x: -120 });
+            gsap.set(step3Ref.current, { opacity: 0, y: 0, x: -120, scale: 0.5 });  // Initial state of the SVG
 
-            // ScrollTrigger setup
             ScrollTrigger.create({
                 trigger: centerRef.current,
                 start: "top center",
@@ -179,79 +179,90 @@ const Entrance = () => {
                     gsap.to(headingRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.2,
                         ease: "power4.out",
                     });
                     gsap.to(subTextRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.4,
                         ease: "power4.out",
                         delay: 0.4,
                     });
 
-                    // Animate Step2 SVG (fade-in from bottom, then rotate -25 degrees)
-                    gsap.to(step2Ref.current, {
+                    // Animate Step3 SVG (fade-in from bottom)
+                    gsap.to(step3Ref.current, {
                         opacity: 1,
                         y: 0,
-                        rotation: -25,
+                        x: 0,
+                        scale: 1,
                         duration: 1.4,
                         ease: "power4.out",
                     });
                 },
                 onEnterBack: () => {
+                    // Fade in and slide up text
                     gsap.to(headingRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.2,
                         ease: "power4.out",
                     });
                     gsap.to(subTextRef.current, {
                         opacity: 1,
                         y: 0,
+                        x: 0,
                         duration: 1.4,
                         ease: "power4.out",
                         delay: 0.4,
                     });
 
-                    // Animate Step2 SVG (fade-in from bottom, then rotate -25 degrees)
-                    gsap.to(step2Ref.current, {
+                    // Animate Step3 SVG (fade-in from bottom)
+                    gsap.to(step3Ref.current, {
                         opacity: 1,
                         y: 0,
-                        rotation: -25,
+                        x: 0,
+                        scale: 1,
                         duration: 1.4,
                         ease: "power4.out",
                     });
                 },
                 onLeave: () => {
+                    // Move and scale up the SVG (fade out and move towards the bottom)
                     gsap.to([headingRef.current, subTextRef.current], {
                         opacity: 0,
-                        y: 80,
+                        y: 0,
+                        x: -120,
                         duration: 0.6,
                         ease: "power2.inOut",
                     });
 
-                    gsap.to(step2Ref.current, {
+                    gsap.to(step3Ref.current, {
                         opacity: 0,
-                        y: 200,  // Move towards the bottom
-                        x: "50%",  // Move to horizontal center
+                        y: 0,  // Move towards the bottom
+                        x: -120,
                         scale: 1.4,  // Scale up by 40%
                         duration: 1.2,
                         ease: "power2.inOut",
                     });
                 },
                 onLeaveBack: () => {
+                    // Move and scale up the SVG (fade out and move towards the bottom)
                     gsap.to([headingRef.current, subTextRef.current], {
                         opacity: 0,
-                        y: 80,
+                        y: 0,
+                        x: -120,
                         duration: 0.6,
                         ease: "power2.inOut",
                     });
 
-                    gsap.to(step2Ref.current, {
+                    gsap.to(step3Ref.current, {
                         opacity: 0,
-                        y: 200,  // Move towards the bottom
-                        x: "50%",  // Move to horizontal center
+                        y: 0,  // Move towards the bottom
+                        x: -120,
                         scale: 1.4,  // Scale up by 40%
                         duration: 1.2,
                         ease: "power2.inOut",
@@ -278,9 +289,9 @@ const Entrance = () => {
             ref={centerRef}
             className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
         >
-            <div className="w-full flex flex-col items-start justify-start gap-24 lg:gap-8">
-                <div ref={textRef} className="text-content flex flex-col items-start justify-start ">
-                    <p className="hidden md:block text-4xl md:text-5xl lg:text-6xl text-left">
+           <div className="w-full flex flex-col items-start justify-start gap-24 lg:gap-8">
+                <div ref={textRef} className="text-content flex flex-col items-start justify-start">
+                <p className="hidden md:block text-4xl md:text-5xl lg:text-6xl text-left" ref={headingRef}>
                         <span className="white-silver-animated-text">
                             We spend our days guiding<br />
                         </span>
@@ -291,7 +302,7 @@ const Entrance = () => {
                             three core stages
                         </span>
                     </p>
-                    <p className="block md:hidden text-4xl md:text-5xl lg:text-6xl text-left">
+                    <p className="block md:hidden text-4xl md:text-5xl lg:text-6xl text-left" ref={subTextRef}>
                         <span className="white-silver-animated-text">
                             We spend our days <br />
                         </span>
@@ -299,7 +310,7 @@ const Entrance = () => {
                             guiding companies<br />
                         </span>
                         <span className="white-silver-animated-text">
-                            through three
+                            through three&nbsp;
                         </span>
                         <span className="white-silver-animated-text">
                             core stages
@@ -307,7 +318,7 @@ const Entrance = () => {
                     </p>
                 </div>
                 <div ref={boxRef} className="w-full flex flex-row items-center justify-center lg:justify-end">
-                    <Step2 ref={step2Ref} className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
+                    <Step3 ref={step3Ref} className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
                 </div>
             </div>
         </div>
