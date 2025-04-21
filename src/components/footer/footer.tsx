@@ -100,7 +100,7 @@ const Footer = () => {
                     enableScroll();
                     setTimeout(() => {
                         scrollCooldown = false;
-                    }, 100);
+                    }, 50);
                 },
             });
         };

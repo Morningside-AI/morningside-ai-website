@@ -174,14 +174,14 @@ const Entrance = () => {
 
             gsap.to(window, {
                 scrollTo: targetId,
-                duration: 0.5,
+                duration: 0.2,
                 ease: "power2.out",
                 overwrite: "auto",
                 onComplete: () => {
                     enableScroll();
                     setTimeout(() => {
                         scrollCooldown = false;
-                    }, 100);
+                    }, 50);
                 },
             });
         };
