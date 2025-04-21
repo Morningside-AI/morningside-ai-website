@@ -18,6 +18,7 @@ const Footer = () => {
     const footerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
     const drawerContentRef = useRef<HTMLDivElement>(null);
+    const textRef = useRef<HTMLParagraphElement>(null);
 
 
 
@@ -210,6 +211,7 @@ const Footer = () => {
 
         const contactEl = document.querySelector(".footer-contact");
         const followEl = document.querySelector(".footer-follow");
+        const textEl = textRef.current;
 
         if (contactEl && followEl && footerRef.current) {
             gsap.set(contactEl, { opacity: 0, y: 60 });
@@ -263,6 +265,66 @@ const Footer = () => {
             };
         }
 
+        
+
+        // Replace the text animation code with this
+        if (textEl) {
+            const words = textEl.querySelectorAll("span");
+
+            // Reset all animations first
+            gsap.killTweensOf(words);
+
+            // Set initial state
+            gsap.set(words, {
+                opacity: 0,
+                y: 100,
+                rotateX: 100,
+                transformOrigin: "bottom center",
+                overwrite: "auto"
+            });
+
+            // Create scroll trigger
+            ScrollTrigger.create({
+                id: "footer-text",
+                trigger: footerRef.current,
+                start: "top 80%",
+                end: "bottom top",
+                toggleActions: "play none none reverse",
+                onEnter: () => animateTextIn(words),
+                onEnterBack: () => animateTextIn(words),
+                onLeave: () => animateTextOut(words),
+                onLeaveBack: () => animateTextOut(words)
+            });
+
+            // Refresh ScrollTrigger after setup
+            ScrollTrigger.refresh();
+        }
+
+        // Add these outside the useEffect
+        const animateTextIn = (words: NodeListOf<Element>) => {
+            const tl = gsap.timeline();
+            tl.to(words, {
+                opacity: 1,
+                y: 0,
+                rotateX: 0,
+                ease: "power4.out",
+                duration: 1.2,
+                stagger: {
+                    each: 0.15,
+                    from: "start"
+                }
+            });
+        };
+
+        const animateTextOut = (words: NodeListOf<Element>) => {
+            gsap.to(words, {
+                opacity: 0,
+                y: 60,
+                duration: 0.6,
+                ease: "power2.inOut"
+            });
+        };
+
         return () => {
             window.removeEventListener("wheel", handleWheel);
             window.removeEventListener("keydown", handleKeyDown);
@@ -283,21 +345,17 @@ const Footer = () => {
                 style={{ touchAction: "auto", pointerEvents: "auto" }}
                 className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden"
             >
-                <div className="w-full flex flex-row justify-between">
-                    <p className="lg:text-6xl text-5xl text-left hidden lg:block">
-                        <span className="white-silver-animated-text">
-                            We look forward to helping<br />
-                        </span>
-                        <span className="green-text">&nbsp;your business</span>
-                    </p>
-                    <p className="lg:text-6xl text-5xl text-leftblock lg:hidden">
-                        <span className="white-silver-animated-text">
-                            We look forward to<br />
-                        </span>
-                        <span className="white-silver-animated-text">
-                            helping<br />
-                        </span>
-                        <span className="green-text">your business</span>
+                <div className="w-full flex flex-row justify-between" ref={textRef}>
+                    <p className="lg:text-6xl text-5xl text-left">
+                        <span className="white-silver-animated-text">We&nbsp;</span>
+                        <span className="white-silver-animated-text">look&nbsp;</span>
+                        <span className="white-silver-animated-text">forward&nbsp;</span>
+                        <br className="block lg:hidden" />
+                        <span className="white-silver-animated-text">to&nbsp;</span>
+                        <span className="white-silver-animated-text">helping&nbsp;</span>
+                        <br />
+                        <span className="green-text">your&nbsp;</span>
+                        <span className="green-text">business</span>
                     </p>
                     <Logo className="w-48 h-10 mt-4 hidden lg:block" />
                 </div>

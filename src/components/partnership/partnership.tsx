@@ -238,9 +238,9 @@ const Partnership = () => {
           y: 0,
           rotateX: 0,
           ease: "linear",
-          duration: 1.2,
+          duration: 0.5,
           stagger: {
-            each: 0.2,
+            each: 0.12,
             from: "start",
           },
         }).fromTo(
@@ -251,10 +251,10 @@ const Partnership = () => {
           },
           {
             rotateX: 0,
-            duration: 1.5,
+            duration: 0.5,
             ease: "power4.out",
             stagger: {
-              each: 0.15,
+              each: 0.12,
               from: "start",
             },
           },

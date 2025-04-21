@@ -6,6 +6,7 @@ import Step32 from "@/assets/images/animation/step3.svg";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 
@@ -14,10 +15,10 @@ const LABELS = [
     { title: "Clarity", index: 1 },
     { title: "Learn", index: 2 },
     { title: "Build", index: 3 },
-  ];
-  
+];
 
-gsap.registerPlugin(ScrollToPlugin);
+
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 const Entrance = () => {
     const [rive1Ready, setRive1Ready] = useState(false);
@@ -27,6 +28,7 @@ const Entrance = () => {
 
     const mtd = new MagicTrackpadDetector();
     const centerRef = useRef<HTMLDivElement>(null);
+    const animTextRef = useRef<HTMLParagraphElement>(null);
     const contentRefs = [
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
@@ -34,7 +36,7 @@ const Entrance = () => {
         useRef<HTMLDivElement>(null),
     ];
     const touchStartY = useRef(0);
-    
+
 
     const { rive: rive1, RiveComponent: LearnRive } = useRive({
         src: "/rive/animation1.riv",
@@ -60,214 +62,279 @@ const Entrance = () => {
 
     useEffect(() => {
         const threshold = 30; // Increased threshold for better control
-    let accumulated = 0;
-    let hasSnapped = false;
-    let scrollLocked = false;
-    let scrollCooldown = false;
-    let entranceStep = 0;
-    let lastTransitionTime = 0;
-    const TRANSITION_COOLDOWN = 400; // Minimum time between transitions in ms
+        let accumulated = 0;
+        let hasSnapped = false;
+        let scrollLocked = false;
+        let scrollCooldown = false;
+        let entranceStep = 0;
+        let lastTransitionTime = 0;
+        const TRANSITION_COOLDOWN = 400; // Minimum time between transitions in ms
 
-    const preventDefault = (e: TouchEvent): void => e.preventDefault();
+        const preventDefault = (e: TouchEvent): void => e.preventDefault();
 
-    const disableScroll = () => {
-        if (!scrollLocked) {
-            scrollLocked = true;
-            document.body.style.overflow = "hidden";
-            document.documentElement.style.overflow = "hidden";
-            document.body.style.touchAction = "none";
-            document.documentElement.style.touchAction = "none";
-            window.addEventListener("touchmove", preventDefault, { passive: false });
-        }
-    };
+        const disableScroll = () => {
+            if (!scrollLocked) {
+                scrollLocked = true;
+                document.body.style.overflow = "hidden";
+                document.documentElement.style.overflow = "hidden";
+                document.body.style.touchAction = "none";
+                document.documentElement.style.touchAction = "none";
+                window.addEventListener("touchmove", preventDefault, { passive: false });
+            }
+        };
 
-    const enableScroll = () => {
-        if (scrollLocked) {
-            scrollLocked = false;
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-            document.body.style.touchAction = "";
-            document.documentElement.style.touchAction = "";
-            window.removeEventListener("touchmove", preventDefault);
-        }
-    };
+        const enableScroll = () => {
+            if (scrollLocked) {
+                scrollLocked = false;
+                document.body.style.overflow = "";
+                document.documentElement.style.overflow = "";
+                document.body.style.touchAction = "";
+                document.documentElement.style.touchAction = "";
+                window.removeEventListener("touchmove", preventDefault);
+            }
+        };
 
-    const isInView = () => {
-        const el = centerRef.current;
-        if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
-    };
+        const isInView = () => {
+            const el = centerRef.current;
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+        };
 
-    const scrollToSection = (targetId: string) => {
-        if (scrollCooldown) return;
-        scrollCooldown = true;
-        hasSnapped = true;
-        accumulated = 0;
+        const scrollToSection = (targetId: string) => {
+            if (scrollCooldown) return;
+            scrollCooldown = true;
+            hasSnapped = true;
+            accumulated = 0;
 
-        gsap.to(window, {
-            scrollTo: targetId,
-            duration: 0.5,
-            ease: "power2.out",
-            overwrite: "auto",
-            onComplete: () => {
-                enableScroll();
-                setTimeout(() => {
-                    scrollCooldown = false;
-                }, 100);
-            },
-        });
-    };
+            gsap.to(window, {
+                scrollTo: targetId,
+                duration: 0.5,
+                ease: "power2.out",
+                overwrite: "auto",
+                onComplete: () => {
+                    enableScroll();
+                    setTimeout(() => {
+                        scrollCooldown = false;
+                    }, 100);
+                },
+            });
+        };
 
-    const canTransition = () => {
-        return Date.now() - lastTransitionTime > TRANSITION_COOLDOWN;
-    };
+        const canTransition = () => {
+            return Date.now() - lastTransitionTime > TRANSITION_COOLDOWN;
+        };
 
-    const transition = (
-        fromIndex: number,
-        toIndex: number,
-        direction: "forward" | "backward"
-    ) => {
-        if (!canTransition()) return;
-        
-        lastTransitionTime = Date.now();
-        const fromRef = contentRefs[fromIndex]?.current;
-        const toRef = contentRefs[toIndex]?.current;
-        if (!fromRef || !toRef) return;
+        const transition = (
+            fromIndex: number,
+            toIndex: number,
+            direction: "forward" | "backward"
+        ) => {
+            if (!canTransition()) return;
 
-        disableScroll();
-        hasSnapped = true;
-        accumulated = 0;
+            lastTransitionTime = Date.now();
+            const fromRef = contentRefs[fromIndex]?.current;
+            const toRef = contentRefs[toIndex]?.current;
+            if (!fromRef || !toRef) return;
 
-        gsap.to(fromRef, {
-            opacity: 0,
-            x: direction === "forward" ? -100 : 100,
-            duration: 0.8, // Slightly longer duration
-            ease: "power2.out",
-            onComplete: () => {
-                fromRef.style.display = "none";
-                toRef.style.display = "flex";
+            disableScroll();
+            hasSnapped = true;
+            accumulated = 0;
 
-                if (rive1Ready && rive1) {
-                    rive1.reset();
-                    rive1.play();
-                }
-                if (rive2Ready && rive2) {
-                    rive2.reset();
-                    rive2.play();
-                }
+            gsap.to(fromRef, {
+                opacity: 0,
+                x: direction === "forward" ? -100 : 100,
+                duration: 0.8, // Slightly longer duration
+                ease: "power2.out",
+                onComplete: () => {
+                    fromRef.style.display = "none";
+                    toRef.style.display = "flex";
 
-                gsap.fromTo(
-                    toRef,
-                    { opacity: 0, x: direction === "forward" ? 150 : -150 },
-                    {
-                        opacity: 1,
-                        x: 0,
-                        duration: 0.8,
-                        ease: "power2.out",
-                        onComplete: () => {
-                            hasSnapped = false;
-                            setTimeout(() => {
-                                enableScroll();
-                            }, 300);
-                        },
+                    if (rive1Ready && rive1) {
+                        rive1.reset();
+                        rive1.play();
                     }
-                );
-            },
-        });
-    };
+                    if (rive2Ready && rive2) {
+                        rive2.reset();
+                        rive2.play();
+                    }
 
-    const handleIntent = (delta: number) => {
-        if (!isInView() || hasSnapped || !canTransition()) return;
-        
-        accumulated += delta;
+                    gsap.fromTo(
+                        toRef,
+                        { opacity: 0, x: direction === "forward" ? 150 : -150 },
+                        {
+                            opacity: 1,
+                            x: 0,
+                            duration: 0.8,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                hasSnapped = false;
+                                setTimeout(() => {
+                                    enableScroll();
+                                }, 300);
+                            },
+                        }
+                    );
+                },
+            });
+        };
 
-        if (accumulated >= threshold) {
-            if (entranceStep < contentRefs.length - 1) {
-                transition(entranceStep, entranceStep + 1, "forward");
-                entranceStep += 1;
-                setActiveStep(entranceStep);
-            } else {
-                scrollToSection("#stats-section");
+        const handleIntent = (delta: number) => {
+            if (!isInView() || hasSnapped || !canTransition()) return;
+
+            accumulated += delta;
+
+            if (accumulated >= threshold) {
+                if (entranceStep < contentRefs.length - 1) {
+                    transition(entranceStep, entranceStep + 1, "forward");
+                    entranceStep += 1;
+                    setActiveStep(entranceStep);
+                } else {
+                    scrollToSection("#stats-section");
+                }
+            } else if (accumulated <= -threshold) {
+                if (entranceStep > 0) {
+                    transition(entranceStep, entranceStep - 1, "backward");
+                    entranceStep -= 1;
+                    setActiveStep(entranceStep);
+                } else {
+                    scrollToSection("#center-section");
+                }
             }
-        } else if (accumulated <= -threshold) {
-            if (entranceStep > 0) {
-                transition(entranceStep, entranceStep - 1, "backward");
-                entranceStep -= 1;
-                setActiveStep(entranceStep);
-            } else {
-                scrollToSection("#center-section");
-            }
-        }
-    };
+        };
 
-    const goToStep = (targetIndex: number) => {
-        if (!canTransition() || 
-            targetIndex === entranceStepRef.current ||
-            targetIndex < 0 || 
-            targetIndex >= contentRefs.length
-        ) return;
+        const goToStep = (targetIndex: number) => {
+            if (!canTransition() ||
+                targetIndex === entranceStepRef.current ||
+                targetIndex < 0 ||
+                targetIndex >= contentRefs.length
+            ) return;
 
-        const direction = targetIndex > entranceStepRef.current ? "forward" : "backward";
-        transition(entranceStepRef.current, targetIndex, direction);
-        entranceStepRef.current = targetIndex;
-        setActiveStep(targetIndex);
-    };
+            const direction = targetIndex > entranceStepRef.current ? "forward" : "backward";
+            transition(entranceStepRef.current, targetIndex, direction);
+            entranceStepRef.current = targetIndex;
+            setActiveStep(targetIndex);
+        };
 
-    const handleWheel = (e: WheelEvent) => {
-        e.preventDefault();
-        if (mtd.inertial(e)) return;
-
-        // Slower wheel sensitivity
-        const deltaY = e.deltaY * 0.3; // Reduced multiplier
-        handleIntent(deltaY);
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (!isInView()) return;
-        
-        e.preventDefault();
-        
-        if (e.key === "ArrowDown" || e.key === "PageDown") {
-            handleIntent(threshold + 5); // Scroll down
-        } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-            handleIntent(-(threshold + 5)); // Scroll up
-        }
-    };
-
-    const handleSpaceButton = (e: KeyboardEvent) => {
-        if (e.key === " " && isInView()) {
+        const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-            handleIntent(threshold + 5); // Scroll down
-        }
-    };
+            if (mtd.inertial(e)) return;
 
-    const handleTouchStart = (e: TouchEvent) => {
-        if (isInView() && e.touches && e.touches.length > 0) {
-            const touch = e.touches[0];
-            if (touch) {
-                touchStartY.current = touch.clientY;
-                disableScroll();
+            // Slower wheel sensitivity
+            const deltaY = e.deltaY * 0.3; // Reduced multiplier
+            handleIntent(deltaY);
+        };
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!isInView()) return;
+
+            e.preventDefault();
+
+            if (e.key === "ArrowDown" || e.key === "PageDown") {
+                handleIntent(threshold + 5); // Scroll down
+            } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+                handleIntent(-(threshold + 5)); // Scroll up
+            }
+        };
+
+        const handleSpaceButton = (e: KeyboardEvent) => {
+            if (e.key === " " && isInView()) {
+                e.preventDefault();
+                handleIntent(threshold + 5); // Scroll down
+            }
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            if (isInView() && e.touches && e.touches.length > 0) {
+                const touch = e.touches[0];
+                if (touch) {
+                    touchStartY.current = touch.clientY;
+                    disableScroll();
+                }
+            }
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (isInView() && e.touches && e.touches.length > 0 && touchStartY.current !== 0) {
+                // Slower touch sensitivity with momentum reduction
+                const touch = e.touches[0];
+                if (touch) {
+                    const deltaY = (touchStartY.current - touch.clientY) * 0.5;
+                    handleIntent(deltaY);
+                    touchStartY.current = touch.clientY;
+                }
+            }
+        };
+
+        const handleTouchEnd = () => {
+            touchStartY.current = 0;
+            // Don't enable scroll immediately - let the transition complete it
+        };
+
+        const headingEl = animTextRef.current;
+
+        if (headingEl) {
+            const words = headingEl.querySelectorAll("span");
+
+            // Set initial state
+            gsap.set(words, {
+                opacity: 0,
+                y: 100,
+                rotateX: 100,
+                transformOrigin: "bottom center"
+            });
+
+            ScrollTrigger.create({
+                trigger: centerRef.current,
+                start: "top center",
+                end: "bottom top",
+                toggleActions: "play none none reverse",
+                onEnter: animateIn,
+                onEnterBack: animateIn,
+                onLeave: animateOut,
+                onLeaveBack: animateOut
+            });
+
+            function animateIn() {
+                const tl = gsap.timeline();
+                tl.to(words, {
+                    opacity: 1,
+                    y: 0,
+                    rotateX: 0,
+                    ease: "linear",
+                    duration: 0.5,
+                    stagger: {
+                        each: 0.12,
+                        from: "start"
+                    }
+                }).fromTo(
+                    words,
+                    {
+                        rotateX: 100,
+                        transformOrigin: "bottom center"
+                    },
+                    {
+                        rotateX: 0,
+                        duration: 0.5,
+                        ease: "power4.out",
+                        stagger: {
+                            each: 0.12,
+                            from: "start"
+                        }
+                    },
+                    "<" // run in parallel with opacity/y
+                );
+            }
+
+            function animateOut() {
+                gsap.to(words, {
+                    opacity: 0,
+                    y: 60,
+                    duration: 0.6,
+                    ease: "power2.inOut"
+                });
             }
         }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-        if (isInView() && e.touches && e.touches.length > 0 && touchStartY.current !== 0) {
-            // Slower touch sensitivity with momentum reduction
-            const touch = e.touches[0];
-            if (touch) {
-                const deltaY = (touchStartY.current - touch.clientY) * 0.5;
-                handleIntent(deltaY);
-                touchStartY.current = touch.clientY;
-            }
-        }
-    };
-
-    const handleTouchEnd = () => {
-        touchStartY.current = 0;
-        // Don't enable scroll immediately - let the transition complete it
-    };
 
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
@@ -316,15 +383,14 @@ const Entrance = () => {
                 {LABELS.map((label, index) => (
                     <button
                         key={label.title}
-                        
-                        className={`text-left ${index === 0 ? "hidden" : ""} transition-all duration-300 ${
-                            activeStep === index 
+
+                        className={`text-left ${index === 0 ? "hidden" : ""} transition-all duration-300 ${activeStep === index
                                 ? "text-lg text-white md:text-2xl opacity-100"
                                 : "text-lg text-gray-400 md:text-xl opacity-50 hover:opacity-70"
-                        }`}
+                            }`}
                         style={{
                             fontFamily: "DM-Mono-Light, monospace",
-                          }}
+                        }}
                     >
                         {label.title}
                     </button>
@@ -332,11 +398,29 @@ const Entrance = () => {
             </div>
             {/* Content 1 */}
             <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-24 lg:gap-8">
-                <p className="text-4xl md:text-5xl lg:text-6xl text-left">
-                    We spend our days guiding<br />
-                    companies through these<br />
-                    three core stages
-                </p>
+                <div>
+                    <p
+                        className="text-5xl md:text-6xl lg:text-7xl text-left whitespace-pre-wrap"
+                        ref={animTextRef}
+                    >
+                        <span className="white-silver-animated-text">We </span>
+                        <span className="white-silver-animated-text1">spend </span>
+                        <span className="white-silver-animated-text2">our </span>
+                        <span className="white-silver-animated-text2">days </span>
+                        <br className="block lg:hidden" />
+                        <span className="white-silver-animated-text1">guiding </span>
+                        <br className="hidden lg:block" />
+                        <span className="white-silver-animated-text">companies </span>
+                        <br className="block lg:hidden" />
+                        <span className="white-silver-animated-text1">through </span>
+                        <span className="white-silver-animated-text2">these </span>
+                        <br className="hidden lg:block" />
+                        <span className="white-silver-animated-text1">three </span>
+                        <br className="block lg:hidden" />
+                        <span className="white-silver-animated-text">core </span>
+                        <span className="white-silver-animated-text1">stages</span>
+                    </p>
+                </div>
                 <div className="w-full flex justify-center lg:justify-end">
                     <Step3 className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
                 </div>

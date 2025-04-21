@@ -135,6 +135,71 @@ const Center = () => {
 
     const handleTouchEnd = () => enableScroll();
 
+    const headingEl = headingRef.current;
+
+    if (headingEl) {
+      const words = headingEl.querySelectorAll("span");
+
+      // Set initial state
+      gsap.set(words, {
+        opacity: 0,
+        y: 100,
+        rotateX: 100,
+        transformOrigin: "bottom center"
+      });
+
+      ScrollTrigger.create({
+        trigger: centerRef.current,
+        start: "top center",
+        end: "bottom top",
+        toggleActions: "play none none reverse",
+        onEnter: animateIn,
+        onEnterBack: animateIn,
+        onLeave: animateOut,
+        onLeaveBack: animateOut
+      });
+
+      function animateIn() {
+        const tl = gsap.timeline();
+        tl.to(words, {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          ease: "linear",
+          duration: 0.5,
+          stagger: {
+            each: 0.12,
+            from: "start"
+          }
+        }).fromTo(
+          words,
+          {
+            rotateX: 100,
+            transformOrigin: "bottom center"
+          },
+          {
+            rotateX: 0,
+            duration: 0.5,
+            ease: "power4.out",
+            stagger: {
+              each: 0.12,
+              from: "start"
+            }
+          },
+          "<" // run in parallel with opacity/y
+        );
+      }
+
+      function animateOut() {
+        gsap.to(words, {
+          opacity: 0,
+          y: 60,
+          duration: 0.6,
+          ease: "power2.inOut"
+        });
+      }
+    }
+
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keydown", handleSpaceButton);
@@ -171,23 +236,23 @@ const Center = () => {
       ref={centerRef}
       className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
     >
-      <div ref={headingRef}>
-        <p className="hidden md:block text-5xl md:text-6xl lg:text-7xl text-center">
-          <span className="white-silver-animated-text">
-            We put AI at the centre of<br />
-          </span>
-          <span className="green-text">everything</span>
-          <span className="white-silver-animated-text1">&nbsp;we do</span>
-        </p>
-        <p className="block md:hidden text-5xl md:text-6xl lg:text-7xl text-center -mt-4">
-          <span className="white-silver-animated-text">
-            We put AI<br />
-          </span>
-          <span className="white-silver-animated-text1">
-            at the center of<br />
-          </span>
-          <span className="green-text">everything</span>
-          <span className="white-silver-animated-text2">&nbsp;we do</span>
+      <div>
+        <p
+          className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap"
+          ref={headingRef}
+        >
+          <span className="white-silver-animated-text">We </span>
+          <span className="white-silver-animated-text1">put </span>
+          <span className="white-silver-animated-text2">AI </span>
+          <br className="block lg:hidden" />
+          <span className="white-silver-animated-text2">at </span>
+          <span className="white-silver-animated-text1">the </span>
+          <span className="white-silver-animated-text">center </span>
+          <span className="white-silver-animated-text1">of </span>
+          <br />
+          <span className="green-text">everything </span>
+          <span className="white-silver-animated-text2">we </span>
+          <span className="white-silver-animated-text">do</span>
         </p>
       </div>
       <p

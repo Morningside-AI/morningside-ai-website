@@ -37,6 +37,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 .green-text {
   color: #469c71;
+  display: inline-block;
 }
 
 .white-silver-animated-text {
@@ -53,6 +54,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: transparent;
   -webkit-text-fill-color: transparent;
   animation: white-silver-gradient 8s linear infinite;
+  display: inline-block;
 }
 
 .white-silver-animated-text1 {
@@ -69,6 +71,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: transparent;
   -webkit-text-fill-color: transparent;
   animation: white-silver-gradient 6s ease-in-out infinite;
+  display: inline-block;
 }
 
 .white-silver-animated-text2 {
@@ -85,6 +88,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: transparent;
   -webkit-text-fill-color: transparent;
   animation: white-silver-gradient 9s ease infinite;
+  display: inline-block;
 }
 
 
