@@ -81,8 +81,16 @@ const Hero = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      handleIntent(e.deltaY);
+    
+      // Normalize delta for macOS touchpad: Often touchpad scroll events are more granular, so we scale them
+      const delta = e.deltaY;
+    
+      // On macOS touchpads, you might want to scale the delta to avoid too-sensitive scrolling
+      const normalizedDelta = Math.abs(delta) < 1 ? delta * 30 : delta; // Adjust 30 based on your preference for sensitivity
+    
+      handleIntent(normalizedDelta);
     };
+    
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.key === "ArrowDown" || e.key === "PageDown") && isHeroInView()) {

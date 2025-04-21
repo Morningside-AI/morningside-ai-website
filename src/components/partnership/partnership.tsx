@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { GoArrowUpRight } from "react-icons/go";
 import PartnershipMarquee from "./partnersMarquee";
+import Drawer from 'react-modern-drawer'
+import 'react-modern-drawer/dist/index.css'
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
@@ -13,6 +15,12 @@ const Partnership = () => {
   const textRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
   useEffect(() => {
     const threshold = 12;
@@ -87,8 +95,16 @@ const Partnership = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      handleIntent(e.deltaY);
+
+      // Normalize delta for macOS touchpad: Often touchpad scroll events are more granular, so we scale them
+      const delta = e.deltaY;
+
+      // On macOS touchpads, you might want to scale the delta to avoid too-sensitive scrolling
+      const normalizedDelta = Math.abs(delta) < 1 ? delta * 30 : delta; // Adjust 30 based on your preference for sensitivity
+
+      handleIntent(normalizedDelta);
     };
+
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "PageDown") {
@@ -120,14 +136,14 @@ const Partnership = () => {
         disableScroll();
       }
     };
-    
+
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
         handleIntent(touchStartY.current - touch.clientY);
       }
     };
-    
+
 
     const handleTouchEnd = () => {
       enableScroll();
@@ -220,11 +236,11 @@ const Partnership = () => {
           "+=0.1" // slight delay after word animation
         );
       }
-      
+
 
       function animateOut() {
         if (!textEl || !buttonEl) return;
-      
+
         const spans = textEl.querySelectorAll("span");
         gsap.to([spans, buttonEl], {
           opacity: 0,
@@ -248,46 +264,137 @@ const Partnership = () => {
   }, []);
 
   return (
-    <div
-      id="partnership-section"
-      ref={centerRef}
-      className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 relative overflow-hidden touch-none"
-    >
-      <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
-        <PartnershipMarquee />
-      </div>
-
-      <p
-        className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap"
-        ref={textRef}
-      >
-        <span className="white-silver-animated-text">The </span>
-        <span className="white-silver-animated-text">best </span>
-        <span className="white-silver-animated-text">AI </span>
-        <br className="block lg:hidden" />
-        <span className="white-silver-animated-text">systems </span>
-        <br className="hidden lg:block" />
-        <span className="white-silver-animated-text">are </span>
-        <span className="white-silver-animated-text">built </span>
-        <span className="green-text">side </span>
-        <span className="green-text">by </span>
-        <span className="green-text">side</span>
-      </p>
-
+    <>
       <div
-        ref={buttonRef}
-        className="w-full flex flex-row items-center justify-center opacity-0"
+        id="partnership-section"
+        ref={centerRef}
+        className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 relative overflow-hidden touch-none"
       >
-        <button className="flex items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-          <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
-          <GoArrowUpRight
-            size={32}
-            strokeWidth={1}
-            className="mt-1 transition-all duration-300"
-          />
-        </button>
+        <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
+          <PartnershipMarquee />
+        </div>
+
+        <p
+          className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap"
+          ref={textRef}
+        >
+          <span className="white-silver-animated-text">The </span>
+          <span className="white-silver-animated-text">best </span>
+          <span className="white-silver-animated-text">AI </span>
+          <br className="block lg:hidden" />
+          <span className="white-silver-animated-text">systems </span>
+          <br className="hidden lg:block" />
+          <span className="white-silver-animated-text">are </span>
+          <span className="white-silver-animated-text">built </span>
+          <span className="green-text">side </span>
+          <span className="green-text">by </span>
+          <span className="green-text">side</span>
+        </p>
+
+        <div
+          ref={buttonRef}
+          className="w-full flex flex-row items-center justify-center opacity-0"
+        >
+          <button onClick={toggleDrawer} className="flex items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+            <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
+            <GoArrowUpRight
+              size={32}
+              strokeWidth={1}
+              className="mt-1 transition-all duration-300"
+            />
+          </button>
+        </div>
       </div>
-    </div>
+      <Drawer
+        open={isDrawerOpen}
+        onClose={toggleDrawer}
+        direction='right'
+        className='msaiDrawer'
+        lockBackgroundScroll
+      >
+        <div className="flex flex-col gap-4 w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
+          <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
+          <div className="w-full flex flex-col items-center gap-6 overflow-y-auto">
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-1/2 flex flex-col gap-2">
+                <p className="text-md font-bold">What is your name?</p>
+                <input type="text" placeholder="Name" />
+              </div>
+              <div className="w-1/2 flex flex-col gap-2">
+                <p className="text-md font-bold">What is your email?</p>
+                <input type="email" placeholder="Email" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-full flex flex-col gap-2">
+                <p className="text-md font-bold">What is your role in the company?</p>
+                <input type="text" placeholder="Enter role" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-1/2 flex flex-col gap-2">
+                <p className="text-md font-bold">Company Name</p>
+                <input type="text" placeholder="Enter company name" />
+              </div>
+              <div className="w-1/2 flex flex-col gap-2">
+                <p className="text-md font-bold">Company Website</p>
+                <input type="text" placeholder="Enter company website" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-1/2 flex flex-col gap-2">
+                <p className="text-md font-bold">Company Size</p>
+                <select name="company-size" id="company-size">
+                  <option value="1-10">Less than 20</option>
+                  <option value="11-50">20-50</option>
+                  <option value="51-100">50-100</option>
+                  <option value="101-500">100-500</option>
+                  <option value="501-1000">More than 500</option>
+                </select>
+              </div>
+              <div className="w-1/2 flex flex-col gap-2">
+                <p className="text-md font-bold">Company&apos;s Annual Revenue</p>
+                <select name="company-revenue" id="company-revenue">
+                  <option value="1-10">Less than $100K</option>
+                  <option value="11-50">$100K-$500K</option>
+                  <option value="51-100">$500K-$1M</option>
+                  <option value="101-500">$1M-$2M</option>
+                  <option value="501-1000">More than $2M</option>
+                </select>
+              </div>
+            </div>
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-full flex flex-col gap-2">
+                <p className="text-md font-bold">Project budget</p>
+                <select name="project-budget" id="project-budget">
+                  <option value="1-10">Less than $10K</option>
+                  <option value="11-50">$10K-$50K</option>
+                  <option value="51-100">$50K-$100K</option>
+                  <option value="501-1000">More than $100K</option>
+                </select>
+              </div>
+            </div>
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-full flex flex-col gap-2">
+                <p className="text-md font-bold">What services are you interested in?</p>
+                <select name="project-goals" id="project-goals">
+                  <option value="1-10">Getting clarity and identifying AI opportunities</option>
+                  <option value="11-50">Educating your team on AI</option>
+                  <option value="51-100">Developing custom AI solutions</option>
+                </select>
+              </div>
+            </div>
+            <div className="w-full flex flex-col lg:flex-row gap-2">
+              <div className="w-full flex flex-col gap-2">
+                <p className="text-md font-bold">Message</p>
+                <textarea rows={5} name="message" id="message" placeholder="Enter message" />
+              </div>
+            </div>
+          </div>
+          <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" >Send</button>
+        </div>
+      </Drawer>
+    </>
   );
 };
 

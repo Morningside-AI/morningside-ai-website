@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hscmap/magic-trackpad-detector": "^0.0.9",
     "@rive-app/react-canvas": "^4.18.8",
     "@shadergradient/react": "^2.0.25",
     "@start-base/react-modal": "^1.5.3",
