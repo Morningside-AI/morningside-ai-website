@@ -319,8 +319,8 @@ const Entrance = () => {
                         
                         className={`text-left ${index === 0 ? "hidden" : ""} transition-all duration-300 ${
                             activeStep === index 
-                                ? "text-md text-white md:text-2xl opacity-100"
-                                : "text-md text-gray-400 md:text-xl opacity-50 hover:opacity-70"
+                                ? "text-lg text-white md:text-2xl opacity-100"
+                                : "text-lg text-gray-400 md:text-xl opacity-50 hover:opacity-70"
                         }`}
                         style={{
                             fontFamily: "DM-Mono-Light, monospace",
