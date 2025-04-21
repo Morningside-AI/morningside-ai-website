@@ -465,7 +465,7 @@ const Entrance = () => {
                         <br className="block lg:hidden" />
                         <span className="white-silver-animated-text2">these </span>
                         <br className="hidden lg:block" />
-                        <span className="white-silver-animated-text1">three </span>
+                        <span className="green-text">three </span>
                         <span className="white-silver-animated-text">core </span>
                         <span className="white-silver-animated-text1">stages</span>
                     </p>
