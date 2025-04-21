@@ -43,15 +43,15 @@ const Navbar = () => {
                 className='msaiDrawer'
                 lockBackgroundScroll
             >
-                <div className="flex flex-col gap-4 w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
+                <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
                     <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
                     <div className="w-full flex flex-col items-center gap-6 overflow-y-auto">
                         <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-1/2 flex flex-col gap-2">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your name?</p>
                                 <input type="text" placeholder="Name" />
                             </div>
-                            <div className="w-1/2 flex flex-col gap-2">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your email?</p>
                                 <input type="email" placeholder="Email" />
                             </div>
@@ -63,17 +63,17 @@ const Navbar = () => {
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-1/2 flex flex-col gap-2">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company Name</p>
                                 <input type="text" placeholder="Enter company name" />
                             </div>
-                            <div className="w-1/2 flex flex-col gap-2">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company Website</p>
                                 <input type="text" placeholder="Enter company website" />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-1/2 flex flex-col gap-2">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company Size</p>
                                 <select name="company-size" id="company-size">
                                     <option value="1-10">Less than 20</option>
@@ -83,7 +83,7 @@ const Navbar = () => {
                                     <option value="501-1000">More than 500</option>
                                 </select>
                             </div>
-                            <div className="w-1/2 flex flex-col gap-2">
+                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company&apos;s Annual Revenue</p>
                                 <select name="company-revenue" id="company-revenue">
                                     <option value="1-10">Less than $100K</option>

@@ -109,6 +109,12 @@ body::-webkit-scrollbar-thumb:hover {
   padding-right: 20px;
 }
 
+@media (max-width: 640px) {
+  .msaiDrawer {
+    padding-right: 5px;
+  }
+}
+
 .msaiDrawer input {
   background-color: #EDECE4;
   color: #060E0A;
