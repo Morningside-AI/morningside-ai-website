@@ -8,6 +8,7 @@ import PartnershipMarquee from "./partnersMarquee";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
+import { IoMdClose } from "react-icons/io";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
@@ -346,7 +347,12 @@ useEffect(() => {
                 lockBackgroundScroll
             >
                 <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
-                    <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
+                <div className="flex flex-row justify-between items-start">
+                        <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
+                        <button onClick={toggleDrawer} className="p-3 cursor-pointer">
+                            <IoMdClose size={24} />
+                        </button>
+                    </div>
                     <div
                         className="w-full flex flex-col items-center gap-6 overflow-y-auto pe-4"
                         ref={drawerContentRef}

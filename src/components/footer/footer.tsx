@@ -9,6 +9,7 @@ import Link from "next/link";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
+import { IoMdClose } from "react-icons/io";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -18,7 +19,7 @@ const Footer = () => {
     const touchStartY = useRef(0);
     const drawerContentRef = useRef<HTMLDivElement>(null);
 
-    
+
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -115,22 +116,22 @@ const Footer = () => {
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-      
+
             // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
             if (mtd.inertial(e)) {
-              // If it's an inertial scroll event, we return early and don't process the scroll
-              return;
+                // If it's an inertial scroll event, we return early and don't process the scroll
+                return;
             }
-      
+
             const deltaY = e.deltaY;
-      
+
             // Normalize the delta to handle macOS touchpad sensitivity
             const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
-      
+
             // Handle the scroll intent (up or down) based on the normalized delta
             handleIntent(normalizedDelta);
-          };
-          
+        };
+
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowUp" || e.key === "PageUp") {
@@ -150,10 +151,10 @@ const Footer = () => {
 
         const handleSpaceButton = (e: KeyboardEvent) => {
             if (e.key === " ") {
-              disableScroll();
-              handleIntent(60);
+                disableScroll();
+                handleIntent(60);
             }
-          }
+        }
 
         let isSwiping = false;
 
@@ -353,7 +354,12 @@ const Footer = () => {
                 lockBackgroundScroll
             >
                 <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
-                    <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
+                    <div className="flex flex-row justify-between items-start">
+                        <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
+                        <button onClick={toggleDrawer} className="p-3 cursor-pointer">
+                            <IoMdClose size={24} />
+                        </button>
+                    </div>
                     <div
                         className="w-full flex flex-col items-center gap-6 overflow-y-auto pe-4"
                         ref={drawerContentRef}
@@ -433,7 +439,7 @@ const Footer = () => {
                             <div className="w-full flex flex-col gap-2">
                                 <p className="text-md font-bold">Message</p>
                                 <textarea rows={5} name="message" id="message" placeholder="Enter message" />
-                            </div> 
+                            </div>
                         </div>
                     </div>
                     <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" >Send</button>
