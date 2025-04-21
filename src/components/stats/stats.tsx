@@ -85,7 +85,7 @@ const Stats = () => {
         scrollToSection("#partnership-section");
       } else if (accumulated <= -threshold) {
         disableScroll(); // ✅ lock scroll before going down
-        scrollToSection("#center-section");
+        scrollToSection("#third-slide-section");
         //const sliderTrigger = ScrollTrigger.getById("slider-scroll");
 
         /*if (sliderTrigger) {
