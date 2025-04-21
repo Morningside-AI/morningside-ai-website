@@ -8,10 +8,12 @@ import { GoArrowUpRight } from "react-icons/go";
 import Link from "next/link";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
+import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Footer = () => {
+    const mtd = new MagicTrackpadDetector();
     const footerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
 
@@ -86,13 +88,19 @@ const Footer = () => {
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-          
-            // Normalize delta for macOS touchpad: Often touchpad scroll events are more granular, so we scale them
-            const delta = e.deltaY;
-          
-            // On macOS touchpads, you might want to scale the delta to avoid too-sensitive scrolling
-            const normalizedDelta = Math.abs(delta) < 1 ? delta * 30 : delta; // Adjust 30 based on your preference for sensitivity
-          
+      
+            // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
+            if (mtd.inertial(e)) {
+              // If it's an inertial scroll event, we return early and don't process the scroll
+              return;
+            }
+      
+            const deltaY = e.deltaY;
+      
+            // Normalize the delta to handle macOS touchpad sensitivity
+            const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
+      
+            // Handle the scroll intent (up or down) based on the normalized delta
             handleIntent(normalizedDelta);
           };
           
