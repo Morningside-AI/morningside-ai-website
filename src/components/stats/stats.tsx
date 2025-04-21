@@ -63,7 +63,7 @@ const Stats = () => {
 
       gsap.to(window, {
         scrollTo: targetId,
-        duration: 0.12,
+        duration: 0.08,
         ease: "linear",
         overwrite: "auto",
         onComplete: () => {
