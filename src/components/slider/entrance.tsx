@@ -49,14 +49,14 @@ const Entrance = () => {
     }, [rive1, rive2]);
 
     useEffect(() => {
-        const threshold = 60; // Increased threshold for better control
+        const threshold = 30; // Increased threshold for better control
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
     let scrollCooldown = false;
     let entranceStep = 0;
     let lastTransitionTime = 0;
-    const TRANSITION_COOLDOWN = 800; // Minimum time between transitions in ms
+    const TRANSITION_COOLDOWN = 400; // Minimum time between transitions in ms
 
     const preventDefault = (e: TouchEvent): void => e.preventDefault();
 
