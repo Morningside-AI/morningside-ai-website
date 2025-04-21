@@ -18,6 +18,7 @@
   "dependencies": {
     "@rive-app/react-canvas": "^4.18.8",
     "@shadergradient/react": "^2.0.25",
+    "@start-base/react-modal": "^1.5.3",
     "@t3-oss/env-nextjs": "^0.12.0",
     "drei": "^2.2.21",
     "gsap": "^3.12.7",
@@ -26,6 +27,8 @@
     "react-dom": "^19.0.0",
     "react-fast-marquee": "^1.6.5",
     "react-icons": "^5.5.0",
+    "react-modal": "^3.16.3",
+    "react-modern-drawer": "^1.4.0",
     "three": "^0.175.0",
     "zod": "^3.24.2"
   },
@@ -36,6 +39,7 @@
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/react-modal": "^3.16.3",
     "@types/three": "^0.175.0",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.2.3",

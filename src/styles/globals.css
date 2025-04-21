@@ -98,3 +98,77 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 
+.msaiDrawer {
+  background-color: transparent !important;
+  color: #060E0A;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding-right: 20px;
+}
+
+.msaiDrawer input {
+  background-color: #EDECE4;
+  color: #060E0A;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #060E0A;
+  border-radius: 0;
+  outline: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+.msaiDrawer input:focus {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #060E0A;
+  outline: none;
+}
+
+.msaiDrawer select {
+  background-color: #EDECE4;
+  color: #060E0A;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #060E0A;
+  border-radius: 0;
+  outline: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+.msaiDrawer select:focus {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #060E0A;
+  outline: none;
+}
+
+.msaiDrawer select option {
+  background-color: #EDECE4;
+  color: #060E0A;
+}
+
+
+.msaiDrawer textarea {
+  background-color: #EDECE4;
+  color: #060E0A;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.msaiDrawer textarea:focus {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #060E0A;
+  outline: none;
+}
