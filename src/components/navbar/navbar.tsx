@@ -20,6 +20,15 @@ const Navbar = () => {
         setIsDrawerOpen(!isDrawerOpen);
     };
 
+    useEffect(() => {
+        if (isDrawerOpen) {
+            document.body.style.overflow = "auto";
+        }
+        return () => {
+            document.body.style.overflow = ""; // Reset when component unmounts
+        };
+    }, [isDrawerOpen]);
+
 
     return (
         <>
@@ -41,7 +50,11 @@ const Navbar = () => {
                 onClose={toggleDrawer}
                 direction='right'
                 className='msaiDrawer'
-                lockBackgroundScroll
+                lockBackgroundScroll={true}
+                style={{
+                    overflowY: 'auto', // Enable scrolling for the drawer itself
+                    backgroundColor: '#EDECE4',
+                }}
             >
                 <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
                     <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>

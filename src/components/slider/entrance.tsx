@@ -312,7 +312,7 @@ const Entrance = () => {
             className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
         >
             {/* Labels Column */}
-            <div className="absolute w-full md:w-fit left-1/2 md:left-2 md:top-1/2 top-4 -translate-x-1/2 md:-translate-y-1/2 flex flex-row items-center justify-center md:flex-col md:gap-2 gap-6 z-10">
+            <div className="absolute w-full md:w-fit left-1/2 md:left-2 md:top-1/2 top-4 -translate-x-1/2 md:-translate-x-0 md:-translate-y-1/2 flex flex-row md:flex-col md:items-start  items-center justify-center md:gap-2 gap-6 z-10">
                 {LABELS.map((label, index) => (
                     <button
                         key={label.title}
