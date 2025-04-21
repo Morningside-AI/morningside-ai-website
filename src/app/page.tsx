@@ -10,6 +10,14 @@ import Slide1 from "@/components/slider/slide1";
 import Slide2 from "@/components/slider/slide2";
 import Slide3 from "@/components/slider/slide3";
 import Entrance from "@/components/slider/entrance";
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+
 export default function HomePage() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center lg:px-12 md:px-8 px-4 relative main-container">
@@ -17,8 +25,6 @@ export default function HomePage() {
       <Hero />
       <Center />
       <Entrance />
-      <Slide2 />
-      <Slide3 />
       <Stats />
       <Partnership />
       <Footer />

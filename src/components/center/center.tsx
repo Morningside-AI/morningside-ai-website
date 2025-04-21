@@ -14,7 +14,6 @@ const Center = () => {
   const headingRef = useRef<HTMLDivElement>(null);
   const subTextRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
-  
 
   useEffect(() => {
     const threshold = 12;
@@ -87,22 +86,14 @@ const Center = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-
-      // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
       if (mtd.inertial(e)) {
-        // If it's an inertial scroll event, we return early and don't process the scroll
         return;
       }
 
       const deltaY = e.deltaY;
-
-      // Normalize the delta to handle macOS touchpad sensitivity
-      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
-
-      // Handle the scroll intent (up or down) based on the normalized delta
+      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY;
       handleIntent(normalizedDelta);
     };
-    
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "PageDown") {
@@ -125,7 +116,7 @@ const Center = () => {
         disableScroll();
         handleIntent(60);
       }
-    }
+    };
 
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches.item(0);
@@ -134,14 +125,13 @@ const Center = () => {
         disableScroll();
       }
     };
-    
+
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
         handleIntent(touchStartY.current - touch.clientY);
       }
     };
-    
 
     const handleTouchEnd = () => enableScroll();
 
@@ -162,64 +152,6 @@ const Center = () => {
       { threshold: 0.5 }
     );
     if (centerRef.current) observer.observe(centerRef.current);
-
-    // Animate main heading
-    if (headingRef.current && subTextRef.current) {
-      gsap.set(headingRef.current, { opacity: 0, y: 80 });
-      gsap.set(subTextRef.current, { opacity: 0, y: 60 });
-
-      ScrollTrigger.create({
-        trigger: centerRef.current,
-        start: "top center",
-        end: "bottom top",
-        onEnter: () => {
-          gsap.to(headingRef.current, {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: "power4.out",
-          });
-          gsap.to(subTextRef.current, {
-            opacity: 1,
-            y: 0,
-            duration: 1.4,
-            ease: "power4.out",
-            delay: 0.4,
-          });
-        },
-        onEnterBack: () => {
-          gsap.to(headingRef.current, {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: "power4.out",
-          });
-          gsap.to(subTextRef.current, {
-            opacity: 1,
-            y: 0,
-            duration: 1.4,
-            ease: "power4.out",
-            delay: 0.4,
-          });
-        },
-        onLeave: () => {
-          gsap.to([headingRef.current, subTextRef.current], {
-            opacity: 0,
-            y: 80,
-            duration: 0.6,
-            ease: "power2.inOut",
-          });
-        },
-        onLeaveBack: () => {
-          gsap.to([headingRef.current, subTextRef.current], {
-            opacity: 0,
-            y: 80,
-            duration: 0.6,
-            ease: "power2.inOut",
-          });
-        },
-      });
-    }
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
