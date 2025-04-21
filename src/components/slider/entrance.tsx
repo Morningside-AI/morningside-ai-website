@@ -3,7 +3,7 @@
 import "@/styles/fonts.css";
 import Step3 from "@/assets/images/animation/entrance.svg";
 import Step32 from "@/assets/images/animation/step3.svg";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -37,7 +37,6 @@ const Entrance = () => {
     ];
     const touchStartY = useRef(0);
 
-
     const { rive: rive1, RiveComponent: LearnRive } = useRive({
         src: "/rive/animation1.riv",
         autoplay: false,
@@ -50,25 +49,81 @@ const Entrance = () => {
         layout: new Layout({ fit: Fit.Cover, alignment: Alignment.Center }),
     });
 
-    // Track when both Rive instances are ready
-    useEffect(() => {
-        if (rive1) {
-            setRive1Ready(true); // Set to true when rive1 is initialized
-        }
-        if (rive2) {
-            setRive2Ready(true); // Set to true when rive2 is initialized
-        }
-    }, [rive1, rive2]);
+    const lastTransitionTime = useRef(0);
+    const TRANSITION_COOLDOWN = 400;
+
+    const canTransition = useCallback(() => {
+        return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
+    }, []);
+
+    const transition = useCallback((
+        fromIndex: number,
+        toIndex: number,
+        direction: "forward" | "backward"
+    ) => {
+        if (!canTransition()) return;
+
+        lastTransitionTime.current = Date.now();
+        const fromRef = contentRefs[fromIndex]?.current;
+        const toRef = contentRefs[toIndex]?.current;
+        if (!fromRef || !toRef) return;
+
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+
+        gsap.to(fromRef, {
+            opacity: 0,
+            x: direction === "forward" ? -100 : 100,
+            duration: 0.8,
+            ease: "power2.out",
+            onComplete: () => {
+                fromRef.style.display = "none";
+                toRef.style.display = "flex";
+
+                if (rive1Ready && rive1) rive1.play();
+                if (rive2Ready && rive2) rive2.play();
+
+                gsap.fromTo(
+                    toRef,
+                    { opacity: 0, x: direction === "forward" ? 150 : -150 },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            document.body.style.overflow = "";
+                            document.documentElement.style.overflow = "";
+                        },
+                    }
+                );
+            },
+        });
+
+        // Update both state and ref
+        setActiveStep(toIndex);
+        entranceStepRef.current = toIndex;
+    }, [rive1, rive2, rive1Ready, rive2Ready, canTransition]);
+
+    const handleLabelClick = useCallback((index: number) => {
+        if (activeStep === index || !canTransition()) return;
+        const direction = index > activeStep ? "forward" : "backward";
+        transition(activeStep, index, direction);
+    }, [activeStep, canTransition, transition]);
 
     useEffect(() => {
-        const threshold = 30; // Increased threshold for better control
+        if (rive1) setRive1Ready(true);
+        if (rive2) setRive2Ready(true);
+    }, [rive1, rive2]);
+
+
+    useEffect(() => {
+        const threshold = 30;
         let accumulated = 0;
         let hasSnapped = false;
         let scrollLocked = false;
         let scrollCooldown = false;
         let entranceStep = 0;
-        let lastTransitionTime = 0;
-        const TRANSITION_COOLDOWN = 400; // Minimum time between transitions in ms
 
         const preventDefault = (e: TouchEvent): void => e.preventDefault();
 
@@ -101,6 +156,7 @@ const Entrance = () => {
             return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
         };
 
+
         const scrollToSection = (targetId: string) => {
             if (scrollCooldown) return;
             scrollCooldown = true;
@@ -121,18 +177,14 @@ const Entrance = () => {
             });
         };
 
-        const canTransition = () => {
-            return Date.now() - lastTransitionTime > TRANSITION_COOLDOWN;
-        };
-
-        const transition = (
+        const localTransition = (
             fromIndex: number,
             toIndex: number,
             direction: "forward" | "backward"
         ) => {
             if (!canTransition()) return;
 
-            lastTransitionTime = Date.now();
+            lastTransitionTime.current = Date.now();
             const fromRef = contentRefs[fromIndex]?.current;
             const toRef = contentRefs[toIndex]?.current;
             if (!fromRef || !toRef) return;
@@ -144,20 +196,14 @@ const Entrance = () => {
             gsap.to(fromRef, {
                 opacity: 0,
                 x: direction === "forward" ? -100 : 100,
-                duration: 0.8, // Slightly longer duration
+                duration: 0.8,
                 ease: "power2.out",
                 onComplete: () => {
                     fromRef.style.display = "none";
                     toRef.style.display = "flex";
 
-                    if (rive1Ready && rive1) {
-                        rive1.reset();
-                        rive1.play();
-                    }
-                    if (rive2Ready && rive2) {
-                        rive2.reset();
-                        rive2.play();
-                    }
+                    if (rive1Ready && rive1) rive1.play();
+                    if (rive2Ready && rive2) rive2.play();
 
                     gsap.fromTo(
                         toRef,
@@ -169,14 +215,17 @@ const Entrance = () => {
                             ease: "power2.out",
                             onComplete: () => {
                                 hasSnapped = false;
-                                setTimeout(() => {
-                                    enableScroll();
-                                }, 300);
+                                setTimeout(() => enableScroll(), 300);
                             },
                         }
                     );
                 },
             });
+
+            // Update both the local entranceStep and the ref
+            entranceStep = toIndex;
+            entranceStepRef.current = toIndex;
+            setActiveStep(toIndex); // This ensures button highlights stay in sync
         };
 
         const handleIntent = (delta: number) => {
@@ -185,35 +234,18 @@ const Entrance = () => {
             accumulated += delta;
 
             if (accumulated >= threshold) {
-                if (entranceStep < contentRefs.length - 1) {
-                    transition(entranceStep, entranceStep + 1, "forward");
-                    entranceStep += 1;
-                    setActiveStep(entranceStep);
+                if (entranceStepRef.current < contentRefs.length - 1) {
+                    localTransition(entranceStepRef.current, entranceStepRef.current + 1, "forward");
                 } else {
                     scrollToSection("#stats-section");
                 }
             } else if (accumulated <= -threshold) {
-                if (entranceStep > 0) {
-                    transition(entranceStep, entranceStep - 1, "backward");
-                    entranceStep -= 1;
-                    setActiveStep(entranceStep);
+                if (entranceStepRef.current > 0) {
+                    localTransition(entranceStepRef.current, entranceStepRef.current - 1, "backward");
                 } else {
                     scrollToSection("#center-section");
                 }
             }
-        };
-
-        const goToStep = (targetIndex: number) => {
-            if (!canTransition() ||
-                targetIndex === entranceStepRef.current ||
-                targetIndex < 0 ||
-                targetIndex >= contentRefs.length
-            ) return;
-
-            const direction = targetIndex > entranceStepRef.current ? "forward" : "backward";
-            transition(entranceStepRef.current, targetIndex, direction);
-            entranceStepRef.current = targetIndex;
-            setActiveStep(targetIndex);
         };
 
         const handleWheel = (e: WheelEvent) => {
@@ -370,7 +402,7 @@ const Entrance = () => {
             observer.disconnect();
             enableScroll();
         };
-    }, [rive1, rive2, rive1Ready, rive2Ready]);
+    }, [rive1, rive2, rive1Ready, rive2Ready, canTransition, transition]);
 
     return (
         <div
@@ -383,10 +415,10 @@ const Entrance = () => {
                 {LABELS.map((label, index) => (
                     <button
                         key={label.title}
-
+                        onClick={() => handleLabelClick(index)}
                         className={`text-left ${index === 0 ? "hidden" : ""} transition-all duration-300 ${activeStep === index
-                                ? "text-lg text-white md:text-2xl opacity-100"
-                                : "text-lg text-gray-400 md:text-xl opacity-50 hover:opacity-70"
+                            ? "text-lg text-white md:text-2xl opacity-100"
+                            : "text-lg text-gray-400 md:text-xl opacity-50 hover:opacity-70"
                             }`}
                         style={{
                             fontFamily: "DM-Mono-Light, monospace",
