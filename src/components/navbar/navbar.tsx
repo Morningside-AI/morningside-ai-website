@@ -9,6 +9,7 @@ import 'react-modern-drawer/dist/index.css'
 
 const Navbar = () => {
     const navbarLogoRef = useRef<SVGSVGElement>(null);
+    const drawerContentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         window.navbarLogoRef = navbarLogoRef;
@@ -20,45 +21,61 @@ const Navbar = () => {
         setIsDrawerOpen(!isDrawerOpen);
     };
 
+    const handleWheel = (e: WheelEvent) => {
+        if (isDrawerOpen && drawerContentRef.current) {
+            // Prevent page scroll when hovering over drawer
+            e.preventDefault();
+            // Manually scroll the drawer content
+            drawerContentRef.current.scrollTop += e.deltaY;
+        }
+    };
+
     useEffect(() => {
         if (isDrawerOpen) {
-            document.body.style.overflow = "auto";
+            document.body.style.overflow = "hidden";
+            window.addEventListener("wheel", handleWheel, { passive: false });
+        } else {
+            document.body.style.overflow = "";
+            window.removeEventListener("wheel", handleWheel);
         }
+
         return () => {
-            document.body.style.overflow = ""; // Reset when component unmounts
+            window.removeEventListener("wheel", handleWheel);
+            document.body.style.overflow = "";
         };
     }, [isDrawerOpen]);
 
 
     return (
         <>
-        <div className="w-full h-fit flex flex-row justify-between items-center pt-4 absolute z-10 top-0 left-0 lg:px-12 md:px-8 px-4">
-            <Logo className="w-36 h-6" ref={navbarLogoRef} />
-            <div className="flex items-center">
-                <button onClick={toggleDrawer} className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-                    Get In Touch
-                    <GoArrowUpRight
-                        size={18}
-                        strokeWidth={1}
-                        className="mt-1 transition-all duration-300"
-                    />
-                </button>
+            <div className="w-full h-fit flex flex-row justify-between items-center pt-4 absolute z-10 top-0 left-0 lg:px-12 md:px-8 px-4">
+                <Logo className="w-36 h-6" ref={navbarLogoRef} />
+                <div className="flex items-center">
+                    <button onClick={toggleDrawer} className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+                        Get In Touch
+                        <GoArrowUpRight
+                            size={18}
+                            strokeWidth={1}
+                            className="mt-1 transition-all duration-300"
+                        />
+                    </button>
+                </div>
             </div>
-        </div>
-        <Drawer
+            <Drawer
                 open={isDrawerOpen}
                 onClose={toggleDrawer}
                 direction='right'
                 className='msaiDrawer'
-                lockBackgroundScroll={true}
-                style={{
-                    overflowY: 'auto', // Enable scrolling for the drawer itself
-                    backgroundColor: '#EDECE4',
-                }}
+                lockBackgroundScroll
             >
                 <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
                     <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
-                    <div className="w-full flex flex-col items-center gap-6 overflow-y-auto">
+                    <div
+                        className="w-full flex flex-col items-center gap-6 overflow-y-auto pe-4"
+                        ref={drawerContentRef}
+                        onTouchStart={(e) => e.stopPropagation()} // Add touch handlers
+                        onTouchMove={(e) => e.stopPropagation()}
+                    >
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your name?</p>
@@ -132,7 +149,7 @@ const Navbar = () => {
                             <div className="w-full flex flex-col gap-2">
                                 <p className="text-md font-bold">Message</p>
                                 <textarea rows={5} name="message" id="message" placeholder="Enter message" />
-                            </div> 
+                            </div>
                         </div>
                     </div>
                     <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" >Send</button>

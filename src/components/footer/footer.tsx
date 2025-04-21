@@ -16,8 +16,35 @@ const Footer = () => {
     const mtd = new MagicTrackpadDetector();
     const footerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
+    const drawerContentRef = useRef<HTMLDivElement>(null);
+
+    
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const handleWheel = (e: WheelEvent) => {
+        if (isDrawerOpen && drawerContentRef.current) {
+            // Prevent page scroll when hovering over drawer
+            e.preventDefault();
+            // Manually scroll the drawer content
+            drawerContentRef.current.scrollTop += e.deltaY;
+        }
+    };
+
+    useEffect(() => {
+        if (isDrawerOpen) {
+            document.body.style.overflow = "hidden";
+            window.addEventListener("wheel", handleWheel, { passive: false });
+        } else {
+            document.body.style.overflow = "";
+            window.removeEventListener("wheel", handleWheel);
+        }
+
+        return () => {
+            window.removeEventListener("wheel", handleWheel);
+            document.body.style.overflow = "";
+        };
+    }, [isDrawerOpen]);
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
@@ -309,10 +336,10 @@ const Footer = () => {
 
                     <div className="flex flex-col justify-end gap-2 lg:gap-4 order-3 md:order-1 text-left footer-follow">
                         <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Follow</p>
-                        <Link href="https://www.linkedin.com/company/morningside-ai/posts/?feedView=all" target="_blank" className="w-full cursor-pointer">
+                        <Link href="https://www.linkedin.com/company/morningside-ai/posts/?feedView=all" target="_blank" className="w-fit cursor-pointer">
                             <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Linkedin</p>
                         </Link>
-                        <Link href="https://www.youtube.com/@LiamOttley" target="_blank" className="w-full cursor-pointer">
+                        <Link href="https://www.youtube.com/@LiamOttley" target="_blank" className="w-fit cursor-pointer">
                             <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Youtube</p>
                         </Link>
                     </div>
@@ -327,7 +354,12 @@ const Footer = () => {
             >
                 <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
                     <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
-                    <div className="w-full flex flex-col items-center gap-6 overflow-y-auto">
+                    <div
+                        className="w-full flex flex-col items-center gap-6 overflow-y-auto pe-4"
+                        ref={drawerContentRef}
+                        onTouchStart={(e) => e.stopPropagation()} // Add touch handlers
+                        onTouchMove={(e) => e.stopPropagation()}
+                    >
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your name?</p>
