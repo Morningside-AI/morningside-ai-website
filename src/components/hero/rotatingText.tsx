@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import "@/styles/fonts.css";
 
-const words = ["Consultancy", "Education", "Development"];
+const words = ["Consulting", "Education", "Development"];
 
 const RotatingText = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
