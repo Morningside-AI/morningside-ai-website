@@ -255,7 +255,7 @@ const Stats = () => {
         <StatsBox
           number={435}
           numberText="+"
-          text="AI Solutions Identified by MorningSide AI"
+          text="AI Solutions Identified by Morningside AI"
           link=""
           linkText=""
         />
