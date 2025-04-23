@@ -20,6 +20,70 @@ const Footer = () => {
     const drawerContentRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLParagraphElement>(null);
 
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        role: "",
+        company_name: "",
+        company_website: "",
+        company_size: "",
+        companys_revenue: "",
+        project_budget: "",
+        services_needed: "",
+        message: "",
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const validateForm = () => {
+        const errors: string[] = [];
+
+        if (formData.name.trim().length < 2) errors.push("Name must be at least 2 characters.");
+        if (!/\S+@\S+\.\S+/.test(formData.email)) errors.push("Invalid email address.");
+        if (formData.role.trim().length < 2) errors.push("Role must be at least 2 characters.");
+        if (formData.company_name.trim().length < 2) errors.push("Company name must be at least 2 characters.");
+        if (formData.company_website.trim().length < 2) errors.push("Company website must be at least 2 characters.");
+        if (formData.company_size.trim().length < 2) errors.push("Company size must be selected.");
+        if (formData.companys_revenue.trim().length < 2) errors.push("Company revenue must be selected.");
+        if (formData.project_budget.trim().length < 2) errors.push("Project budget must be selected.");
+        if (formData.services_needed.trim().length < 2) errors.push("Services needed must be selected.");
+        if (formData.message.trim().length < 2) errors.push("Message must be at least 2 characters.");
+
+        return errors;
+    };
+
+    const handleSubmit = async () => {
+        const errors = validateForm();
+
+        if (errors.length > 0) {
+            console.log(errors.join("\n"));
+            return;
+        }
+
+        try {
+            await fetch("https://hook.eu2.make.com/7k7oe359aq8op254a1o6elozana7565d", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            console.log("Form submitted successfully!");
+        } catch (err) {
+            console.error(err);
+            console.log("Submission failed.");
+        }
+    };
+
+
+
 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -435,33 +499,33 @@ const Footer = () => {
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your name?</p>
-                                <input type="text" placeholder="Name" />
+                                <input type="text" placeholder="name" id="name" name="name" onChange={handleChange} value={formData.name} />
                             </div>
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your email?</p>
-                                <input type="email" placeholder="Email" />
+                                <input type="email" placeholder="Email" name="email" id="email" onChange={handleChange} value={formData.email} />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
                                 <p className="text-md font-bold">What is your role in the company?</p>
-                                <input type="text" placeholder="Enter role" />
+                                <input type="text" placeholder="Enter role" name="role" id="role" onChange={handleChange} value={formData.role} />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company Name</p>
-                                <input type="text" placeholder="Enter company name" />
+                                <input type="text" placeholder="Enter company name" name="company_name" id="company_name" onChange={handleChange} value={formData.company_name} />
                             </div>
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company Website</p>
-                                <input type="text" placeholder="Enter company website" />
+                                <input type="text" placeholder="Enter company website" name="company_website" id="company_website" onChange={handleChange} value={formData.company_website} />
                             </div>
                         </div>
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company Size</p>
-                                <select name="company-size" id="company-size">
+                                <select name="company_size" id="company_size" onChange={handleChange} value={formData.company_size}>
                                     <option value="1-10">Less than 20</option>
                                     <option value="11-50">20-50</option>
                                     <option value="51-100">50-100</option>
@@ -471,7 +535,7 @@ const Footer = () => {
                             </div>
                             <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                 <p className="text-md font-bold">Company&apos;s Annual Revenue</p>
-                                <select name="company-revenue" id="company-revenue">
+                                <select name="companys_revenue" id="companys_revenue" onChange={handleChange} value={formData.companys_revenue}>
                                     <option value="1-10">Less than $100K</option>
                                     <option value="11-50">$100K-$500K</option>
                                     <option value="51-100">$500K-$1M</option>
@@ -483,7 +547,7 @@ const Footer = () => {
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
                                 <p className="text-md font-bold">Project budget</p>
-                                <select name="project-budget" id="project-budget">
+                                <select name="project_budget" id="project_budget" onChange={handleChange} value={formData.project_budget}>
                                     <option value="1-10">Less than $10K</option>
                                     <option value="11-50">$10K-$50K</option>
                                     <option value="51-100">$50K-$100K</option>
@@ -494,7 +558,7 @@ const Footer = () => {
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
                                 <p className="text-md font-bold">What services are you interested in?</p>
-                                <select name="project-goals" id="project-goals">
+                                <select name="services_needed" id="services_needed" onChange={handleChange} value={formData.services_needed}>
                                     <option value="1-10">Getting clarity and identifying AI opportunities</option>
                                     <option value="11-50">Educating your team on AI</option>
                                     <option value="51-100">Developing custom AI solutions</option>
@@ -504,11 +568,11 @@ const Footer = () => {
                         <div className="w-full flex flex-col lg:flex-row gap-2">
                             <div className="w-full flex flex-col gap-2">
                                 <p className="text-md font-bold">Message</p>
-                                <textarea rows={5} name="message" id="message" placeholder="Enter message" />
+                                <textarea rows={5} name="message" id="message" placeholder="Enter message" onChange={handleChange} value={formData.message} />
                             </div>
                         </div>
                     </div>
-                    <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" >Send</button>
+                    <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" onClick={handleSubmit} >Send</button>
                 </div>
             </Drawer>
         </>
