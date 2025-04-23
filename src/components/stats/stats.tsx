@@ -39,9 +39,9 @@ const Stats = () => {
           toggleActions: "play none none reverse",
         },
       })
-        .to(part3, { opacity: 0.03, duration: 0.4, ease: "power2.inOut" })
-        .to(part2, { opacity: 0.03, duration: 0.5, ease: "power2.inOut" }, "+=0.35")
-        .to(part1, { opacity: 0.03, duration: 0.6, ease: "power2.inOut" }, "+=0.45");
+        .to(part3, { opacity: 0.03, duration: 0.2, ease: "power2.inOut" })
+        .to(part2, { opacity: 0.03, duration: 0.3, ease: "power2.inOut" }, "+=0.2")
+        .to(part1, { opacity: 0.03, duration: 0.4, ease: "power2.inOut" }, "+=0.35");
     }
 
 
