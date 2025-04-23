@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import StatsBox from "./statsBox";
-import LogoMarkWhite from "@/assets/images/morningside-assets/Logomark-White.svg?url";
+import LogoMarkWhite from "@/assets/images/morningside-assets/Logomark-White.svg";
 import "@/styles/fonts.css";
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 
@@ -14,6 +14,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 const Stats = () => {
   const mtd = new MagicTrackpadDetector();
   const statsRef = useRef<HTMLDivElement>(null);
+  const svgContainerRef = useRef<SVGSVGElement>(null);
   const touchStartY = useRef(0);
 
   useEffect(() => {
@@ -22,6 +23,27 @@ const Stats = () => {
     let hasSnapped = false;
     let scrollLocked = false;
     let scrollCooldown = false;
+
+    const svg = svgContainerRef.current;
+    if (svg) {
+      const part1 = svg.querySelector(".logoMarkPart1");
+      const part2 = svg.querySelector(".logoMarkPart2");
+      const part3 = svg.querySelector(".logoMarkPart3");
+
+      gsap.set([part1, part2, part3], { opacity: 0.001 }); // Start hidden
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: statsRef.current,
+          start: "top center",
+          toggleActions: "play none none reverse",
+        },
+      })
+        .to(part3, { opacity: 0.03, duration: 0.4, ease: "power2.inOut" })
+        .to(part2, { opacity: 0.03, duration: 0.5, ease: "power2.inOut" }, "+=0.35")
+        .to(part1, { opacity: 0.03, duration: 0.6, ease: "power2.inOut" }, "+=0.45");
+    }
+
 
     const preventDefault = (e: TouchEvent): void => {
       e.preventDefault();
@@ -206,15 +228,8 @@ const Stats = () => {
       id="stats-section"
       className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
     >
-      <div
-        className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1] opacity-[0.03]"
-        style={{
-          backgroundImage: `url(${LogoMarkWhite})`,
-          backgroundSize: "110%",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-      />
+
+      <LogoMarkWhite ref={svgContainerRef}  className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
       <p className="white-silver-animated-text">
         <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.&nbsp;</span>
         <br className="block lg:hidden" />
