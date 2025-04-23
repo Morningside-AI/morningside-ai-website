@@ -1,12 +1,10 @@
-import PreloaderWrapper from "@/components/generic/preloaderWrapper";
-import AnimatedMeshBackground from "@/components/generic/AnimatedMeshBackground";
 import "@/styles/globals.css";
 import "@/styles/fonts.css";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Morningside AI",
-  description: "Morningside AI",
+  title: "Morningside AI - Terms and Conditions",
+  description: "Morningside AI - Terms and Conditions",
   icons: [
     { rel: "icon", type: "image/png", sizes: "96x96", url: "/favicon-96x96.png" },
     { rel: "icon", type: "image/svg+xml", url: "/favicon.svg" },
@@ -22,7 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black relative" style={{ fontFamily: "DM-Sans" }}>
-        <AnimatedMeshBackground />
         {children}
       </body>
     </html>

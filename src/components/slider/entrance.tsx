@@ -12,9 +12,9 @@ import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 
 const LABELS = [
     { title: "Introduction", index: 0 },
-    { title: "Clarify", index: 1 },
-    { title: "Learn", index: 2 },
-    { title: "Build", index: 3 },
+    { title: "Identify", index: 1 },
+    { title: "Educate", index: 2 },
+    { title: "Develop", index: 3 },
 ];
 
 
@@ -62,15 +62,15 @@ const Entrance = () => {
         direction: "forward" | "backward"
     ) => {
         if (!canTransition()) return;
-    
+
         lastTransitionTime.current = Date.now();
         const fromRef = contentRefs[fromIndex]?.current;
         const toRef = contentRefs[toIndex]?.current;
         if (!fromRef || !toRef) return;
-    
+
         document.body.style.overflow = "hidden";
         document.documentElement.style.overflow = "hidden";
-    
+
         if (toIndex === 2 && rive1) {
             setTimeout(() => {
                 rive1.reset();
@@ -83,7 +83,7 @@ const Entrance = () => {
                 rive2.play();
             }, 450);
         }
-    
+
         gsap.to(fromRef, {
             opacity: 0,
             x: direction === "forward" ? -100 : 100,
@@ -92,7 +92,7 @@ const Entrance = () => {
             onComplete: () => {
                 fromRef.style.display = "none";
                 toRef.style.display = "flex";
-    
+
                 gsap.fromTo(
                     toRef,
                     { opacity: 0, x: direction === "forward" ? 150 : -150 },
@@ -109,7 +109,7 @@ const Entrance = () => {
                 );
             },
         });
-    
+
         setActiveStep(toIndex);
         entranceStepRef.current = toIndex;
     }, [rive1, rive2, rive1Ready, rive2Ready, canTransition]);
@@ -192,12 +192,12 @@ const Entrance = () => {
             direction: "forward" | "backward"
         ) => {
             if (!canTransition()) return;
-        
+
             lastTransitionTime.current = Date.now();
             const fromRef = contentRefs[fromIndex]?.current;
             const toRef = contentRefs[toIndex]?.current;
             if (!fromRef || !toRef) return;
-        
+
             if (toIndex === 2 && rive1) {
                 setTimeout(() => {
                     rive1.reset();
@@ -210,11 +210,11 @@ const Entrance = () => {
                     rive2.play();
                 }, 450);
             }
-        
+
             disableScroll();
             hasSnapped = true;
             accumulated = 0;
-        
+
             gsap.to(fromRef, {
                 opacity: 0,
                 x: direction === "forward" ? -100 : 100,
@@ -223,7 +223,7 @@ const Entrance = () => {
                 onComplete: () => {
                     fromRef.style.display = "none";
                     toRef.style.display = "flex";
-        
+
                     gsap.fromTo(
                         toRef,
                         { opacity: 0, x: direction === "forward" ? 150 : -150 },
@@ -240,7 +240,7 @@ const Entrance = () => {
                     );
                 },
             });
-        
+
             entranceStep = toIndex;
             entranceStepRef.current = toIndex;
             setActiveStep(toIndex);
@@ -481,10 +481,10 @@ const Entrance = () => {
                     <Step32 className="w-[50vw] h-[40vw] lg:w-[20vw] lg:h-[20vw]" />
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
-                    Gain Clarity
+                    Identify
                 </p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    We analyze your business operations and co-design your AI strategy.
+                    We analyze your business operations, define high-impact Al Opportunities and co-design the Al Transformation Strategy that best aligns with your business goals.
                 </p>
             </div>
 
@@ -495,9 +495,9 @@ const Entrance = () => {
                         <LearnRive />
                     </div>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Learn AI</p>
+                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Educate </p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    We equip your team with the tools and knowledge to lead AI adoption.
+                    Our experts equip your team with the tools, frameworks, and strategic know-how to adopt Al confidently across all organizational levels.
                 </p>
             </div>
 
@@ -508,9 +508,9 @@ const Entrance = () => {
                         <BuildRive />
                     </div>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Build Solutions</p>
+                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Develop</p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    We design and develop custom AI systems aligned with your goals.
+                    We design and develop custom AI systems, automations, and state-of-the-art solutions tailored to your organisational structure.
                 </p>
             </div>
         </div>
