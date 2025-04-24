@@ -71,11 +71,11 @@ const Footer = () => {
             role: formData.role.trim().length < 2,
             company_name: formData.company_name.trim().length < 2,
             company_website: formData.company_website.trim().length < 2,
-            company_size: formData.company_size.trim().length < 2,
-            companys_revenue: formData.companys_revenue.trim().length < 2,
-            project_budget: formData.project_budget.trim().length < 2,
-            services_needed: formData.services_needed.trim().length < 2,
-            message: formData.message.trim().length < 2,
+            company_size: formData.company_size.trim().length < 0,
+            companys_revenue: formData.companys_revenue.trim().length < 0,
+            project_budget: formData.project_budget.trim().length < 0,
+            services_needed: formData.services_needed.trim().length < 0,
+            message: formData.message.trim().length < 0,
         };
 
         setFieldErrors(errors);
