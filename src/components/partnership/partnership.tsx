@@ -25,6 +25,7 @@ const Partnership = () => {
   const handleWheel = (e: WheelEvent) => {
     if (isDrawerOpen && drawerContentRef.current) {
       // Prevent page scroll when hovering over drawer
+      document.body.style.overflow = "hidden";
       e.preventDefault();
       // Manually scroll the drawer content
       drawerContentRef.current.scrollTop += e.deltaY;
@@ -88,7 +89,6 @@ const Partnership = () => {
 
     const scrollToSection = (targetId: string) => {
       if (scrollCooldown) return;
-
       scrollCooldown = true;
       hasSnapped = true;
       accumulated = 0;

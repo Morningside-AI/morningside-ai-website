@@ -9,7 +9,8 @@ import Link from "next/link";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose, IoMdAlert } from "react-icons/io";
+import { div } from "three/tsl";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -33,41 +34,64 @@ const Footer = () => {
         message: "",
     });
 
+    const [fieldErrors, setFieldErrors] = useState({
+        name: false,
+        email: false,
+        role: false,
+        company_name: false,
+        company_website: false,
+        company_size: false,
+        companys_revenue: false,
+        project_budget: false,
+        services_needed: false,
+        message: false,
+    });
+
+    const [success, setSuccess] = useState<boolean>(false)
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
             [name]: value,
         }));
+        // Clear error when user starts typing
+        if (fieldErrors[name as keyof typeof fieldErrors]) {
+            setFieldErrors(prev => ({
+                ...prev,
+                [name]: false
+            }));
+        }
     };
 
     const validateForm = () => {
-        const errors: string[] = [];
+        const errors = {
+            name: formData.name.trim().length < 2,
+            email: !/\S+@\S+\.\S+/.test(formData.email),
+            role: formData.role.trim().length < 2,
+            company_name: formData.company_name.trim().length < 2,
+            company_website: formData.company_website.trim().length < 2,
+            company_size: formData.company_size.trim().length < 2,
+            companys_revenue: formData.companys_revenue.trim().length < 2,
+            project_budget: formData.project_budget.trim().length < 2,
+            services_needed: formData.services_needed.trim().length < 2,
+            message: formData.message.trim().length < 2,
+        };
 
-        if (formData.name.trim().length < 2) errors.push("Name must be at least 2 characters.");
-        if (!/\S+@\S+\.\S+/.test(formData.email)) errors.push("Invalid email address.");
-        if (formData.role.trim().length < 2) errors.push("Role must be at least 2 characters.");
-        if (formData.company_name.trim().length < 2) errors.push("Company name must be at least 2 characters.");
-        if (formData.company_website.trim().length < 2) errors.push("Company website must be at least 2 characters.");
-        if (formData.company_size.trim().length < 2) errors.push("Company size must be selected.");
-        if (formData.companys_revenue.trim().length < 2) errors.push("Company revenue must be selected.");
-        if (formData.project_budget.trim().length < 2) errors.push("Project budget must be selected.");
-        if (formData.services_needed.trim().length < 2) errors.push("Services needed must be selected.");
-        if (formData.message.trim().length < 2) errors.push("Message must be at least 2 characters.");
-
-        return errors;
+        setFieldErrors(errors);
+        return Object.values(errors).some(error => error);
     };
 
-    const handleSubmit = async () => {
-        const errors = validateForm();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const hasErrors = validateForm();
 
-        if (errors.length > 0) {
-            console.log(errors.join("\n"));
+        if (hasErrors) {
             return;
         }
 
         try {
-            await fetch("https://hook.eu2.make.com/7k7oe359aq8op254a1o6elozana7565d", {
+            await fetch("https://api.backendless.com/21B586A5-D90D-40E9-B17C-B637D2E49D0A/DA2469F6-EBCE-40E1-8F07-D2B357ADB1BB/data/morningside", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -76,23 +100,31 @@ const Footer = () => {
             });
 
             console.log("Form submitted successfully!");
+            setSuccess(true);
+            // Reset form after successful submission
+            setFormData({
+                name: "",
+                email: "",
+                role: "",
+                company_name: "",
+                company_website: "",
+                company_size: "",
+                companys_revenue: "",
+                project_budget: "",
+                services_needed: "",
+                message: "",
+            });
         } catch (err) {
             console.error(err);
             console.log("Submission failed.");
         }
     };
 
-
-
-
-
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handleWheel = (e: WheelEvent) => {
         if (isDrawerOpen && drawerContentRef.current) {
-            // Prevent page scroll when hovering over drawer
             e.preventDefault();
-            // Manually scroll the drawer content
             drawerContentRef.current.scrollTop += e.deltaY;
         }
     };
@@ -114,6 +146,7 @@ const Footer = () => {
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
+        setSuccess(false);
     };
 
     useEffect(() => {
@@ -126,7 +159,7 @@ const Footer = () => {
         const preventDefault = (e: TouchEvent) => e.preventDefault();
 
         const disableScroll = () => {
-            if (!scrollLocked && !isDrawerOpen) {
+            if (!scrollLocked) {
                 scrollLocked = true;
                 document.body.style.overflow = "hidden";
                 document.documentElement.style.overflow = "hidden";
@@ -151,6 +184,9 @@ const Footer = () => {
 
         const scrollToSection = (targetId: string) => {
             if (scrollCooldown) return;
+            if (isDrawerOpen) {
+                disableScroll();
+            }
             scrollCooldown = true;
             hasSnapped = true;
             accumulated = 0;
@@ -170,10 +206,14 @@ const Footer = () => {
         };
 
         const handleIntent = (delta: number) => {
+            if (isDrawerOpen) {
+                disableScroll();
+                return;
+            }
             if (!isInView() || hasSnapped) return;
             accumulated += delta;
 
-            if (accumulated <= -threshold) {
+            if (accumulated <= -threshold && !isDrawerOpen) {
                 disableScroll();
                 scrollToSection("#partnership-section");
             }
@@ -182,21 +222,14 @@ const Footer = () => {
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
 
-            // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
             if (mtd.inertial(e)) {
-                // If it's an inertial scroll event, we return early and don't process the scroll
                 return;
             }
 
             const deltaY = e.deltaY;
-
-            // Normalize the delta to handle macOS touchpad sensitivity
-            const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
-
-            // Handle the scroll intent (up or down) based on the normalized delta
+            const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY;
             handleIntent(normalizedDelta);
         };
-
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowUp" || e.key === "PageUp") {
@@ -237,10 +270,8 @@ const Footer = () => {
 
             const deltaY = touchStartY.current - touch.clientY;
 
-            // ✅ Only lock scroll if the user is swiping significantly
             if (!isSwiping && Math.abs(deltaY) > 10) {
                 isSwiping = true;
-                //disableScroll(); // only now
             }
 
             if (isSwiping) {
@@ -248,8 +279,6 @@ const Footer = () => {
                 handleIntent(deltaY);
             }
         };
-
-
 
         const handleTouchEnd = () => {
             enableScroll();
@@ -329,16 +358,10 @@ const Footer = () => {
             };
         }
 
-
-
-        // Replace the text animation code with this
         if (textEl) {
             const words = textEl.querySelectorAll("span");
 
-            // Reset all animations first
             gsap.killTweensOf(words);
-
-            // Set initial state
             gsap.set(words, {
                 opacity: 0,
                 y: 100,
@@ -347,7 +370,6 @@ const Footer = () => {
                 overwrite: "auto"
             });
 
-            // Create scroll trigger
             ScrollTrigger.create({
                 id: "footer-text",
                 trigger: footerRef.current,
@@ -360,11 +382,9 @@ const Footer = () => {
                 onLeaveBack: () => animateTextOut(words)
             });
 
-            // Refresh ScrollTrigger after setup
             ScrollTrigger.refresh();
         }
 
-        // Add these outside the useEffect
         const animateTextIn = (words: NodeListOf<Element>) => {
             const tl = gsap.timeline();
             tl.to(words, {
@@ -410,7 +430,7 @@ const Footer = () => {
                 className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden"
             >
                 <div className="w-full flex flex-row justify-between" ref={textRef}>
-                    <p className="lg:text-6xl text-5xl text-left">
+                    <p className="lg:text-6xl text-5xl text-left leading-normal">
                         <span className="white-silver-animated-text">We&nbsp;</span>
                         <span className="white-silver-animated-text">look&nbsp;</span>
                         <span className="white-silver-animated-text">forward&nbsp;</span>
@@ -431,7 +451,7 @@ const Footer = () => {
                             <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                         </Link>
                         <div className="flex flex-row gap-1 relative z-10">
-                            <button onClick={() => setIsDrawerOpen(true)} className="flex items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
+                            <button onClick={() => setIsDrawerOpen(true)} className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                 Get In Touch
                                 <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
                             </button>
@@ -445,13 +465,13 @@ const Footer = () => {
                     </div>
 
                     <div className="w-full flex flex-col lg:flex-row items-start lg:items-end lg:justify-center gap-2 lg:gap-4 order-3 lg:order-1 my-8">
-                        <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">
+                        <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:opacity-70">
                             <Link href="/terms-and-conditions" target="_blank" className="w-full cursor-pointer">
                                 Terms & Conditions
                             </Link>
                         </p>
-                        <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">
-                            <Link href="/privacy-policy" target="_blank" className="w-full cursor-pointer">
+                        <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:opacity-70">
+                            <Link href="/privacy-policy" target="_blank" className="w-full cursor-pointer ">
                                 Privacy Policy
                             </Link>
                         </p>
@@ -459,11 +479,11 @@ const Footer = () => {
 
                     <div className="flex flex-col justify-end gap-2 lg:gap-4 order-3 md:order-1 text-left footer-follow">
                         <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Follow</p>
-                        <Link href="https://www.linkedin.com/company/morningside-ai/posts/?feedView=all" target="_blank" className="w-fit cursor-pointer">
-                            <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Linkedin</p>
+                        <Link href="https://www.linkedin.com/company/morningside-ai/posts/?feedView=all" target="_blank" className="w-fit cursor-pointer hover:opacity-80">
+                            <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:text-white/70">Linkedin</p>
                         </Link>
-                        <Link href="https://www.youtube.com/@LiamOttley" target="_blank" className="w-fit cursor-pointer">
-                            <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase">Youtube</p>
+                        <Link href="https://www.youtube.com/@LiamOttley" target="_blank" className="w-fit cursor-pointer hover:opacity-80">
+                            <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:text-white/70">Youtube</p>
                         </Link>
                     </div>
                 </div>
@@ -485,94 +505,218 @@ const Footer = () => {
             >
                 <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
                     <div className="flex flex-row justify-between items-start">
-                        <h2 className="text-5xl font-bold pb-6">Get In Touch</h2>
-                        <button onClick={toggleDrawer} className="p-3 cursor-pointer">
+                        <h2 className="text-4xl font-medium pb-6">Get In Touch</h2>
+                        <button onClick={toggleDrawer} className="p-3 cursor-pointer hover:opacity-50">
                             <IoMdClose size={28} />
                         </button>
                     </div>
                     <div
                         className="w-full flex flex-col items-center gap-6 overflow-y-auto pe-4"
                         ref={drawerContentRef}
-                        onTouchStart={(e) => e.stopPropagation()} // Add touch handlers
+                        onTouchStart={(e) => e.stopPropagation()}
                         onTouchMove={(e) => e.stopPropagation()}
                     >
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
-                                <p className="text-md font-bold">What is your name?</p>
-                                <input type="text" placeholder="name" id="name" name="name" onChange={handleChange} value={formData.name} />
-                            </div>
-                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
-                                <p className="text-md font-bold">What is your email?</p>
-                                <input type="email" placeholder="Email" name="email" id="email" onChange={handleChange} value={formData.email} />
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full flex flex-col gap-2">
-                                <p className="text-md font-bold">What is your role in the company?</p>
-                                <input type="text" placeholder="Enter role" name="role" id="role" onChange={handleChange} value={formData.role} />
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
-                                <p className="text-md font-bold">Company Name</p>
-                                <input type="text" placeholder="Enter company name" name="company_name" id="company_name" onChange={handleChange} value={formData.company_name} />
-                            </div>
-                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
-                                <p className="text-md font-bold">Company Website</p>
-                                <input type="text" placeholder="Enter company website" name="company_website" id="company_website" onChange={handleChange} value={formData.company_website} />
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
-                                <p className="text-md font-bold">Company Size</p>
-                                <select name="company_size" id="company_size" onChange={handleChange} value={formData.company_size}>
-                                    <option value="1-10">Less than 20</option>
-                                    <option value="11-50">20-50</option>
-                                    <option value="51-100">50-100</option>
-                                    <option value="101-500">100-500</option>
-                                    <option value="501-1000">More than 500</option>
-                                </select>
-                            </div>
-                            <div className="w-full lg:w-1/2 flex flex-col gap-2">
-                                <p className="text-md font-bold">Company&apos;s Annual Revenue</p>
-                                <select name="companys_revenue" id="companys_revenue" onChange={handleChange} value={formData.companys_revenue}>
-                                    <option value="1-10">Less than $100K</option>
-                                    <option value="11-50">$100K-$500K</option>
-                                    <option value="51-100">$500K-$1M</option>
-                                    <option value="101-500">$1M-$2M</option>
-                                    <option value="501-1000">More than $2M</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full flex flex-col gap-2">
-                                <p className="text-md font-bold">Project budget</p>
-                                <select name="project_budget" id="project_budget" onChange={handleChange} value={formData.project_budget}>
-                                    <option value="1-10">Less than $10K</option>
-                                    <option value="11-50">$10K-$50K</option>
-                                    <option value="51-100">$50K-$100K</option>
-                                    <option value="501-1000">More than $100K</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full flex flex-col gap-2">
-                                <p className="text-md font-bold">What services are you interested in?</p>
-                                <select name="services_needed" id="services_needed" onChange={handleChange} value={formData.services_needed}>
-                                    <option value="1-10">Getting clarity and identifying AI opportunities</option>
-                                    <option value="11-50">Educating your team on AI</option>
-                                    <option value="51-100">Developing custom AI solutions</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2">
-                            <div className="w-full flex flex-col gap-2">
-                                <p className="text-md font-bold">Message</p>
-                                <textarea rows={5} name="message" id="message" placeholder="Enter message" onChange={handleChange} value={formData.message} />
-                            </div>
-                        </div>
+                        {
+                            success ? (
+                                <div className="h-full flex flex-col items-center justify-center">
+                                    <p className="green-text font-medium">Message sent succesfully !</p>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="w-full flex flex-col">
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">What is your name?</p>
+                                                {fieldErrors.name && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <input
+                                                required
+                                                type="text"
+                                                placeholder="name"
+                                                id="name"
+                                                name="name"
+                                                onChange={handleChange}
+                                                value={formData.name}
+                                                className={fieldErrors.name ? "border-red-500" : ""}
+                                            />
+                                        </div>
+                                        <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">What is your email?</p>
+                                                {fieldErrors.email && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <input
+                                                required
+                                                type="email"
+                                                placeholder="Email"
+                                                name="email"
+                                                id="email"
+                                                onChange={handleChange}
+                                                value={formData.email}
+                                                className={fieldErrors.email ? "border-red-500" : ""}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">What is your role in the company?</p>
+                                                {fieldErrors.role && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <input
+                                                required
+                                                type="text"
+                                                placeholder="Enter role"
+                                                name="role"
+                                                id="role"
+                                                onChange={handleChange}
+                                                value={formData.role}
+                                                className={fieldErrors.role ? "border-red-500" : ""}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">Company Name</p>
+                                                {fieldErrors.company_name && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <input
+                                                required
+                                                type="text"
+                                                placeholder="Enter company name"
+                                                name="company_name"
+                                                id="company_name"
+                                                onChange={handleChange}
+                                                value={formData.company_name}
+                                                className={fieldErrors.company_name ? "border-red-500" : ""}
+                                            />
+                                        </div>
+                                        <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">Company Website</p>
+                                                {fieldErrors.company_website && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <input
+                                                required
+                                                type="text"
+                                                placeholder="Enter company website"
+                                                name="company_website"
+                                                id="company_website"
+                                                onChange={handleChange}
+                                                value={formData.company_website}
+                                                className={fieldErrors.company_website ? "border-red-500" : ""}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">Company Size</p>
+                                                {fieldErrors.company_size && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <select
+                                                name="company_size"
+                                                id="company_size"
+                                                onChange={handleChange}
+                                                value={formData.company_size}
+                                                className={fieldErrors.company_size ? "border-red-500" : ""}
+                                            >
+                                                <option value="">Select company size</option>
+                                                <option value="1-10">Less than 20</option>
+                                                <option value="11-50">20-50</option>
+                                                <option value="51-100">50-100</option>
+                                                <option value="101-500">100-500</option>
+                                                <option value="501-1000">More than 500</option>
+                                            </select>
+                                        </div>
+                                        <div className="w-full lg:w-1/2 flex flex-col gap-2 mb-4">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">Company&apos;s Annual Revenue</p>
+                                                {fieldErrors.companys_revenue && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <select
+                                                name="companys_revenue"
+                                                id="companys_revenue"
+                                                onChange={handleChange}
+                                                value={formData.companys_revenue}
+                                                className={fieldErrors.companys_revenue ? "border-red-500" : ""}
+                                            >
+                                                <option value="">Select revenue range</option>
+                                                <option value="1-10">Less than $100K</option>
+                                                <option value="11-50">$100K-$500K</option>
+                                                <option value="51-100">$500K-$1M</option>
+                                                <option value="101-500">$1M-$2M</option>
+                                                <option value="501-1000">More than $2M</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">Project budget</p>
+                                                {fieldErrors.project_budget && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <select
+                                                name="project_budget"
+                                                id="project_budget"
+                                                onChange={handleChange}
+                                                value={formData.project_budget}
+                                                className={fieldErrors.project_budget ? "border-red-500" : ""}
+                                            >
+                                                <option value="">Select budget range</option>
+                                                <option value="1-10">Less than $10K</option>
+                                                <option value="11-50">$10K-$50K</option>
+                                                <option value="51-100">$50K-$100K</option>
+                                                <option value="501-1000">More than $100K</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">What services are you interested in?</p>
+                                                {fieldErrors.services_needed && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <select
+                                                name="services_needed"
+                                                id="services_needed"
+                                                onChange={handleChange}
+                                                value={formData.services_needed}
+                                                className={fieldErrors.services_needed ? "border-red-500" : ""}
+                                            >
+                                                <option value="">Select service</option>
+                                                <option value="1-10">Getting clarity and identifying AI opportunities</option>
+                                                <option value="11-50">Educating your team on AI</option>
+                                                <option value="51-100">Developing custom AI solutions</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
+                                        <div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row items-center gap-1">
+                                                <p className="text-md font-medium">Message</p>
+                                                {fieldErrors.message && <IoMdAlert size={14} color="red" />}
+                                            </div>
+                                            <textarea
+                                                required
+                                                rows={7}
+                                                name="message"
+                                                id="message"
+                                                placeholder="Enter message"
+                                                onChange={handleChange}
+                                                value={formData.message}
+                                                className={fieldErrors.message ? "border-red-500 resize-none" : "resize-none"}
+                                            />
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="w-full text-white cursor-pointer py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/70">
+                                        Send
+                                    </button>
+                                </form>
+                            )
+                        }
                     </div>
-                    <button className="w-full text-white py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/80" onClick={handleSubmit} >Send</button>
                 </div>
             </Drawer>
         </>

@@ -161,6 +161,7 @@ body::-webkit-scrollbar-thumb:hover {
   outline: none;
   width: 100%;
   max-width: 100%;
+  font-weight: 300;
 }
 
 .msaiDrawer select:focus {
@@ -169,11 +170,13 @@ body::-webkit-scrollbar-thumb:hover {
   border-right: none;
   border-bottom: 1px solid #060E0A;
   outline: none;
+  font-weight: 300;
 }
 
 .msaiDrawer select option {
   background-color: #EDECE4;
   color: #060E0A;
+  font-weight: 300;
 }
 
 

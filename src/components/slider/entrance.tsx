@@ -434,7 +434,7 @@ const Entrance = () => {
                     <button
                         key={label.title}
                         onClick={() => handleLabelClick(index)}
-                        className={`text-left ${index === 0 ? "hidden" : ""} transition-all duration-300 ${activeStep === index
+                        className={`text-left ${index === 0 ? "hidden" : ""} cursor-pointer transition-all duration-300 ${activeStep === index
                             ? "text-lg text-white md:text-2xl opacity-100"
                             : "text-lg text-gray-400 md:text-xl opacity-50 hover:opacity-70"
                             }`}
