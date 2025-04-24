@@ -86,7 +86,7 @@ const Navbar = () => {
         }
 
         try {
-            await fetch("https://api.backendless.com/21B586A5-D90D-40E9-B17C-B637D2E49D0A/DA2469F6-EBCE-40E1-8F07-D2B357ADB1BB/data/morningside", {
+            await fetch(`https://api.backendless.com/21B586A5-D90D-40E9-B17C-B637D2E49D0A/${process.env.backendless_api_key}/data/morningside`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
