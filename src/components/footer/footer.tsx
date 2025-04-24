@@ -91,7 +91,7 @@ const Footer = () => {
         }
 
         try {
-            await fetch(`https://api.backendless.com/21B586A5-D90D-40E9-B17C-B637D2E49D0A/${process.env.backendless_api_key}/data/morningside`, {
+            await fetch(`https://api.backendless.com/21B586A5-D90D-40E9-B17C-B637D2E49D0A/${process.env.NEXT_PUBLIC_backendless_api_key}/data/morningside`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
