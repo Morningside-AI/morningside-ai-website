@@ -484,7 +484,7 @@ const Entrance = () => {
                     Identify
                 </p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    We analyze your business operations, define high-impact Al Opportunities and co-design the Al Transformation Strategy that best aligns with your business goals.
+                    We analyze your business operations, define high-impact Al opportunities and co-design the Al Transformation Strategy that best aligns with your business goals.
                 </p>
             </div>
 

@@ -95,7 +95,7 @@ const TermsAndConditions = () => {
             <h2 className="text-xl md:text-2xl font-semibold mb-3">13. Contact Us</h2>
             <p className="mb-6">
               For any questions about these Terms, please contact us using the following information:<br />
-              Email address: josh@morningside.ai<br />
+              Email address: info@morningside.ai<br />
               Postal address: 1 Albert Street, Auckland, 1010, New Zealand
             </p>
           </section>
