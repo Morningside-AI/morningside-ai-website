@@ -41,12 +41,10 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .white-silver-animated-text {
-  background: linear-gradient(
-    90deg,
-    #999999 0%,
-    #ffffff 50%,
-    #999999 100%
-  );
+  background: linear-gradient(90deg,
+      #999999 0%,
+      #ffffff 50%,
+      #999999 100%);
   background-size: 250% 100%;
   background-position: 0% 0%;
   background-clip: text;
@@ -58,12 +56,10 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .white-silver-animated-text1 {
-  background: linear-gradient(
-    90deg,
-    #999999 0%,
-    #ffffff 50%,
-    #999999 100%
-  );
+  background: linear-gradient(90deg,
+      #999999 0%,
+      #ffffff 50%,
+      #999999 100%);
   background-size: 300% 100%;
   background-position: 0% 0%;
   background-clip: text;
@@ -75,12 +71,10 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .white-silver-animated-text2 {
-  background: linear-gradient(
-    90deg,
-    #999999 0%,
-    #ffffff 50%,
-    #999999 100%
-  );
+  background: linear-gradient(90deg,
+      #999999 0%,
+      #ffffff 50%,
+      #999999 100%);
   background-size: 300% 100%;
   background-position: 0% 0%;
   background-clip: text;
@@ -91,16 +85,15 @@ body::-webkit-scrollbar-thumb:hover {
   display: inline-block;
 }
 
-
 @keyframes white-silver-gradient {
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: 300% 0%;
   }
 }
-
 
 .msaiDrawer {
   background-color: transparent !important;
@@ -114,7 +107,7 @@ body::-webkit-scrollbar-thumb:hover {
   transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1) !important;
 }
 
-.msaiDrawer > div {
+.msaiDrawer>div {
   will-change: transform;
   transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1) !important;
 }
@@ -129,6 +122,7 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+/* Enhanced Input Styles */
 .msaiDrawer input {
   background-color: #EDECE4;
   color: #060E0A;
@@ -140,58 +134,82 @@ body::-webkit-scrollbar-thumb:hover {
   outline: none;
   width: 100%;
   max-width: 100%;
+  padding: 8px 0;
+  transition: border-color 0.2s ease;
 }
 
 .msaiDrawer input:focus {
-  border-top: none;
   border-left: none;
   border-right: none;
+  border-top: none;
   border-bottom: 1px solid #060E0A;
   outline: none;
 }
 
+/* Enhanced Select Styles */
 .msaiDrawer select {
   background-color: #EDECE4;
   color: #060E0A;
-  border-top: none;
+  border-bottom: 1px solid #060E0A;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid #060E0A;
-  border-radius: 0;
+  border-top: none;
   outline: none;
   width: 100%;
   max-width: 100%;
+  padding: 10px 12px;
   font-weight: 300;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23060E0A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: all 0.2s ease;
 }
 
 .msaiDrawer select:focus {
-  border-top: none;
   border-left: none;
   border-right: none;
+  border-top: none;
   border-bottom: 1px solid #060E0A;
   outline: none;
-  font-weight: 300;
 }
 
 .msaiDrawer select option {
   background-color: #EDECE4;
   color: #060E0A;
   font-weight: 300;
+  padding: 8px 12px;
 }
 
+/* Error States */
+.msaiDrawer input.border-red-500,
+.msaiDrawer select.border-red-500,
+.msaiDrawer textarea.border-red-500 {
+  border-color: #EF4444;
+}
 
 .msaiDrawer textarea {
   background-color: #EDECE4;
   color: #060E0A;
-  border-top: none;
   border-left: none;
   border-right: none;
+  border-top: none;
+  border-bottom: 1px solid #060E0A;
+  outline: none;
+  padding: 10px 12px;
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  transition: border-color 0.2s ease;
 }
 
 .msaiDrawer textarea:focus {
-  border-top: none;
   border-left: none;
   border-right: none;
+  border-top: none;
   border-bottom: 1px solid #060E0A;
   outline: none;
 }
@@ -205,8 +223,6 @@ body::-webkit-scrollbar-thumb:hover {
   text-align: center;
   font-size: 18px;
   background: transparent !important;
-
-  /* Center slide text vertically */
   display: flex;
   justify-content: center;
   align-items: center;

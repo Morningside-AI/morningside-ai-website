@@ -62,7 +62,7 @@ const RotatingText = () => {
   return (
     <div
       ref={containerRef}
-      className="text-5xl md:text-7xl lg:text-9xl green-text flex gap-[0.02em] tracking-tighter"
+      className="text-5xl md:text-7xl lg:text-9xl green-text flex gap-[0.02em] tracking-[-0.04em]"
     >
       {currentWord?.split("").map((char, index) => (
         <span key={index} data-letter className="inline-block opacity-0" style={{
