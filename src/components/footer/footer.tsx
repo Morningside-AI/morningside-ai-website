@@ -421,7 +421,7 @@ const Footer = () => {
                     boxShadow: 'none',
                 }}
             >
-                <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md ">
+                <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md overflow-y-auto pe-4" ref={drawerContentRef}>
                     <div className="flex flex-row justify-between items-start">
                         <h2 className="text-4xl font-medium pb-6">Get In Touch</h2>
                         <button onClick={toggleDrawer} className="p-3 cursor-pointer hover:opacity-50">
@@ -429,9 +429,7 @@ const Footer = () => {
                         </button>
                     </div>
                     <div
-                        className="w-full flex flex-col items-center gap-6 overflow-y-auto pe-4"
-                        ref={drawerContentRef}
-                    >
+                        className="w-full flex flex-col items-center gap-6">
                         {
                             success ? (
                                 <div className="h-full flex flex-col items-center justify-center">
