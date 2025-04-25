@@ -17,11 +17,13 @@
   },
   "dependencies": {
     "@hscmap/magic-trackpad-detector": "^0.0.9",
+    "@react-three/fiber": "^9.1.2",
     "@rive-app/react-canvas": "^4.18.8",
     "@shadergradient/react": "^2.0.25",
     "@start-base/react-modal": "^1.5.3",
     "@t3-oss/env-nextjs": "^0.12.0",
     "drei": "^2.2.21",
+    "formik": "^2.4.6",
     "gsap": "^3.12.7",
     "next": "^15.2.3",
     "react": "^19.0.0",
@@ -32,6 +34,7 @@
     "react-modern-drawer": "^1.4.0",
     "swiper": "^11.2.6",
     "three": "^0.175.0",
+    "yup": "^1.6.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {
