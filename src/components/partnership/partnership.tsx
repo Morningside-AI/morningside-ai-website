@@ -70,12 +70,13 @@ const Partnership = () => {
       role: formData.role.trim().length < 2,
       company_name: formData.company_name.trim().length < 2,
       company_website: formData.company_website.trim().length < 2,
-      company_size: formData.company_size.trim().length < 0,
-      companys_revenue: formData.companys_revenue.trim().length < 0,
-      project_budget: formData.project_budget.trim().length < 0,
-      services_needed: formData.services_needed.trim().length < 0,
-      message: formData.message.trim().length < 0,
+      company_size: formData.company_size.trim().length < 1,
+      companys_revenue: formData.companys_revenue.trim().length < 1,
+      project_budget: formData.project_budget.trim().length < 1,
+      services_needed: formData.services_needed.trim().length < 1,
+      message: formData.message.trim().length < 2, // optional: ensure message is at least 2 chars
     };
+
 
     setFieldErrors(errors);
     return Object.values(errors).some(error => error);
@@ -123,13 +124,15 @@ const Partnership = () => {
 
   const handleWheel = (e: WheelEvent) => {
     if (isDrawerOpen && drawerContentRef.current) {
-      // Prevent page scroll when hovering over drawer
-      document.body.style.overflow = "hidden";
-      e.preventDefault();
-      // Manually scroll the drawer content
-      drawerContentRef.current.scrollTop += e.deltaY;
+      const target = e.target as HTMLElement;
+      const isInput = ['TEXTAREA', 'INPUT', 'SELECT'].includes(target.tagName);
+      if (!isInput) {
+        e.preventDefault();
+        drawerContentRef.current.scrollTop += e.deltaY;
+      }
     }
   };
+
 
   useEffect(() => {
     if (isDrawerOpen) {
