@@ -456,7 +456,7 @@ const Footer = () => {
                         <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">
                             <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                         </Link>
-                        <div className="flex flex-row gap-1 relative z-10">
+                        <div className="flex flex-row gap-2 relative z-10">
                             <button onClick={() => setIsDrawerOpen(true)} className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                 Get In Touch
                                 <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
@@ -628,7 +628,7 @@ const Footer = () => {
                                                 value={formData.company_size}
                                                 className={fieldErrors.company_size ? "border-red-500" : ""}
                                             >
-                                                <option value="">Select company size</option>
+                                                <option value="" className="text-gray-500">Select company size</option>
                                                 <option value="1-10">Less than 20</option>
                                                 <option value="11-50">20-50</option>
                                                 <option value="51-100">50-100</option>

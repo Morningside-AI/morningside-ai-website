@@ -239,7 +239,7 @@ const Stats = () => {
             fontFamily: "DM-Mono-Italic, monospace",
             fontStyle: "italic",
           }}
-          className="md:text-5xl text-4xl white-silver-animated-text2"
+          className="md:text-5xl text-4xl white-silver-animated-text2 tracking-[-0.04em]"
         >
           Results.
         </span>

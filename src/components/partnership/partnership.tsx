@@ -424,7 +424,7 @@ const Partnership = () => {
           <span className="white-silver-animated-text">built </span>
           <span className="green-text">side </span>
           <span className="green-text">by </span>
-          <span className="green-text">side</span>
+          <span className="green-text">side.</span>
         </p>
 
         <div

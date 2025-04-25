@@ -252,7 +252,7 @@ const Center = () => {
           <br />
           <span className="green-text">everything </span>
           <span className="white-silver-animated-text2">we </span>
-          <span className="white-silver-animated-text">do</span>
+          <span className="white-silver-animated-text">do.</span>
         </p>
       </div>
       <p
