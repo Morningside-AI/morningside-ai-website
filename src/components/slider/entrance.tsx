@@ -510,7 +510,7 @@ const Entrance = () => {
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Develop</p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    We design and develop custom AI systems, automations, and state-of-the-art solutions tailored to your organisational structure.
+                We design and develop custom AI systems, automations, and state-of-the-art solutions that are proven to move the needle inside your business, thanks to our extensive experience and network of AI Automation Agencies building such solutions.
                 </p>
             </div>
         </div>
