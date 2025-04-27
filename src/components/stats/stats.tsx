@@ -25,7 +25,7 @@ const Stats = () => {
   };
 
   useEffect(() => {
-    const threshold = 30; // same as Hero
+    const threshold = 45; // same as Hero
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -80,7 +80,9 @@ const Stats = () => {
       const el = statsRef.current;
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+      // Tighter viewport check
+      return rect.top <= window.innerHeight * 0.4 &&
+        rect.bottom > window.innerHeight * 0.4;
     };
 
     const scrollToSection = (targetId: string) => {
@@ -91,9 +93,11 @@ const Stats = () => {
       accumulated = 0;
 
       gsap.to(window, {
-        scrollTo: targetId,
+        scrollTo: {
+          y: targetId,
+        },
         duration: 0.08,
-        ease: "linear",
+        ease: "power2.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
@@ -105,30 +109,32 @@ const Stats = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition()) {
+        return;
+      }
       accumulated += delta;
-    
+
       if (accumulated >= threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
-        scrollToSection("#partnership-section");
-      } else if (accumulated <= -threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
+        lastTransitionTime.current = Date.now();
+        accumulated = 0;
         scrollToSection("#entrance-section");
+      } else if (accumulated <= -threshold) {
+        lastTransitionTime.current = Date.now();
+        accumulated = 0;
+        scrollToSection("#hero-section");
       }
     };
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) {
-        return;
-      }
+      if (mtd.inertial(e)) return;
 
-      const deltaY = e.deltaY * 0.3; 
+      // Add delta normalization
+      const baseDelta = e.deltaY * 0.3;
+      const deltaY = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), 20);
       handleIntent(deltaY);
     };
-    
+
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "PageDown") {
@@ -163,8 +169,9 @@ const Stats = () => {
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
-        const deltaY = (touchStartY.current - touch.clientY) * 0.5;
+        const deltaY = (touchStartY.current - touch.clientY) * 0.5; // Reduce touch sensitivity
         handleIntent(deltaY);
+        touchStartY.current = touch.clientY;
       }
     };
 
@@ -211,7 +218,7 @@ const Stats = () => {
       className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
     >
 
-      <LogoMarkWhite ref={svgContainerRef}  className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
+      <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
       <p className="white-silver-animated-text">
         <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.&nbsp;</span>
         <br className="block lg:hidden" />

@@ -25,7 +25,7 @@ const Partnership = () => {
   };
 
   useEffect(() => {
-    const threshold = 30;
+    const threshold = 45;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -57,7 +57,9 @@ const Partnership = () => {
       const el = centerRef.current;
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+      // Tighter viewport check
+      return rect.top <= window.innerHeight * 0.4 &&
+        rect.bottom > window.innerHeight * 0.4;
     };
 
     const scrollToSection = (targetId: string) => {
@@ -67,9 +69,11 @@ const Partnership = () => {
       accumulated = 0;
 
       gsap.to(window, {
-        scrollTo: targetId,
+        scrollTo: {
+          y: targetId,
+        },
         duration: 0.08,
-        ease: "linear",
+        ease: "power2.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
@@ -81,25 +85,29 @@ const Partnership = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition()) {
+        return;
+      }
       accumulated += delta;
 
       if (accumulated >= threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
-        scrollToSection("#footer-section");
+        lastTransitionTime.current = Date.now();
+        accumulated = 0;
+        scrollToSection("#entrance-section");
       } else if (accumulated <= -threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
-        scrollToSection("#stats-section");
+        lastTransitionTime.current = Date.now();
+        accumulated = 0;
+        scrollToSection("#hero-section");
       }
     };
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return; // Ignore inertial events
+      if (mtd.inertial(e)) return;
 
-      const deltaY = e.deltaY * 0.3; // Reduced sensitivity
+      // Add delta normalization
+      const baseDelta = e.deltaY * 0.3;
+      const deltaY = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), 20);
       handleIntent(deltaY);
     };
 
