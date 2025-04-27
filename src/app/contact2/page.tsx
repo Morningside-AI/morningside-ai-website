@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Navbar from "@/components/navbar/navbar";
 import ContactForm from "@/components/generic/contactForm";
 import ContactFooter2 from "@/components/footer/contactFooter2";
@@ -9,6 +10,7 @@ import 'swiper/css/pagination';
 
 
 export default function HomePage() {
+    const [success, setSuccess] = useState(false);
     return (
         <main className="flex min-h-screen w-full flex-col items-center lg:px-12 md:px-8 px-4 relative main-container">
             <Navbar />
@@ -16,7 +18,7 @@ export default function HomePage() {
                 <div className="w-full flex flex-row">
                 <h2 className="text-4xl font-medium text-left pb-10">Get In Touch</h2>
                 </div>
-                <ContactForm />
+                <ContactForm setSuccess={setSuccess} />
             </div>
             <ContactFooter2 />
         </main>
