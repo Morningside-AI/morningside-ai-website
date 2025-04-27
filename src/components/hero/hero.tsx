@@ -84,20 +84,11 @@ const Hero = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-
-      // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
       if (mtd.inertial(e)) {
-        // If it's an inertial scroll event, we return early and don't process the scroll
         return;
       }
-
-      const deltaY = e.deltaY;
-
-      // Normalize the delta to handle macOS touchpad sensitivity
-      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 20 : deltaY * 0.7; // Adjust 30 based on your preference for sensitivity
-
-      // Handle the scroll intent (up or down) based on the normalized delta
-      handleIntent(normalizedDelta);
+      const deltaY = e.deltaY * 0.3; 
+      handleIntent(deltaY);
     };
 
 

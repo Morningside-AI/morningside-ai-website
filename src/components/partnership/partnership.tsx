@@ -5,11 +5,7 @@ import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { GoArrowUpRight } from "react-icons/go";
 import PartnershipMarquee from "./partnersMarquee";
-import Drawer from 'react-modern-drawer'
-import 'react-modern-drawer/dist/index.css'
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
-import { IoMdClose, IoMdAlert } from "react-icons/io";
-import ContactForm from "../generic/contactForm";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
@@ -19,16 +15,6 @@ const Partnership = () => {
   const textRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
-  const drawerContentRef = useRef<HTMLDivElement>(null);
-
-  const [success, setSuccess] = useState<boolean>(false)
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    if (isDrawerOpen) setSuccess(false);
-    setIsDrawerOpen(!isDrawerOpen);
-};
 
   useEffect(() => {
     const threshold = 12;
@@ -101,27 +87,16 @@ const Partnership = () => {
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (isDrawerOpen) return;
       e.preventDefault();
-
-      // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
       if (mtd.inertial(e)) {
-        // If it's an inertial scroll event, we return early and don't process the scroll
         return;
       }
-
-      const deltaY = e.deltaY;
-
-      // Normalize the delta to handle macOS touchpad sensitivity
-      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
-
-      // Handle the scroll intent (up or down) based on the normalized delta
-      handleIntent(normalizedDelta);
+      const deltaY = e.deltaY * 0.3; 
+      handleIntent(deltaY);
     };
 
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isDrawerOpen) return;
       if (e.key === "ArrowDown" || e.key === "PageDown") {
         if (isInView()) {
           e.preventDefault();
@@ -138,7 +113,6 @@ const Partnership = () => {
     };
 
     const handleSpaceButton = (e: KeyboardEvent) => {
-      if (isDrawerOpen) return;
       if (e.key === " ") {
         disableScroll();
         handleIntent(60);
@@ -146,7 +120,6 @@ const Partnership = () => {
     }
 
     const handleTouchStart = (e: TouchEvent) => {
-      if (isDrawerOpen) return;
       const touch = e.touches.item(0);
       if (touch) {
         touchStartY.current = touch.clientY;
@@ -155,7 +128,6 @@ const Partnership = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (isDrawerOpen) return;
       const touch = e.touches.item(0);
       if (touch) {
         handleIntent(touchStartY.current - touch.clientY);
@@ -281,36 +253,6 @@ const Partnership = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isDrawerOpen) {
-        // Lock background scroll (body)
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
-    } else {
-        // Enable background scroll
-        document.body.style.overflow = "";
-        document.documentElement.style.overflow = "";
-    }
-}, [isDrawerOpen]);
-
-useEffect(() => {
-    const drawerContent = drawerContentRef.current;
-    if (!drawerContent) return;
-
-    const stopPropagation = (e: Event) => {
-        e.stopPropagation();
-    };
-
-    // Prevent drawer scroll events from reaching the window
-    drawerContent.addEventListener("wheel", stopPropagation, { passive: false });
-    drawerContent.addEventListener("touchmove", stopPropagation, { passive: false });
-
-    return () => {
-        drawerContent.removeEventListener("wheel", stopPropagation);
-        drawerContent.removeEventListener("touchmove", stopPropagation);
-    };
-}, [isDrawerOpen]);
-
   return (
     <>
       <div
@@ -343,7 +285,7 @@ useEffect(() => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center opacity-0"
         >
-          <button onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+          <button className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
             <GoArrowUpRight
               size={32}
@@ -353,41 +295,6 @@ useEffect(() => {
           </button>
         </div>
       </div>
-      <Drawer
-                open={isDrawerOpen}
-                onClose={toggleDrawer}
-                direction='right'
-                className='msaiDrawer'
-                duration={600}
-                overlayOpacity={0.5}
-                style={{
-                    width: '98vw',
-                    maxWidth: '35vw',
-                    background: 'transparent',
-                    boxShadow: 'none',
-                }}
-            >
-                <div className="flex flex-col gap-4 w-[98vw] lg:w-[35vw] h-[80vh] bg-[#EDECE4] p-4 rounded-md overflow-y-auto pe-4" ref={drawerContentRef}>
-                    <div className="flex flex-row justify-between items-start">
-                        <h2 className="text-4xl font-medium pb-6">Get In Touch</h2>
-                        <button onClick={toggleDrawer} className="p-3 cursor-pointer hover:opacity-50">
-                            <IoMdClose size={28} />
-                        </button>
-                    </div>
-                    <div
-                        className="w-full flex flex-col items-center gap-6">
-                        {
-                            success ? (
-                                <div className="h-full flex flex-col items-center justify-center">
-                                    <p className="green-text font-medium">Message sent succesfully !</p>
-                                </div>
-                            ) : (
-                                <ContactForm setSuccess={setSuccess} />
-                            )
-                        }
-                    </div>
-                </div>
-            </Drawer>
     </>
   );
 };

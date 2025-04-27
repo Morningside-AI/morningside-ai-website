@@ -139,13 +139,10 @@ const Stats = () => {
         return;
       }
 
-      const deltaY = e.deltaY;
-
-      // Normalize the delta to handle macOS touchpad sensitivity
-      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY; // Adjust 30 based on your preference for sensitivity
+      const deltaY = e.deltaY * 0.3; 
 
       // Handle the scroll intent (up or down) based on the normalized delta
-      handleIntent(normalizedDelta);
+      handleIntent(deltaY);
     };
     
 

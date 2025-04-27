@@ -90,9 +90,8 @@ const Center = () => {
         return;
       }
 
-      const deltaY = e.deltaY;
-      const normalizedDelta = Math.abs(deltaY) < 1 ? deltaY * 30 : deltaY;
-      handleIntent(normalizedDelta);
+      const deltaY = e.deltaY * 0.3; 
+      handleIntent(deltaY);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
