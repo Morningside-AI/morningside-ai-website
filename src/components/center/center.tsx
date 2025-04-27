@@ -23,7 +23,7 @@ const Center = () => {
   };
 
   useEffect(() => {
-    const threshold = 30;
+    const threshold = 45;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -55,7 +55,9 @@ const Center = () => {
       const el = centerRef.current;
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
+      // Tighter viewport check
+      return rect.top <= window.innerHeight * 0.4 &&
+        rect.bottom > window.innerHeight * 0.4;
     };
 
     const scrollToSection = (targetId: string) => {
@@ -65,9 +67,11 @@ const Center = () => {
       accumulated = 0;
 
       gsap.to(window, {
-        scrollTo: targetId,
+        scrollTo: {
+          y: targetId,
+        },
         duration: 0.08,
-        ease: "linear",
+        ease: "power2.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
@@ -79,25 +83,29 @@ const Center = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) return;
+      if (!isInView() || hasSnapped || !canTransition()) {
+        return;
+      }
       accumulated += delta;
-    
+
       if (accumulated >= threshold) {
         lastTransitionTime.current = Date.now();
-        disableScroll();
+        accumulated = 0;
         scrollToSection("#entrance-section");
       } else if (accumulated <= -threshold) {
         lastTransitionTime.current = Date.now();
-        disableScroll();
+        accumulated = 0;
         scrollToSection("#hero-section");
       }
     };
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return; // Ignore inertial events
-    
-      const deltaY = e.deltaY * 0.3; // Reduced sensitivity
+      if (mtd.inertial(e)) return;
+
+      // Add delta normalization
+      const baseDelta = e.deltaY * 0.3;
+      const deltaY = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), 20);
       handleIntent(deltaY);
     };
 
