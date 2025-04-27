@@ -504,12 +504,12 @@ const Entrance = () => {
             {/* Content 4 */}
             <div ref={contentRefs[3]} className="w-full flex-col items-center justify-center gap-8">
                 <div className="w-full flex justify-center">
-                    <div className="w-[100vw] h-[250px] lg:w-[700px] lg:h-[400px]">
+                    <div className="w-[100vw] h-[250px] md:w-[400px] md:h-[250px] lg:w-[500px] lg:h-[300px]">
                         <BuildRive />
                     </div>
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Develop</p>
-                <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
+                <p className="text-base md:text-xl lg:text-2xl font-light text-center lg:w-9/12 w-11/12 text-[#A0A4A1]">
                 We design and develop custom AI systems, automations, and state-of-the-art solutions that are proven to move the needle inside your business, thanks to our extensive experience and network of AI Automation Agencies building such solutions.
                 </p>
             </div>
