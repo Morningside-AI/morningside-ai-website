@@ -69,14 +69,14 @@ const Hero = () => {
 
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.08,
+        duration: 0.2,
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 6);
+          }, 20);
         },
       });
     };

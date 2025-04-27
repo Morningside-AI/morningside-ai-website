@@ -16,6 +16,7 @@ const Partnership = () => {
   const textRef = useRef<HTMLParagraphElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
+  const isAnimatingRef = useRef(false);
 
   const lastTransitionTime = useRef(0);
   const TRANSITION_COOLDOWN = 400; // Same as Entrance
@@ -72,20 +73,20 @@ const Partnership = () => {
         scrollTo: {
           y: targetId,
         },
-        duration: 0.08,
+        duration: 0.2,
         ease: "power2.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 6);
+          }, 20);
         },
       });
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) {
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) {
         return;
       }
       accumulated += delta;
@@ -93,11 +94,11 @@ const Partnership = () => {
       if (accumulated >= threshold) {
         lastTransitionTime.current = Date.now();
         accumulated = 0;
-        scrollToSection("#entrance-section");
+        scrollToSection("#footer-section");
       } else if (accumulated <= -threshold) {
         lastTransitionTime.current = Date.now();
         accumulated = 0;
-        scrollToSection("#hero-section");
+        scrollToSection("#stats-section");
       }
     };
 
@@ -194,19 +195,14 @@ const Partnership = () => {
         y: 60,
       });
 
-      ScrollTrigger.create({
-        trigger: centerRef.current,
-        start: "top center",
-        end: "bottom top",
-        toggleActions: "play none none reverse",
-        onEnter: animateIn,
-        onEnterBack: animateIn,
-        onLeave: animateOut,
-        onLeaveBack: animateOut,
-      });
+      const animateIn = () => {
+        isAnimatingRef.current = true; // Set animating state
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimatingRef.current = false; // Clear animating state
+          }
+        });
 
-      function animateIn() {
-        const tl = gsap.timeline();
         tl.to(words, {
           opacity: 1,
           y: 0,
@@ -219,20 +215,14 @@ const Partnership = () => {
           },
         }).fromTo(
           words,
-          {
-            rotateX: 100,
-            transformOrigin: "bottom center",
-          },
+          { rotateX: 100, transformOrigin: "bottom center" },
           {
             rotateX: 0,
             duration: 0.5,
             ease: "power4.out",
-            stagger: {
-              each: 0.12,
-              from: "start",
-            },
+            stagger: { each: 0.12, from: "start" },
           },
-          "<" // run in parallel with opacity/y
+          "<"
         ).to(
           buttonEl,
           {
@@ -241,22 +231,41 @@ const Partnership = () => {
             duration: 1.1,
             ease: "power3.out",
           },
-          "+=0.1" // slight delay after word animation
+          "+=0.1"
         );
-      }
 
+        return tl;
+      };
 
-      function animateOut() {
-        if (!textEl || !buttonEl) return;
+      const animateOut = () => {
+        isAnimatingRef.current = true; // Set animating state
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimatingRef.current = false; // Clear animating state
+          }
+        });
 
         const spans = textEl.querySelectorAll("span");
-        gsap.to([spans, buttonEl], {
+        tl.to([spans, buttonEl], {
           opacity: 0,
           y: 60,
           duration: 0.6,
           ease: "power2.inOut",
         });
-      }
+
+        return tl;
+      };
+
+      ScrollTrigger.create({
+        trigger: centerRef.current,
+        start: "top center",
+        end: "bottom top",
+        toggleActions: "play none none reverse",
+        onEnter: animateIn,
+        onEnterBack: animateIn,
+        onLeave: animateOut,
+        onLeaveBack: animateOut
+      });
     }
 
     return () => {

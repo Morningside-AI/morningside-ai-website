@@ -16,6 +16,8 @@ const Stats = () => {
   const statsRef = useRef<HTMLDivElement>(null);
   const svgContainerRef = useRef<SVGSVGElement>(null);
   const touchStartY = useRef(0);
+  const isAnimatingRef = useRef(false);
+  const headingRef = useRef<HTMLDivElement>(null);
 
   const lastTransitionTime = useRef(0);
   const TRANSITION_COOLDOWN = 400; // Same as Entrance
@@ -96,32 +98,30 @@ const Stats = () => {
         scrollTo: {
           y: targetId,
         },
-        duration: 0.08,
+        duration: 0.2,
         ease: "power2.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 6);
+          }, 20);
         },
       });
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) {
-        return;
-      }
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) return; // Add cooldown check
       accumulated += delta;
-
+    
       if (accumulated >= threshold) {
-        lastTransitionTime.current = Date.now();
-        accumulated = 0;
-        scrollToSection("#entrance-section");
+        lastTransitionTime.current = Date.now(); // Record transition time
+        disableScroll();
+        scrollToSection("#partnership-section");
       } else if (accumulated <= -threshold) {
-        lastTransitionTime.current = Date.now();
-        accumulated = 0;
-        scrollToSection("#hero-section");
+        lastTransitionTime.current = Date.now(); // Record transition time
+        disableScroll();
+        scrollToSection("#entrance-section");
       }
     };
 
@@ -180,6 +180,89 @@ const Stats = () => {
       enableScroll();
     };
 
+    const headingEl = headingRef.current;
+
+    if (headingEl) {
+      const words = headingEl.querySelectorAll("span");
+      // Set initial state
+      gsap.set(words, {
+        opacity: 0,
+        y: 100,
+        rotateX: 100,
+        transformOrigin: "bottom center"
+      });
+
+      const animateIn = () => {
+        isAnimatingRef.current = true;
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimatingRef.current = false;
+          }
+        });
+  
+        tl.to(words, {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          ease: "linear",
+          duration: 0.5,
+          stagger: {
+            each: 0.12,
+            from: "start"
+          }
+        }).fromTo(
+          words,
+          {
+            rotateX: 100,
+            transformOrigin: "bottom center"
+          },
+          {
+            rotateX: 0,
+            duration: 0.5,
+            ease: "power4.out",
+            stagger: {
+              each: 0.12,
+              from: "start"
+            }
+          },
+          "<"
+        );
+  
+        return tl;
+      };
+
+      const animateOut = () => {
+        isAnimatingRef.current = true;
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimatingRef.current = false;
+          }
+        });
+  
+        tl.to(words, {
+          opacity: 0,
+          y: 60,
+          duration: 0.6,
+          ease: "power2.inOut"
+        });
+  
+        return tl;
+      };
+
+      ScrollTrigger.create({
+        trigger: statsRef.current,
+        start: "top center",
+        end: "bottom top",
+        toggleActions: "play none none reverse",
+        onEnter: animateIn,
+        onEnterBack: animateIn,
+        onLeave: animateOut,
+        onLeaveBack: animateOut
+      });
+
+      
+    }
+
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keydown", handleSpaceButton);
@@ -219,7 +302,7 @@ const Stats = () => {
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
-      <p className="white-silver-animated-text">
+      <p className="white-silver-animated-text" ref={headingRef}>
         <span className="md:text-5xl text-4xl white-silver-animated-text1">We don&apos;t sell AI.&nbsp;</span>
         <br className="block lg:hidden" />
         <span className="md:text-5xl text-4xl white-silver-animated-text">We sell&nbsp;</span>

@@ -14,6 +14,7 @@ const Center = () => {
   const headingRef = useRef<HTMLDivElement>(null);
   const subTextRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
+  const isAnimatingRef = useRef(false);
 
   const lastTransitionTime = useRef(0);
   const TRANSITION_COOLDOWN = 400; // Same as Entrance
@@ -83,7 +84,7 @@ const Center = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) {
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) {
         return;
       }
       accumulated += delta;
@@ -155,7 +156,6 @@ const Center = () => {
 
     if (headingEl) {
       const words = headingEl.querySelectorAll("span");
-
       // Set initial state
       gsap.set(words, {
         opacity: 0,
@@ -164,19 +164,14 @@ const Center = () => {
         transformOrigin: "bottom center"
       });
 
-      ScrollTrigger.create({
-        trigger: centerRef.current,
-        start: "top center",
-        end: "bottom top",
-        toggleActions: "play none none reverse",
-        onEnter: animateIn,
-        onEnterBack: animateIn,
-        onLeave: animateOut,
-        onLeaveBack: animateOut
-      });
-
-      function animateIn() {
-        const tl = gsap.timeline();
+      const animateIn = () => {
+        isAnimatingRef.current = true;
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimatingRef.current = false;
+          }
+        });
+  
         tl.to(words, {
           opacity: 1,
           y: 0,
@@ -202,18 +197,42 @@ const Center = () => {
               from: "start"
             }
           },
-          "<" // run in parallel with opacity/y
+          "<"
         );
-      }
+  
+        return tl;
+      };
 
-      function animateOut() {
-        gsap.to(words, {
+      const animateOut = () => {
+        isAnimatingRef.current = true;
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isAnimatingRef.current = false;
+          }
+        });
+  
+        tl.to(words, {
           opacity: 0,
           y: 60,
           duration: 0.6,
           ease: "power2.inOut"
         });
-      }
+  
+        return tl;
+      };
+
+      ScrollTrigger.create({
+        trigger: centerRef.current,
+        start: "top center",
+        end: "bottom top",
+        toggleActions: "play none none reverse",
+        onEnter: animateIn,
+        onEnterBack: animateIn,
+        onLeave: animateOut,
+        onLeaveBack: animateOut
+      });
+
+      
     }
 
     window.addEventListener("wheel", handleWheel, { passive: false });
