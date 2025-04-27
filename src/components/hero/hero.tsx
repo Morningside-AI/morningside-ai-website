@@ -25,7 +25,7 @@ const Hero = () => {
   };
 
   useEffect(() => {
-    const threshold = 30;
+    const threshold = 45;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -57,7 +57,8 @@ const Hero = () => {
       const el = heroRef.current;
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top <= 0 && rect.bottom > window.innerHeight * 0.5;
+      return rect.top <= window.innerHeight * 0.35 &&
+        rect.bottom > window.innerHeight * 0.35;
     };
 
     const goToNext = () => {
@@ -81,21 +82,22 @@ const Hero = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isHeroInView() || hasSnapped || !canTransition()) return; // Add cooldown check
+      if (!isHeroInView() || hasSnapped || !canTransition()) return;
+      disableScroll();
       accumulated += delta;
 
       if (accumulated >= threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
+        lastTransitionTime.current = Date.now();
         goToNext();
       }
     };
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return; // Ignore inertial events
+      if (mtd.inertial(e)) return;
 
-      const deltaY = e.deltaY * 0.3; // Reduced sensitivity
+      // Reduced sensitivity further
+      const deltaY = e.deltaY * 0.2; // Changed from 0.3 to 0.2
       handleIntent(deltaY);
     };
 

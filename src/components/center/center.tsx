@@ -79,15 +79,15 @@ const Center = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition()) return;
       accumulated += delta;
     
       if (accumulated >= threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
+        lastTransitionTime.current = Date.now();
         disableScroll();
         scrollToSection("#entrance-section");
       } else if (accumulated <= -threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
+        lastTransitionTime.current = Date.now();
         disableScroll();
         scrollToSection("#hero-section");
       }
