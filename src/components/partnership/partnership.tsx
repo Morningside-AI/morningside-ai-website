@@ -6,6 +6,7 @@ import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { GoArrowUpRight } from "react-icons/go";
 import PartnershipMarquee from "./partnersMarquee";
 import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
@@ -82,7 +83,7 @@ const Partnership = () => {
     const handleIntent = (delta: number) => {
       if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
       accumulated += delta;
-    
+
       if (accumulated >= threshold) {
         lastTransitionTime.current = Date.now(); // Record transition time
         disableScroll();
@@ -97,7 +98,7 @@ const Partnership = () => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (mtd.inertial(e)) return; // Ignore inertial events
-    
+
       const deltaY = e.deltaY * 0.3; // Reduced sensitivity
       handleIntent(deltaY);
     };
@@ -294,14 +295,16 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center opacity-0"
         >
-          <button className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-            <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
-            <GoArrowUpRight
-              size={32}
-              strokeWidth={1}
-              className="mt-1 transition-all duration-300"
-            />
-          </button>
+          <Link href="/contact" target="_blank" className="w-fit cursor-pointer">
+            <button className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+              <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
+              <GoArrowUpRight
+                size={32}
+                strokeWidth={1}
+                className="mt-1 transition-all duration-300"
+              />
+            </button>
+          </Link>
         </div>
       </div>
     </>

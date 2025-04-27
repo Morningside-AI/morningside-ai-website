@@ -96,15 +96,32 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .msaiDrawer {
-  background-color: transparent !important;
   color: #060E0A;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  padding-right: 20px;
-  transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1) !important;
+}
+
+.msaiDrawer::-webkit-scrollbar{
+  width: 4px;
+}
+
+.msaiDrawer::-webkit-scrollbar-thumb{
+  background: #83ab97;
+}
+
+.msaiDrawer::-webkit-scrollbar-thumb:hover{
+  background: #83ab9799;
+}
+
+.msaiDrawer::-webkit-scrollbar-track{
+  background: #EDECE4;
+}
+
+.msaiDrawer::-webkit-scrollbar-track-piece{
+  background: #EDECE4;
 }
 
 .msaiDrawer>div {

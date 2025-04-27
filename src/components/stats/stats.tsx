@@ -163,7 +163,8 @@ const Stats = () => {
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
-        handleIntent(touchStartY.current - touch.clientY);
+        const deltaY = (touchStartY.current - touch.clientY) * 0.5;
+        handleIntent(deltaY);
       }
     };
 

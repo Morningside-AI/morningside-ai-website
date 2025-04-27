@@ -1,163 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import Logo from "@/assets/images/morningside-assets/logo-FullWhite.svg";
 import { GoArrowUpRight } from "react-icons/go";
 import Link from "next/link";
-import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-const Footer = () => {
-    const mtd = new MagicTrackpadDetector();
-    const footerRef = useRef<HTMLDivElement>(null);
-    const touchStartY = useRef(0);
+const ContactFooter = () => {
+   const footerRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLParagraphElement>(null);
 
-    const lastTransitionTime = useRef(0);
-    const TRANSITION_COOLDOWN = 400;
-
-    const canTransition = () => {
-        return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
-    };
-
     useEffect(() => {
-        const threshold = 30;
-        let accumulated = 0;
-        let hasSnapped = false;
-        let scrollLocked = false;
-        let scrollCooldown = false;
-
-        const preventDefault = (e: TouchEvent) => e.preventDefault();
-
-        const disableScroll = () => {
-            if (!scrollLocked) {
-                scrollLocked = true;
-                document.body.style.touchAction = "none";
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-            }
-        };
-
-        const enableScroll = () => {
-            scrollLocked = false;
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-            document.body.style.touchAction = "";
-            document.documentElement.style.touchAction = "";
-            window.removeEventListener("touchmove", preventDefault);
-        };
-
-        const isInView = () => {
-            const el = footerRef.current;
-            if (!el) return false;
-            const rect = el.getBoundingClientRect();
-            return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
-        };
-
-        const scrollToSection = (targetId: string) => {
-            if (scrollCooldown) return;
-            scrollCooldown = true;
-            hasSnapped = true;
-            accumulated = 0;
-
-            gsap.to(window, {
-                scrollTo: targetId,
-                duration: 0.08,
-                ease: "linear",
-                overwrite: "auto",
-                onComplete: () => {
-                    enableScroll();
-                    setTimeout(() => {
-                        scrollCooldown = false;
-                    }, 6);
-                },
-            });
-        };
-
-        const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
-            accumulated += delta;
-
-            if (accumulated <= -threshold) {
-                lastTransitionTime.current = Date.now();
-                disableScroll();
-                scrollToSection("#partnership-section");
-            }
-        };
-
-        const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            if (mtd.inertial(e)) return; // Ignore inertial events
-
-            const deltaY = e.deltaY * 0.3; // Reduced sensitivity
-            handleIntent(deltaY);
-        };
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "ArrowUp" || e.key === "PageUp") {
-                if (isInView()) {
-                    e.preventDefault();
-                    disableScroll();
-                    handleIntent(-60);
-                }
-            } else if (e.key === "ArrowDown" || e.key === "PageDown") {
-                if (isInView()) {
-                    e.preventDefault();
-                    disableScroll();
-                    handleIntent(60);
-                }
-            }
-        };
-
-        const handleSpaceButton = (e: KeyboardEvent) => {
-            if (e.key === " ") {
-                disableScroll();
-                handleIntent(60);
-            }
-        }
-
-        const handleTouchStart = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                touchStartY.current = touch.clientY;
-                disableScroll();
-            }
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                const deltaY = (touchStartY.current - touch.clientY) * 0.5;
-                handleIntent(deltaY);
-                touchStartY.current = touch.clientY;
-            }
-        };
-
-        const handleTouchEnd = () => {
-            enableScroll();
-        };
-
-        window.addEventListener("wheel", handleWheel, { passive: false });
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("keydown", handleSpaceButton);
-        window.addEventListener("touchstart", handleTouchStart, { passive: false });
-        window.addEventListener("touchmove", handleTouchMove, { passive: false });
-        window.addEventListener("touchend", handleTouchEnd);
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry?.isIntersecting) {
-                    hasSnapped = false;
-                    accumulated = 0;
-                }
-            },
-            { threshold: 0.5 }
-        );
-        if (footerRef.current) observer.observe(footerRef.current);
-
         const contactEl = document.querySelector(".footer-contact");
         const followEl = document.querySelector(".footer-follow");
         const textEl = textRef.current;
@@ -264,17 +120,6 @@ const Footer = () => {
                 ease: "power2.inOut"
             });
         };
-
-        return () => {
-            window.removeEventListener("wheel", handleWheel);
-            window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("keydown", handleSpaceButton);
-            window.removeEventListener("touchstart", handleTouchStart);
-            window.removeEventListener("touchmove", handleTouchMove);
-            window.removeEventListener("touchend", handleTouchEnd);
-            observer.disconnect();
-            enableScroll();
-        };
     }, []);
 
     return (
@@ -282,10 +127,11 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
+                style={{ touchAction: "auto", pointerEvents: "auto" }}
                 className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden"
             >
                 <div className="w-full flex flex-row justify-between" ref={textRef}>
-                    <p className="w-full lg:text-6xl text-5xl text-left leading-normal">
+                    <p className="lg:text-6xl text-5xl text-left leading-normal">
                         <span className="white-silver-animated-text">We&nbsp;</span>
                         <span className="white-silver-animated-text">look&nbsp;</span>
                         <span className="white-silver-animated-text">forward&nbsp;</span>
@@ -306,12 +152,10 @@ const Footer = () => {
                             <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                         </Link>
                         <div className="flex flex-row gap-2 relative z-10">
-                            <Link href="/contact" target="_blank" className="w-full cursor-pointer">
-                                <button className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
-                                    Get In Touch
-                                    <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
-                                </button>
-                            </Link>
+                            <button className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
+                                Get In Touch
+                                <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
+                            </button>
                             <Link href="https://tally.so/r/wbYr52" target="_blank" className="w-full cursor-pointer">
                                 <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                     Explore Careers
@@ -349,4 +193,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default ContactFooter;
