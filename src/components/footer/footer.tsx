@@ -16,6 +16,13 @@ const Footer = () => {
     const touchStartY = useRef(0);
     const textRef = useRef<HTMLParagraphElement>(null);
 
+    const lastTransitionTime = useRef(0);
+    const TRANSITION_COOLDOWN = 400;
+
+    const canTransition = () => {
+        return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
+    };
+
     useEffect(() => {
         const threshold = 12;
         let accumulated = 0;
@@ -70,10 +77,11 @@ const Footer = () => {
         };
 
         const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped) return;
+            if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
             accumulated += delta;
 
             if (accumulated <= -threshold) {
+                lastTransitionTime.current = Date.now();
                 disableScroll();
                 scrollToSection("#partnership-section");
             }
@@ -81,12 +89,9 @@ const Footer = () => {
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
+            if (mtd.inertial(e)) return; // Ignore inertial events
 
-            if (mtd.inertial(e)) {
-                return;
-            }
-
-            const deltaY = e.deltaY * 0.3; 
+            const deltaY = e.deltaY * 0.3; // Reduced sensitivity
             handleIntent(deltaY);
         };
 
@@ -113,29 +118,20 @@ const Footer = () => {
             }
         }
 
-        let isSwiping = false;
-
         const handleTouchStart = (e: TouchEvent) => {
-            const touch = e.touches[0];
+            const touch = e.touches.item(0);
             if (touch) {
-                isSwiping = false;
                 touchStartY.current = touch.clientY;
+                disableScroll();
             }
         };
 
         const handleTouchMove = (e: TouchEvent) => {
-            const touch = e.touches[0];
-            if (!touch) return;
-
-            const deltaY = touchStartY.current - touch.clientY;
-
-            if (!isSwiping && Math.abs(deltaY) > 10) {
-                isSwiping = true;
-            }
-
-            if (isSwiping) {
-                e.preventDefault();
+            const touch = e.touches.item(0);
+            if (touch) {
+                const deltaY = (touchStartY.current - touch.clientY) * 0.5;
                 handleIntent(deltaY);
+                touchStartY.current = touch.clientY;
             }
         };
 

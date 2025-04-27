@@ -17,8 +17,15 @@ const Stats = () => {
   const svgContainerRef = useRef<SVGSVGElement>(null);
   const touchStartY = useRef(0);
 
+  const lastTransitionTime = useRef(0);
+  const TRANSITION_COOLDOWN = 400; // Same as Entrance
+
+  const canTransition = () => {
+    return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
+  };
+
   useEffect(() => {
-    const threshold = 12; // same as Hero
+    const threshold = 30; // same as Hero
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -98,50 +105,27 @@ const Stats = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped) return;
-
+      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
       accumulated += delta;
-
+    
       if (accumulated >= threshold) {
-        disableScroll(); // ✅ lock scroll before going down
+        lastTransitionTime.current = Date.now(); // Record transition time
+        disableScroll();
         scrollToSection("#partnership-section");
       } else if (accumulated <= -threshold) {
-        disableScroll(); // ✅ lock scroll before going down
+        lastTransitionTime.current = Date.now(); // Record transition time
+        disableScroll();
         scrollToSection("#entrance-section");
-        //const sliderTrigger = ScrollTrigger.getById("slider-scroll");
-
-        /*if (sliderTrigger) {
-          disableScroll(); // ✅ lock scroll before going up
-          const targetScroll = sliderTrigger.start + (sliderTrigger.end - sliderTrigger.start) * 1;
-
-          gsap.to(window, {
-            scrollTo: targetScroll,
-            duration: 0.4,
-            ease: "power2.inOut",
-            onComplete: () => {
-              enableScroll();
-              setTimeout(() => {
-                scrollCooldown = false;
-              }, 100);
-            },
-          });
-        }*/
       }
     };
 
-
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-
-      // Use the MagicTrackpadDetector to check if the event is from a trackpad and is not an inertial scroll
       if (mtd.inertial(e)) {
-        // If it's an inertial scroll event, we return early and don't process the scroll
         return;
       }
 
       const deltaY = e.deltaY * 0.3; 
-
-      // Handle the scroll intent (up or down) based on the normalized delta
       handleIntent(deltaY);
     };
     

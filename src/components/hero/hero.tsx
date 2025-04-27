@@ -17,8 +17,15 @@ const Hero = () => {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
 
+  const lastTransitionTime = useRef(0);
+  const TRANSITION_COOLDOWN = 400;
+
+  const canTransition = () => {
+    return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
+  };
+
   useEffect(() => {
-    const threshold = 12;
+    const threshold = 30;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -74,9 +81,11 @@ const Hero = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isHeroInView() || hasSnapped || delta <= 16) return;
+      if (!isHeroInView() || hasSnapped || !canTransition()) return; // Add cooldown check
       accumulated += delta;
+
       if (accumulated >= threshold) {
+        lastTransitionTime.current = Date.now(); // Record transition time
         disableScroll();
         goToNext();
       }
@@ -84,10 +93,9 @@ const Hero = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) {
-        return;
-      }
-      const deltaY = e.deltaY * 0.3; 
+      if (mtd.inertial(e)) return; // Ignore inertial events
+
+      const deltaY = e.deltaY * 0.3; // Reduced sensitivity
       handleIntent(deltaY);
     };
 
@@ -118,7 +126,9 @@ const Hero = () => {
     const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches.item(0);
       if (touch) {
-        handleIntent(touchStartY.current - touch.clientY);
+        const deltaY = (touchStartY.current - touch.clientY) * 0.5;
+        handleIntent(deltaY);
+        touchStartY.current = touch.clientY;
       }
     };
 
