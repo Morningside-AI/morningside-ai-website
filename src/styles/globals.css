@@ -256,20 +256,3 @@ body::-webkit-scrollbar-thumb:hover {
   object-fit: cover;
 }
 
-[class*="white-silver"], .green-text {
-  display: inline-block;
-}
-
-.char {
-  background: linear-gradient(
-    to right,
-    #FFFFFF 50%,
-    #C0C0C0 50%
-  );
-  background-size: 200% 100%;
-  background-position-x: 100%;
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  display: inline-block;
-}

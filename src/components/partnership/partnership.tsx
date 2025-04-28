@@ -181,18 +181,9 @@ const Partnership = () => {
 
     if (centerRef.current) observer.observe(centerRef.current);
 
-    const textEl = textRef.current;
     const buttonEl = buttonRef.current;
 
-    if (textEl && buttonEl) {
-      const words = textEl.querySelectorAll("span");
-
-      gsap.set(words, {
-        opacity: 0,
-        y: 100,
-        rotateX: 100,
-        transformOrigin: "bottom center",
-      });
+    if (buttonEl) {
 
       gsap.set(buttonEl, {
         opacity: 0,
@@ -207,27 +198,7 @@ const Partnership = () => {
           }
         });
 
-        tl.to(words, {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          ease: "linear",
-          duration: 0.5,
-          stagger: {
-            each: 0.12,
-            from: "start",
-          },
-        }).fromTo(
-          words,
-          { rotateX: 100, transformOrigin: "bottom center" },
-          {
-            rotateX: 0,
-            duration: 0.5,
-            ease: "power4.out",
-            stagger: { each: 0.12, from: "start" },
-          },
-          "<"
-        ).to(
+        tl.to(
           buttonEl,
           {
             opacity: 1,
@@ -247,14 +218,6 @@ const Partnership = () => {
           onComplete: () => {
             isAnimatingRef.current = false; // Clear animating state
           }
-        });
-
-        const spans = textEl.querySelectorAll("span");
-        tl.to([spans, buttonEl], {
-          opacity: 0,
-          y: 60,
-          duration: 0.6,
-          ease: "power2.inOut",
         });
 
         return tl;

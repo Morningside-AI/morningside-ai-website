@@ -312,16 +312,51 @@ const Stats = () => {
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
-      <div className="relative w-full -translate-y-10">
-        {/* Gray background text */}
-        <p className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 opacity-40 z-0">
-          <span className="gray-text">We don&apos;t sell AI.&nbsp;</span>
+      <div className="relative w-full -translate-y-20 lg:-translate-y-14">
+        <p
+          className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-0"
+        >
+          <span className="">
+            <span className="gray-text">W</span>
+            <span className="gray-text">e</span>
+            <span className="gray-text">&nbsp;</span>
+            <span className="gray-text">d</span>
+            <span className="gray-text">o</span>
+            <span className="gray-text">n</span>
+            <span className="gray-text">&apos;</span>
+            <span className="gray-text">t</span>
+            <span className="gray-text">&nbsp;</span>
+            <span className="gray-text">s</span>
+            <span className="gray-text">e</span>
+            <span className="gray-text">l</span>
+            <span className="gray-text">l</span>
+            <span className="gray-text">&nbsp;</span>
+            <span className="gray-text">A</span>
+            <span className="gray-text">I</span>
+            <span className="gray-text">.</span>
+          </span>
           <br className="block lg:hidden" />
-          <span className="gray-text">We sell&nbsp;</span>
-          <span className="gray-text">Results.</span>
+          <span className="">
+            <span className="gray-text">W</span>
+            <span className="gray-text">e</span>
+            <span className="gray-text">&nbsp;</span>
+            <span className="gray-text">s</span>
+            <span className="gray-text">e</span>
+            <span className="gray-text">l</span>
+            <span className="gray-text">l</span>
+            <span className="gray-text">&nbsp;</span>
+          </span>
+          <span className="">
+            <span className="gray-text">R</span>
+            <span className="gray-text">e</span>
+            <span className="gray-text">s</span>
+            <span className="gray-text">u</span>
+            <span className="letter">l</span>
+            <span className="gray-text">t</span>
+            <span className="gray-text">s</span>
+            <span className="gray-text">.</span>
+          </span>
         </p>
-
-        {/* White foreground text (pre-split letters) */}
         <p
           className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-10"
           ref={headingRef}

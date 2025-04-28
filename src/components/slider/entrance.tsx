@@ -202,13 +202,13 @@ const Entrance = () => {
                 setTimeout(() => {
                     rive1.reset();
                     rive1.play();
-                }, 300);
+                }, 250);
             }
             if (toIndex === 3 && rive2) {
                 setTimeout(() => {
                     rive2.reset();
                     rive2.play();
-                }, 450);
+                }, 250);
             }
 
             disableScroll();
@@ -218,7 +218,7 @@ const Entrance = () => {
             gsap.to(fromRef, {
                 opacity: 0,
                 x: direction === "forward" ? -100 : 100,
-                duration: 0.8,
+                duration: 0.3,
                 ease: "power2.out",
                 onComplete: () => {
                     fromRef.style.display = "none";
@@ -230,7 +230,7 @@ const Entrance = () => {
                         {
                             opacity: 1,
                             x: 0,
-                            duration: 0.8,
+                            duration: 0.3,
                             ease: "power2.out",
                             onComplete: () => {
                                 hasSnapped = false;
