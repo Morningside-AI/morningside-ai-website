@@ -62,7 +62,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
         }}
     >
         {({ isSubmitting }: FormikProps<FormValues>) => (
-            <Form className="w-full h-full flex flex-col">
+            <Form className="w-full h-full flex flex-col pr-1 md:pr-0">
                 {/* Name */}
                 <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
                     <div className="w-full lg:w-1/2 flex flex-col gap-2">
