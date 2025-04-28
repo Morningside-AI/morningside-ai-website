@@ -17,7 +17,7 @@ const Footer = () => {
     const textRef = useRef<HTMLParagraphElement>(null);
 
     const lastTransitionTime = useRef(0);
-    const TRANSITION_COOLDOWN = 400;
+    const TRANSITION_COOLDOWN = 300;
 
     const canTransition = () => {
         return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;

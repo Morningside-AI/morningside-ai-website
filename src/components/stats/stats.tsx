@@ -20,14 +20,14 @@ const Stats = () => {
   const headingRef = useRef<HTMLDivElement>(null);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 400; // Same as Entrance
+  const TRANSITION_COOLDOWN = 300; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
 
   useEffect(() => {
-    const threshold = 45; // same as Hero
+    const threshold = 30; // same as Hero
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;

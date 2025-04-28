@@ -18,14 +18,14 @@ const Hero = () => {
   const touchStartY = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 400;
+  const TRANSITION_COOLDOWN = 300;
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
 
   useEffect(() => {
-    const threshold = 45;
+    const threshold = 30;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;

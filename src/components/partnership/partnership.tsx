@@ -19,14 +19,14 @@ const Partnership = () => {
   const isAnimatingRef = useRef(false);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 400; // Same as Entrance
+  const TRANSITION_COOLDOWN = 300; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
 
   useEffect(() => {
-    const threshold = 45;
+    const threshold = 30;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
