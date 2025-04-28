@@ -263,7 +263,7 @@ const Center = () => {
     <div
       id="center-section"
       ref={centerRef}
-      className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
+      className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal overflow-hidden touch-none"
     >
       <div className="relative w-full ">
         <p

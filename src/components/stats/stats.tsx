@@ -308,22 +308,22 @@ const Stats = () => {
     <div
       ref={statsRef}
       id="stats-section"
-      className="w-full will-change-transform h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
+      className="w-full will-change-transform h-screen flex flex-col justify-center text-white leading-normal tracking-normal md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
       <div className="relative w-full">
         {/* Gray background text */}
-        <p className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-40 z-0">
+        <p className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 opacity-40 z-0">
           <span className="gray-text">We don&apos;t sell AI.&nbsp;</span>
           <br className="block lg:hidden" />
           <span className="gray-text">We sell&nbsp;</span>
-          <span className="gray-text italic">Results.</span>
+          <span className="gray-text">Results.</span>
         </p>
 
         {/* White foreground text (pre-split letters) */}
         <p
-          className="text-4xl md:text-5xl text-center whitespace-pre-wrap relative z-10"
+          className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-10"
           ref={headingRef}
         >
           <span className="text-white word">
@@ -357,7 +357,7 @@ const Stats = () => {
             <span className="letter">l</span>
             <span className="letter">&nbsp;</span>
           </span>
-          <span className="italic word">
+          <span className="green-text word">
             <span className="letter">R</span>
             <span className="letter">e</span>
             <span className="letter">s</span>
