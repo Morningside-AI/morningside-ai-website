@@ -14,6 +14,7 @@ const Partnership = () => {
   const mtd = new MagicTrackpadDetector();
   const centerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
   const isAnimatingRef = useRef(false);
@@ -181,60 +182,6 @@ const Partnership = () => {
 
     if (centerRef.current) observer.observe(centerRef.current);
 
-    const buttonEl = buttonRef.current;
-
-    if (buttonEl) {
-
-      gsap.set(buttonEl, {
-        opacity: 0,
-        y: 60,
-      });
-
-      const animateIn = () => {
-        isAnimatingRef.current = true; // Set animating state
-        const tl = gsap.timeline({
-          onComplete: () => {
-            isAnimatingRef.current = false; // Clear animating state
-          }
-        });
-
-        tl.to(
-          buttonEl,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.1,
-            ease: "power3.out",
-          },
-          "+=0.1"
-        );
-
-        return tl;
-      };
-
-      const animateOut = () => {
-        isAnimatingRef.current = true; // Set animating state
-        const tl = gsap.timeline({
-          onComplete: () => {
-            isAnimatingRef.current = false; // Clear animating state
-          }
-        });
-
-        return tl;
-      };
-
-      ScrollTrigger.create({
-        trigger: centerRef.current,
-        start: "top center",
-        end: "bottom top",
-        toggleActions: "play none none reverse",
-        onEnter: animateIn,
-        onEnterBack: animateIn,
-        onLeave: animateOut,
-        onLeaveBack: animateOut
-      });
-    }
-
     return () => {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
@@ -244,6 +191,79 @@ const Partnership = () => {
       window.removeEventListener("touchend", handleTouchEnd);
       observer.disconnect();
       enableScroll();
+    };
+  }, []);
+
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (!heading) return;
+
+    const words = heading.querySelectorAll('.word');
+
+    // Loop through each word and wrap each letter
+    words.forEach(word => {
+      const letters = word.textContent?.split('');
+      if (letters) {
+        word.innerHTML = '';
+        letters.forEach(letter => {
+          const span = document.createElement('span');
+          span.classList.add('letter');
+          span.textContent = letter;
+          word.appendChild(span);
+        });
+      }
+    });
+
+    const letters = heading.querySelectorAll('.letter');
+    let animationIn: GSAPTimeline | null = null;
+    let animationOut: GSAPTimeline | null = null;
+
+    // Initially hide each letter
+    gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
+
+    const animateIn = () => {
+      // Kill the out animation if it's running
+      if (animationOut) animationOut.kill();
+
+      animationIn = gsap.timeline();
+      animationIn.to(letters, {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        duration: 0.1,
+        ease: 'linear',
+        stagger: {
+          each: 0.04,
+        },
+      });
+    };
+
+    const animateOut = () => {
+      // Kill the in animation if it's running
+      if (animationIn) animationIn.kill();
+
+      animationOut = gsap.timeline();
+      animationOut.to(letters, {
+        clipPath: 'inset(0% 100% 0% 0%)',
+        duration: 0.0005,
+        ease: 'power2.in',
+        onComplete: () => {
+          // Just to be safe, ensure all letters are fully hidden
+          gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
+        },
+      });
+    };
+
+    const trigger = ScrollTrigger.create({
+      trigger: centerRef.current,
+      start: 'top 60%',
+      end: 'bottom 40%',
+      onEnter: animateIn,
+      onEnterBack: animateIn,
+      onLeave: animateOut,
+      onLeaveBack: animateOut,
+    });
+
+    return () => {
+      trigger.kill();
     };
   }, []);
 
@@ -258,26 +278,147 @@ const Partnership = () => {
           <PartnershipMarquee />
         </div>
 
-        <p
-          className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap"
-          ref={textRef}
-        >
-          <span className="white-silver-animated-text">The </span>
-          <span className="white-silver-animated-text">best </span>
-          <span className="white-silver-animated-text">AI </span>
-          <br className="block lg:hidden" />
-          <span className="white-silver-animated-text">systems </span>
-          <br className="hidden lg:block" />
-          <span className="white-silver-animated-text">are </span>
-          <span className="white-silver-animated-text">built </span>
-          <span className="green-text">side </span>
-          <span className="green-text">by </span>
-          <span className="green-text">side.</span>
-        </p>
+        <div className="relative w-full mb-40 mt-8 ">
+          <p
+            className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap absolute top-1/2 left-1/2 -translate-x-1/2 w-full "
+          >
+            <span className="gray-text">
+              <span className="">T</span>
+              <span className="">h</span>
+              <span className="">e</span>
+              <span className=""> </span>
+            </span>
+            <span className="gray-text">
+              <span className="">b</span>
+              <span className="">e</span>
+              <span className="">s</span>
+              <span className="">t</span>
+              <span className=""> </span>
+            </span>
+            <span className="gray-text">
+              <span className="">A</span>
+              <span className="">I</span>
+              <span className=""> </span>
+            </span>
+            <br className="block lg:hidden" />
+            <span className="gray-text ">
+              <span className="">s</span>
+              <span className="">y</span>
+              <span className="">s</span>
+              <span className="">t</span>
+              <span className="">e</span>
+              <span className="">m</span>
+              <span className="">s</span>
+              <span className=""> </span>
+            </span>
+            <br className="hidden lg:block" />
+            <span className="gray-text ">
+              <span className="">a</span>
+              <span className="">r</span>
+              <span className="">e</span>
+              <span className=""> </span>
+            </span>
+            <span className="gray-text ">
+              <span className="">b</span>
+              <span className="">u</span>
+              <span className="">i</span>
+              <span className="">l</span>
+              <span className="">t</span>
+              <span className=""> </span>
+            </span>
+            <span className="gray-text ">
+              <span className="">s</span>
+              <span className="">i</span>
+              <span className="">d</span>
+              <span className="">e</span>
+              <span className=""> </span>
+            </span>
+            <span className="gray-text ">
+              <span className="">b</span>
+              <span className="">y</span>
+              <span className=""> </span>
+            </span>
+            <span className="gray-text ">
+              <span className="">s</span>
+              <span className="">i</span>
+              <span className="">d</span>
+              <span className="">e</span>
+              <span className="">.</span>
+            </span>
+          </p>
+          <p
+            className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap absolute top-1/2 left-1/2 z-50 -translate-x-1/2 w-full"
+            ref={headingRef}
+          >
+            <span className="text-white word">
+              <span className="letter">T</span>
+              <span className="letter">h</span>
+              <span className="letter">e</span>
+              <span className="letter"> </span>
+            </span>
+            <span className="text-white word">
+              <span className="letter">b</span>
+              <span className="letter">e</span>
+              <span className="letter">s</span>
+              <span className="letter">t</span>
+              <span className="letter"> </span>
+            </span>
+            <span className="text-white word">
+              <span className="letter">A</span>
+              <span className="letter">I</span>
+              <span className="letter"> </span>
+            </span>
+            <br className="block lg:hidden" />
+            <span className="text-white word">
+              <span className="letter">s</span>
+              <span className="letter">y</span>
+              <span className="letter">s</span>
+              <span className="letter">t</span>
+              <span className="letter">e</span>
+              <span className="letter">m</span>
+              <span className="letter">s</span>
+              <span className="letter"> </span>
+            </span>
+            <br className="hidden lg:block" />
+            <span className="text-white word">
+              <span className="letter">a</span>
+              <span className="letter">r</span>
+              <span className="letter">e</span>
+              <span className="letter"> </span>
+            </span>
+            <span className="text-white word">
+              <span className="letter">b</span>
+              <span className="letter">u</span>
+              <span className="letter">i</span>
+              <span className="letter">l</span>
+              <span className="letter">t</span>
+              <span className="letter"> </span>
+            </span>
+            <span className="green-text word">
+              <span className="letter">s</span>
+              <span className="letter">i</span>
+              <span className="letter">d</span>
+              <span className="letter">e</span>
+              <span className="letter"> </span>
+            </span>
+            <span className="green-text word">
+              <span className="letter">b</span>
+              <span className="letter">y</span>
+              <span className="letter"> </span>
+            </span>
+            <span className="green-text word">
+              <span className="letter">s</span>
+              <span className="letter">i</span>
+              <span className="letter">d</span>
+              <span className="letter">e</span>
+              <span className="letter">.</span>
+            </span>
+          </p>
+        </div>
 
         <div
           ref={buttonRef}
-          className="w-full flex flex-row items-center justify-center opacity-0"
+          className="w-full flex flex-row items-center justify-center"
         >
           <button onClick={handleContactClick} className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
