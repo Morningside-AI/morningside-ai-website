@@ -312,7 +312,7 @@ const Stats = () => {
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
-      <div className="relative w-full">
+      <div className="relative w-full -translate-y-10">
         {/* Gray background text */}
         <p className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 opacity-40 z-0">
           <span className="gray-text">We don&apos;t sell AI.&nbsp;</span>
@@ -344,7 +344,6 @@ const Stats = () => {
             <span className="letter">A</span>
             <span className="letter">I</span>
             <span className="letter">.</span>
-            <span className="letter">&nbsp;</span>
           </span>
           <br className="block lg:hidden" />
           <span className="text-white word">
