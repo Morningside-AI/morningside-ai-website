@@ -174,7 +174,7 @@ body::-webkit-scrollbar-thumb:hover {
   outline: none;
   width: 100%;
   max-width: 100%;
-  padding: 10px 12px;
+  padding: 10px 0px;
   font-weight: 300;
   appearance: none;
   -webkit-appearance: none;
@@ -198,7 +198,7 @@ body::-webkit-scrollbar-thumb:hover {
   background-color: #EDECE4;
   color: #060E0A;
   font-weight: 300;
-  padding: 8px 12px;
+  padding: 8px 0px;
 }
 
 /* Error States */

@@ -45,7 +45,7 @@ const Stats = () => {
   
       const animateSVGOut = () => {
         gsap.timeline()
-          .to([part1, part2, part3], { opacity: 0.001, duration: 0.03, ease: "power2.inOut" });
+          .to([part1, part2, part3], { opacity: 0.001, duration: 0.001, ease: "power2.inOut" });
       };
   
       // Set up ScrollTrigger
