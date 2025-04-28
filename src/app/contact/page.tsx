@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/navbar/navbar";
 import ContactForm from "@/components/generic/contactForm";
 import ContactFooter2 from "@/components/footer/contactFooter2";
@@ -10,9 +10,20 @@ import 'swiper/css/pagination';
 
 
 export default function HomePage() {
+
+    useEffect(() => {
+        // Unlock scroll when Contact page mounts
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+        document.body.style.touchAction = "";
+        document.documentElement.style.touchAction = "";
+    }, []);
+
+
     const [success, setSuccess] = useState(false);
+    
     return (
-        <main className="flex min-h-screen w-full flex-col items-center lg:px-12 md:px-8 px-0 relative main-container">
+        <main className="flex min-h-screen w-full flex-col items-center lg:px-12 md:px-8 px-0 relative">
             <Navbar isConctactPage />
             <div className="w-11/12 lg:w-7/12 flex flex-col items-start justify-start bg-[#EDECE4] pl-3 pr-10 py-4 lg:p-4 rounded-2xl mt-32 mb-10 msaiDrawer">
                 <div className="w-full flex flex-row">

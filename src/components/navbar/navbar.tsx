@@ -17,6 +17,10 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
         window.navbarLogoRef = navbarLogoRef;
     }, []);
 
+    const handleContactClick = () => {
+        window.location.href = "/contact"; // This forces a full page reload
+    };
+
 
     return (
         <>
@@ -27,17 +31,14 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
                 {
                     !isConctactPage && (
                         <div className="flex items-center">
-                            <Link href="/contact" className="w-fit cursor-pointer">
-                                <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-                                    Get In Touch
-                                    <GoArrowUpRight
-                                        size={18}
-                                        strokeWidth={1}
-                                        className="mt-1 transition-all duration-300"
-                                    />
-                                </button>
-                            </Link>
-
+                            <button onClick={handleContactClick} className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+                                Get In Touch
+                                <GoArrowUpRight
+                                    size={18}
+                                    strokeWidth={1}
+                                    className="mt-1 transition-all duration-300"
+                                />
+                            </button>
                         </div>
                     )
                 }

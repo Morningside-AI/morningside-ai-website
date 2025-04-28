@@ -23,7 +23,7 @@ const Hero = () => {
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
-
+  
   useEffect(() => {
     const threshold = 30;
     let accumulated = 0;

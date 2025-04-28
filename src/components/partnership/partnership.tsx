@@ -21,6 +21,10 @@ const Partnership = () => {
   const lastTransitionTime = useRef(0);
   const TRANSITION_COOLDOWN = 300; // Same as Entrance
 
+  const handleContactClick = () => {
+    window.location.href = "/contact"; // This forces a full page reload
+  };
+
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
@@ -312,16 +316,14 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center opacity-0"
         >
-          <Link href="/contact" className="w-fit cursor-pointer">
-            <button className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-              <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
-              <GoArrowUpRight
-                size={32}
-                strokeWidth={1}
-                className="mt-1 transition-all duration-300"
-              />
-            </button>
-          </Link>
+          <button onClick={handleContactClick} className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+            <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
+            <GoArrowUpRight
+              size={32}
+              strokeWidth={1}
+              className="mt-1 transition-all duration-300"
+            />
+          </button>
         </div>
       </div>
     </>

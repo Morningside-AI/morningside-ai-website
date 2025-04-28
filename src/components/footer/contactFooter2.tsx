@@ -1,12 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { GoArrowUpRight } from "react-icons/go";
 import Link from "next/link";
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const ContactFooter2 = () => {
    const footerRef = useRef<HTMLDivElement>(null);
