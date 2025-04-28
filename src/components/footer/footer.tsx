@@ -286,7 +286,7 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="w-full h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden"
+                className="w-full h-screen min-h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 sm:pt-4 lg:pt-6 overflow-hidden"
             >
                 <div className="w-full flex flex-row justify-between" ref={textRef}>
                     <p className="w-full lg:text-6xl text-5xl text-left leading-normal">
@@ -303,7 +303,7 @@ const Footer = () => {
                     <Logo className="w-48 h-10 mt-4 hidden lg:block" />
                 </div>
 
-                <div className="w-full flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between lg:mb-0 mb-16 pb-10 lg:pb-0 tracking-wider text-sm relative">
+                <div className="w-full flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between mb-16 sm:mb-0 md:mb-0 lg:mb-0 pb-4 sm:pb-0 md:pb-2 lg:pb-0 tracking-wider text-sm relative">
                     <div className="flex flex-col gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
                         <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
                         <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">
