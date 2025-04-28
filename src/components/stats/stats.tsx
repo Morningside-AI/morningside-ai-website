@@ -98,14 +98,14 @@ const Stats = () => {
         scrollTo: {
           y: targetId,
         },
-        duration: 0.2,
+        duration: 0.08,
         ease: "power2.inOut",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 20);
+          }, 6);
         },
       });
     };
