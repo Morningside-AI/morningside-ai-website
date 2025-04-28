@@ -75,7 +75,7 @@ const ContactFooter2 = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="w-full lg:h-[40vh] h-[50vh] flex flex-col will-change-transform justify-end items-center text-white tracking-[-0.04em] leading-[90%] pt-6 overflow-hidden"
+                className="w-full lg:h-[40vh] h-[50vh] flex flex-col will-change-transform justify-end items-center text-white tracking-[-0.04em] leading-[90%] pt-6 px-4 overflow-hidden"
             >
                 <div className="w-full flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between lg:mb-0 mb-4 pb-4 lg:pb-0 tracking-wider text-sm relative">
                     <div className="flex flex-col gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
