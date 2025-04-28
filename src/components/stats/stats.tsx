@@ -334,6 +334,7 @@ const Stats = () => {
             <span className="gray-text">A</span>
             <span className="gray-text">I</span>
             <span className="gray-text">.</span>
+            
           </span>
           <br className="block lg:hidden" />
           <span className="">
@@ -351,7 +352,7 @@ const Stats = () => {
             <span className="gray-text">e</span>
             <span className="gray-text">s</span>
             <span className="gray-text">u</span>
-            <span className="letter">l</span>
+            <span className="gray-text">l</span>
             <span className="gray-text">t</span>
             <span className="gray-text">s</span>
             <span className="gray-text">.</span>
