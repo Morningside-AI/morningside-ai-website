@@ -27,32 +27,52 @@ const Stats = () => {
   };
 
   useEffect(() => {
-    const threshold = 30; // same as Hero
-    let accumulated = 0;
-    let hasSnapped = false;
-    let scrollLocked = false;
-    let scrollCooldown = false;
-
     const svg = svgContainerRef.current;
     if (svg) {
       const part1 = svg.querySelector(".logoMarkPart1");
       const part2 = svg.querySelector(".logoMarkPart2");
       const part3 = svg.querySelector(".logoMarkPart3");
-
-      gsap.set([part1, part2, part3], { opacity: 0.001 }); // Start hidden
-
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: statsRef.current,
-          start: "top center",
-          toggleActions: "play none none reverse",
-        },
-      })
-        .to(part3, { opacity: 0.03, duration: 0.2, ease: "power2.inOut" })
-        .to(part2, { opacity: 0.03, duration: 0.3, ease: "power2.inOut" }, "+=0.2")
-        .to(part1, { opacity: 0.03, duration: 0.4, ease: "power2.inOut" }, "+=0.35");
+  
+      // Always start hidden
+      gsap.set([part1, part2, part3], { opacity: 0.001 });
+  
+      const animateSVGIn = () => {
+        gsap.timeline()
+          .to(part3, { opacity: 0.03, duration: 0.2, ease: "power2.inOut" })
+          .to(part2, { opacity: 0.03, duration: 0.3, ease: "power2.inOut" }, "+=0.2")
+          .to(part1, { opacity: 0.03, duration: 0.4, ease: "power2.inOut" }, "+=0.35");
+      };
+  
+      const animateSVGOut = () => {
+        gsap.timeline()
+          .to([part1, part2, part3], { opacity: 0.001, duration: 0.03, ease: "power2.inOut" });
+      };
+  
+      // Set up ScrollTrigger
+      ScrollTrigger.create({
+        trigger: statsRef.current,
+        start: "top center",
+        end: "bottom center",
+        onEnter: animateSVGIn,
+        onEnterBack: animateSVGIn,
+        onLeave: animateSVGOut,
+        onLeaveBack: animateSVGOut,
+      });
     }
+  
+    // Clean up ScrollTrigger instances on unmount
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+  
 
+  useEffect(() => {
+    const threshold = 30; // same as Hero
+    let accumulated = 0;
+    let hasSnapped = false;
+    let scrollLocked = false;
+    let scrollCooldown = false;
 
     const preventDefault = (e: TouchEvent): void => {
       e.preventDefault();
