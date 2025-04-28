@@ -18,7 +18,7 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
     }, []);
 
     const handleLogoClick = () => {
-        window.location.href = "/contact"; // This forces a full page reload
+        window.location.href = "/"; // This forces a full page reload
     };
 
     const handleContactClick = () => {
