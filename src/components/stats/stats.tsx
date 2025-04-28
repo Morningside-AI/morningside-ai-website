@@ -111,7 +111,7 @@ const Stats = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
       accumulated += delta;
     
       if (accumulated >= threshold) {

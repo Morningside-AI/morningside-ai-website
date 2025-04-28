@@ -84,7 +84,7 @@ const Center = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) {
+      if (!isInView() || hasSnapped || !canTransition()) {
         return;
       }
       accumulated += delta;
