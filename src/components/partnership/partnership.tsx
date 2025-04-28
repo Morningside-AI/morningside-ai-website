@@ -312,7 +312,7 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center opacity-0"
         >
-          <Link href="/contact" target="_blank" className="w-fit cursor-pointer">
+          <Link href="/contact" className="w-fit cursor-pointer">
             <button className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
               <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
               <GoArrowUpRight

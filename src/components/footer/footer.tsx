@@ -306,7 +306,7 @@ const Footer = () => {
                             <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                         </Link>
                         <div className="flex flex-row gap-2 relative z-10">
-                            <Link href="/contact" target="_blank" className="w-full cursor-pointer">
+                            <Link href="/contact" className="w-full cursor-pointer">
                                 <button className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                     Get In Touch
                                     <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />

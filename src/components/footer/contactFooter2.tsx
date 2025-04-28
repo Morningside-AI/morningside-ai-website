@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
-import Logo from "@/assets/images/morningside-assets/logo-FullWhite.svg";
 import { GoArrowUpRight } from "react-icons/go";
 import Link from "next/link";
 
@@ -11,64 +10,6 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const ContactFooter2 = () => {
    const footerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const contactEl = document.querySelector(".footer-contact");
-        const followEl = document.querySelector(".footer-follow");
-
-        if (contactEl && followEl && footerRef.current) {
-            gsap.set(contactEl, { opacity: 0, y: 60 });
-            gsap.set(followEl, { opacity: 0, x: 60 });
-
-            const trigger = ScrollTrigger.create({
-                trigger: footerRef.current,
-                start: "top 90%",
-                end: "bottom top",
-                toggleActions: "play none none reverse",
-                onEnter: animateIn,
-                onEnterBack: animateIn,
-                onLeaveBack: animateOut,
-            });
-
-            function animateIn() {
-                gsap.to(contactEl, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1.2,
-                    ease: "power4.out",
-                });
-                gsap.to(followEl, {
-                    opacity: 1,
-                    x: 0,
-                    duration: 1.2,
-                    ease: "power4.out",
-                    delay: 0.4,
-                });
-            }
-
-            function animateOut() {
-                gsap.to(contactEl, {
-                    opacity: 0,
-                    y: 60,
-                    duration: 0.8,
-                    ease: "power2.inOut",
-                });
-                gsap.to(followEl, {
-                    opacity: 0,
-                    x: 60,
-                    duration: 0.8,
-                    ease: "power2.inOut",
-                });
-            }
-
-            ScrollTrigger.refresh();
-
-            return () => {
-                trigger.kill();
-            };
-        }
-
-    }, []);
 
     return (
         <>
