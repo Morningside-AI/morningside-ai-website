@@ -40,6 +40,10 @@ body::-webkit-scrollbar-thumb:hover {
   display: inline-block;
 }
 
+.gray-text{
+  color: #99999966;
+}
+
 .white-silver-animated-text {
   background: linear-gradient(90deg,
       #999999 0%,
