@@ -24,9 +24,6 @@ export default function HomePage() {
                         <span className="green-text">your&nbsp;</span>
                         <span className="green-text">business</span>
                     </p>
-                    <p className="text-xl lg:text-2xl pr-2 text-[#C0C0C0]">
-                    At Morningside AI, we transform AI potential into measurable business outcomes through strategic consultation and custom solution development. Our experts work directly with your team to identify high-impact automation opportunities, implement intelligent systems, and create frameworks that drive growth while aligning with your operational needs. From workflow optimization to data-driven decision support, we focus on practical implementations that deliver ROI and position your organization at the forefront of enterprise AI innovation.
-                    </p>
                 </div>
                 <div className={`w-full lg:w-1/2 h-[75vh] lg:h-full flex flex-col bg-[#EDECE4] px-4 msaiDrawer overflow-y-auto ${!success ? "lg:pt-72 pt-8" : "lg:pt-0 pt-0"}`}>
                     {
