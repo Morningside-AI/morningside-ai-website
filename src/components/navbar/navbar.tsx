@@ -17,6 +17,10 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
         window.navbarLogoRef = navbarLogoRef;
     }, []);
 
+    const handleLogoClick = () => {
+        window.location.href = "/contact"; // This forces a full page reload
+    };
+
     const handleContactClick = () => {
         window.location.href = "/contact"; // This forces a full page reload
     };
@@ -25,7 +29,10 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
     return (
         <>
             <div className="w-full h-fit flex flex-row justify-between items-center pt-4 absolute z-10 top-0 left-0 lg:px-12 md:px-8 px-4">
-                <Link href="/" className="w-fit cursor-pointer">
+                <Link href="/" className="w-fit cursor-pointer" onClick={(e)=>{
+                    e.preventDefault()
+                    handleLogoClick()
+                }}>
                     <Logo className="w-36 h-6" ref={navbarLogoRef} />
                 </Link>
                 {
