@@ -18,7 +18,7 @@ const Hero = () => {
   const touchStartY = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 300;
+  const TRANSITION_COOLDOWN = 400;
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;

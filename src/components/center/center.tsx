@@ -17,7 +17,7 @@ const Center = () => {
   const isAnimatingRef = useRef(false);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 300; // Same as Entrance
+  const TRANSITION_COOLDOWN = 400; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
@@ -114,13 +114,11 @@ const Center = () => {
       if (e.key === "ArrowDown" || e.key === "PageDown") {
         if (isInView()) {
           e.preventDefault();
-          disableScroll();
           handleIntent(60);
         }
       } else if (e.key === "ArrowUp" || e.key === "PageUp") {
         if (isInView()) {
           e.preventDefault();
-          disableScroll();
           handleIntent(-60);
         }
       }

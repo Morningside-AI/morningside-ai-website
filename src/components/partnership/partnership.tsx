@@ -20,7 +20,7 @@ const Partnership = () => {
   const isAnimatingRef = useRef(false);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 300; // Same as Entrance
+  const TRANSITION_COOLDOWN = 400; // Same as Entrance
 
   const handleContactClick = () => {
     window.location.href = "/contact"; // This forces a full page reload
