@@ -15,9 +15,11 @@ const Footer = () => {
     const footerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
     const textRef = useRef<HTMLParagraphElement>(null);
+    const lastScrollTime = useRef(0);
+    const lastScrollDelta = useRef(0);
 
     const lastTransitionTime = useRef(0);
-    const TRANSITION_COOLDOWN = 300;
+    const TRANSITION_COOLDOWN = 500;
 
     const handleContactClick = () => {
         window.location.href = "/contact"; // This forces a full page reload
@@ -28,7 +30,7 @@ const Footer = () => {
     };
 
     useEffect(() => {
-        const threshold = 30;
+        const threshold = 45;
         let accumulated = 0;
         let hasSnapped = false;
         let scrollLocked = false;
@@ -94,10 +96,32 @@ const Footer = () => {
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-            if (mtd.inertial(e)) return; // Ignore inertial events
+            if (!canTransition()) return;
 
-            const deltaY = e.deltaY * 0.3; // Reduced sensitivity
-            handleIntent(deltaY);
+            // 1. Use mtd as primary trackpad detector
+            const isTrackpad = mtd.inertial(e);
+
+            // 2. Apply different handling based on input type
+            const sensitivity = isTrackpad ? 0.1 : 0.2;
+            const maxDelta = isTrackpad ? 10 : 20;
+
+            // 3. Normalize delta values
+            const baseDelta = e.deltaY * sensitivity;
+            const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+            // 4. Momentum scroll prevention
+            const now = Date.now();
+            const isMomentumScroll = isTrackpad &&
+                (now - lastScrollTime.current < 16) && // < 60fps
+                Math.abs(normalizedDelta) > 8;
+
+            if (!isMomentumScroll) {
+                handleIntent(normalizedDelta);
+            }
+
+            // 5. Update timing refs
+            lastScrollTime.current = now;
+            lastScrollDelta.current = normalizedDelta;
         };
 
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -303,13 +327,13 @@ const Footer = () => {
                     <Logo className="w-48 h-10 mt-4 hidden lg:block" />
                 </div>
 
-                <div className="w-full h-fit flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between mb-16 sm:mb-0 md:mb-0 lg:mb-0 pb-4 sm:pb-0 md:pb-2 lg:pb-0 tracking-wider text-sm relative">
+                <div className="w-full h-fit flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between mb-20 md:mb-0 lg:mb-0 pb-4 md:pb-2 lg:pb-0 tracking-wider text-sm relative">
                     <div className="flex flex-col gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
                         <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
                         <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">
                             <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                         </Link>
-                        <div className="flex flex-row gap-2 relative z-10 sm:mb-2 md:mb-28 lg:mb-10">
+                        <div className="flex flex-row gap-2 relative z-10 sm:mb-8 md:mb-28 lg:mb-10">
                             <button onClick={handleContactClick} className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                 Get In Touch
                                 <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />

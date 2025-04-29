@@ -16,16 +16,18 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
+  const lastScrollTime = useRef(0);
+  const lastScrollDelta = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 400;
+  const TRANSITION_COOLDOWN = 500;
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
-  
+
   useEffect(() => {
-    const threshold = 30;
+    const threshold = 45;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -61,22 +63,26 @@ const Hero = () => {
         rect.bottom > window.innerHeight * 0.35;
     };
 
+    // In both Hero and Center sections
     const goToNext = () => {
       if (scrollCooldown) return;
       scrollCooldown = true;
       hasSnapped = true;
       accumulated = 0;
 
+      // Add temporary scroll lock
+      disableScroll();
+
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.08,
+        duration: 0.15, // Slightly longer duration
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 6);
+          }, 100); // Longer cooldown after animation
         },
       });
     };
@@ -94,11 +100,32 @@ const Hero = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return;
+      if (!canTransition()) return;
 
-      // Reduced sensitivity further
-      const deltaY = e.deltaY * 0.2; // Changed from 0.3 to 0.2
-      handleIntent(deltaY);
+      // 1. Use mtd as primary trackpad detector
+      const isTrackpad = mtd.inertial(e);
+
+      // 2. Apply different handling based on input type
+      const sensitivity = isTrackpad ? 0.1 : 0.2;
+      const maxDelta = isTrackpad ? 10 : 20;
+
+      // 3. Normalize delta values
+      const baseDelta = e.deltaY * sensitivity;
+      const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+      // 4. Momentum scroll prevention
+      const now = Date.now();
+      const isMomentumScroll = isTrackpad &&
+        (now - lastScrollTime.current < 16) && // < 60fps
+        Math.abs(normalizedDelta) > 8;
+
+      if (!isMomentumScroll) {
+        handleIntent(normalizedDelta);
+      }
+
+      // 5. Update timing refs
+      lastScrollTime.current = now;
+      lastScrollDelta.current = normalizedDelta;
     };
 
 

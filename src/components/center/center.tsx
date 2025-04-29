@@ -15,16 +15,18 @@ const Center = () => {
   const subTextRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
   const isAnimatingRef = useRef(false);
+  const lastScrollTime = useRef(0);
+  const lastScrollDelta = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 400; // Same as Entrance
+  const TRANSITION_COOLDOWN = 500; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
 
   useEffect(() => {
-    const threshold = 30;
+    const threshold = 45;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -102,12 +104,23 @@ const Center = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return;
+      if (!canTransition()) return;
 
-      // Add delta normalization
-      const baseDelta = e.deltaY * 0.3;
-      const deltaY = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), 20);
-      handleIntent(deltaY);
+      const isTrackpad = mtd.inertial(e);
+      const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
+      const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
+
+      const baseDelta = e.deltaY * sensitivity;
+      const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+      // Additional velocity check
+      const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
+      if (velocity > 0.5) return;
+
+      handleIntent(normalizedDelta);
+
+      lastScrollTime.current = Date.now();
+      lastScrollDelta.current = normalizedDelta;
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
