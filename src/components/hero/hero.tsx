@@ -75,14 +75,14 @@ const Hero = () => {
 
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.15, // Slightly longer duration
+        duration: 0.1, // Slightly longer duration
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 100); // Longer cooldown after animation
+          }, 6); // Longer cooldown after animation
         },
       });
     };
@@ -187,7 +187,7 @@ const Hero = () => {
     // Animate paragraph
     if (paragraphRef.current) {
       const para = paragraphRef.current;
-      gsap.set(para, { opacity: 0, y: 200 });
+      gsap.set(para, { opacity: 0, y: 80 });
 
       ScrollTrigger.create({
         trigger: heroRef.current,
@@ -212,7 +212,7 @@ const Hero = () => {
         onLeave: () => {
           gsap.to(para, {
             opacity: 0,
-            y: 200,
+            y: 80,
             duration: 1.2,
             ease: "power2.inOut",
           });
@@ -220,7 +220,7 @@ const Hero = () => {
         onLeaveBack: () => {
           gsap.to(para, {
             opacity: 0,
-            y: 200,
+            y: 80,
             duration: 1.2,
             ease: "power2.inOut",
           });
