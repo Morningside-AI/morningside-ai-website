@@ -24,11 +24,7 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
       window.addEventListener('wheel', blockScroll, options);
       window.addEventListener('touchmove', blockScroll, options);
       window.addEventListener('scroll', blockScroll, options);
-      window.addEventListener('keydown', (e) => {
-        if ([32, 33, 34, 35, 36, 37, 38, 39, 40].includes(e.keyCode)) {
-          blockScroll(e);
-        }
-      }, options);
+      
 
       // Lock scrolling at document level
       document.body.style.overflow = 'hidden';
@@ -47,7 +43,6 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
         window.removeEventListener('wheel', blockScroll, options);
         window.removeEventListener('touchmove', blockScroll, options);
         window.removeEventListener('scroll', blockScroll, options);
-        window.removeEventListener('keydown', blockScroll, options);
 
         // Restore scrolling
         document.body.style.overflow = '';
