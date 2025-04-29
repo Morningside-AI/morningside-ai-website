@@ -40,6 +40,10 @@ body::-webkit-scrollbar-thumb:hover {
   display: inline-block;
 }
 
+.gray-text{
+  color: #99999966;
+}
+
 .white-silver-animated-text {
   background: linear-gradient(90deg,
       #999999 0%,
@@ -174,7 +178,7 @@ body::-webkit-scrollbar-thumb:hover {
   outline: none;
   width: 100%;
   max-width: 100%;
-  padding: 10px 12px;
+  padding: 10px 0px;
   font-weight: 300;
   appearance: none;
   -webkit-appearance: none;
@@ -198,7 +202,7 @@ body::-webkit-scrollbar-thumb:hover {
   background-color: #EDECE4;
   color: #060E0A;
   font-weight: 300;
-  padding: 8px 12px;
+  padding: 8px 0px;
 }
 
 /* Error States */
@@ -252,20 +256,3 @@ body::-webkit-scrollbar-thumb:hover {
   object-fit: cover;
 }
 
-[class*="white-silver"], .green-text {
-  display: inline-block;
-}
-
-.char {
-  background: linear-gradient(
-    to right,
-    #FFFFFF 50%,
-    #C0C0C0 50%
-  );
-  background-size: 200% 100%;
-  background-position-x: 100%;
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  display: inline-block;
-}

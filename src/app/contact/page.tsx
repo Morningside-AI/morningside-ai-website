@@ -1,56 +1,54 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/navbar/navbar";
 import ContactForm from "@/components/generic/contactForm";
 import ContactFooter2 from "@/components/footer/contactFooter2";
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
 
-export default function HomePage() {
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+export default function ContactPage() {
     const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        // Unlock scroll when Contact page mounts
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+        document.body.style.touchAction = "";
+        document.documentElement.style.touchAction = "";
+    }, []);
+
+    const handleBackClick = () => {
+        window.location.href = "/"; // This forces a full page reload
+    };
+
     return (
-        <main className="flex min-h-screen w-full flex-col items-center lg:px-12 md:px-8 px-4 relative main-container">
-            <Navbar />
-            <div className="w-full flex flex-col-reverse lg:flex-row gap-4 lg:gap-2 lg:h-[80vh] mt-32 overflow-clip rounded-[10px]">
-                <div className="h-full w-full lg:w-1/2 flex flex-col gap-3 lg:px-4 tracking-[-0.04em] leading-[90%]">
-                    <p className="lg:text-6xl text-5xl text-left leading-normal">
-                        <span className="white-silver-animated-text">We&nbsp;</span>
-                        <span className="white-silver-animated-text">look&nbsp;</span>
-                        <span className="white-silver-animated-text">forward&nbsp;</span>
-                        <br className="block lg:hidden" />
-                        <span className="white-silver-animated-text">to&nbsp;</span>
-                        <span className="white-silver-animated-text">helping&nbsp;</span>
-                        <br />
-                        <span className="green-text">your&nbsp;</span>
-                        <span className="green-text">business</span>
-                    </p>
-                </div>
-                <div className={`w-full lg:w-1/2 h-[75vh] lg:h-full flex flex-col bg-[#EDECE4] px-4 msaiDrawer overflow-y-auto ${!success ? "lg:pt-72 pt-8" : "lg:pt-0 pt-0"}`}>
-                    {
-                        !success ? (
-                            <div className="w-full flex flex-row lg:mt-20">
-                                <h2 className="text-4xl font-medium text-left pt-4 lg:pt-0 pb-10">Get In Touch</h2>
-                            </div>
-                        ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center mt-auto gap-2">
-                                <p className="text-green-500 text-lg">Thank you for your message! We will get back to you soon.</p>
-                                <Link href="/" className="w-full cursor-pointer flex flex-row items-center justify-center gap-1.5 hover:opacity-75 transition-all duration-300">
-                                    <p className="text-md font-medium">Back to Home</p>
-                                    <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 rotate-45 duration-300" />
-                                </Link>
-                            </div>
-                        )
-                    }
-                    <div className="w-full pr-4 lg:pr-0 flex flex-col flex-1">
-                        {
-                            !success && (
-                                <ContactForm setSuccess={setSuccess} />
-                            )
-                        }
-                        <div className="w-full h-2 mt-auto"></div>
+        <main className="flex min-h-screen w-full flex-col items-center lg:px-12 md:px-0 px-0 relative">
+            <Navbar isConctactPage />
+
+            {success ? (
+                // Success message
+                <div className="w-11/12 lg:w-7/12 h-[50vh] flex flex-col items-center justify-center bg-[#EDECE4] rounded-2xl mt-32 mb-10 msaiDrawer">
+                    <div className="w-full h-full flex flex-col items-center justify-center mt-auto gap-2">
+                        <p className="text-green-500 text-lg text-center w-11/12">Thank you for your message! We will get back to you soon.</p>
+                        <Link href="/" onClick={(e)=>{e.preventDefault(); handleBackClick()}} className="w-full cursor-pointer flex flex-row items-center justify-center gap-1.5 hover:opacity-75 transition-all duration-300">
+                            <p className="text-md font-medium">Back to Home</p>
+                            <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 rotate-45 duration-300" />
+                        </Link>
                     </div>
                 </div>
-            </div>
+            ) : (
+                // Contact form
+                <div className="w-11/12 lg:w-7/12 flex flex-col items-start justify-start bg-[#EDECE4] pl-3 pr-10 py-4 md:p-4 rounded-2xl mt-32 mb-10 msaiDrawer">
+                    <div className="w-full flex flex-row">
+                        <h2 className="text-4xl font-medium text-left pb-10">Get In Touch</h2>
+                    </div>
+                    <ContactForm setSuccess={setSuccess} />
+                </div>
+            )}
 
             <ContactFooter2 />
         </main>

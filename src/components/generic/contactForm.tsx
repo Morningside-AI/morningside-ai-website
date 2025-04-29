@@ -62,7 +62,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
         }}
     >
         {({ isSubmitting }: FormikProps<FormValues>) => (
-            <Form className="w-full h-full flex flex-col">
+            <Form className="w-full h-full flex flex-col pr-1 md:pr-0">
                 {/* Name */}
                 <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
                     <div className="w-full lg:w-1/2 flex flex-col gap-2">
@@ -105,11 +105,11 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                         <Label name="Company Size" field="company_size" />
                         <Field as="select" name="company_size" className="border">
                             <option value="">Select company size</option>
-                            <option value="1-10">Less than 20</option>
-                            <option value="11-50">20-50</option>
-                            <option value="51-100">50-100</option>
-                            <option value="101-500">100-500</option>
-                            <option value="501-1000">More than 500</option>
+                            <option value="1-20">Less than 20</option>
+                            <option value="20-50">20-50</option>
+                            <option value="50-100">50-100</option>
+                            <option value="100-500">100-500</option>
+                            <option value="500-1000">More than 500</option>
                         </Field>
                         <Error name="company_size" />
                     </div>
@@ -117,11 +117,11 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                         <Label name="Company's Annual Revenue" field="companys_revenue" />
                         <Field as="select" name="companys_revenue" className="border">
                             <option value="">Select revenue range</option>
-                            <option value="1-10">Less than $100K</option>
-                            <option value="11-50">$100K-$500K</option>
-                            <option value="51-100">$500K-$1M</option>
-                            <option value="101-500">$1M-$2M</option>
-                            <option value="501-1000">More than $2M</option>
+                            <option value="<100K">Less than $100K</option>
+                            <option value="100K-500K">$100K-$500K</option>
+                            <option value="500K-1M">$500K-$1M</option>
+                            <option value="1M-2M">$1M-$2M</option>
+                            <option value=">2M">More than $2M</option>
                         </Field>
                         <Error name="companys_revenue" />
                     </div>
@@ -132,10 +132,10 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                     <Label name="Project budget" field="project_budget" />
                     <Field as="select" name="project_budget" className="border">
                         <option value="">Select budget range</option>
-                        <option value="1-10">Less than $10K</option>
-                        <option value="11-50">$10K-$50K</option>
-                        <option value="51-100">$50K-$100K</option>
-                        <option value="501-1000">More than $100K</option>
+                        <option value="<10K>">Less than $10K</option>
+                        <option value="10K-50K">$10K-$50K</option>
+                        <option value="51K-100K">$50K-$100K</option>
+                        <option value=">100K">More than $100K</option>
                     </Field>
                     <Error name="project_budget" />
                 </div>
@@ -145,9 +145,9 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                     <Label name="What services are you interested in?" field="services_needed" />
                     <Field as="select" name="services_needed" className="border">
                         <option value="">Select service</option>
-                        <option value="1-10">Getting clarity and identifying AI opportunities</option>
-                        <option value="11-50">Educating your team on AI</option>
-                        <option value="51-100">Developing custom AI solutions</option>
+                        <option value="Identifying">Identifying AI opportunities</option>
+                        <option value="Educating">Educating your team on AI</option>
+                        <option value="Developping">Developing custom AI solutions</option>
                     </Field>
                     <Error name="services_needed" />
                 </div>

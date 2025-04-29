@@ -18,14 +18,14 @@ const Hero = () => {
   const touchStartY = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 400;
+  const TRANSITION_COOLDOWN = 300;
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
-
+  
   useEffect(() => {
-    const threshold = 45;
+    const threshold = 30;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -69,14 +69,14 @@ const Hero = () => {
 
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.2,
+        duration: 0.08,
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 20);
+          }, 6);
         },
       });
     };

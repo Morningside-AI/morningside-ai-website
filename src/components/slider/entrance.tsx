@@ -29,6 +29,7 @@ const Entrance = () => {
     const mtd = new MagicTrackpadDetector();
     const centerRef = useRef<HTMLDivElement>(null);
     const animTextRef = useRef<HTMLParagraphElement>(null);
+    const headingRef = useRef<HTMLDivElement>(null);
     const contentRefs = [
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
@@ -202,13 +203,13 @@ const Entrance = () => {
                 setTimeout(() => {
                     rive1.reset();
                     rive1.play();
-                }, 300);
+                }, 250);
             }
             if (toIndex === 3 && rive2) {
                 setTimeout(() => {
                     rive2.reset();
                     rive2.play();
-                }, 450);
+                }, 250);
             }
 
             disableScroll();
@@ -218,7 +219,7 @@ const Entrance = () => {
             gsap.to(fromRef, {
                 opacity: 0,
                 x: direction === "forward" ? -100 : 100,
-                duration: 0.8,
+                duration: 0.4,
                 ease: "power2.out",
                 onComplete: () => {
                     fromRef.style.display = "none";
@@ -230,11 +231,11 @@ const Entrance = () => {
                         {
                             opacity: 1,
                             x: 0,
-                            duration: 0.8,
+                            duration: 0.4,
                             ease: "power2.out",
                             onComplete: () => {
                                 hasSnapped = false;
-                                setTimeout(() => enableScroll(), 300);
+                                setTimeout(() => enableScroll(), 500);
                             },
                         }
                     );
@@ -321,71 +322,6 @@ const Entrance = () => {
             // Don't enable scroll immediately - let the transition complete it
         };
 
-        const headingEl = animTextRef.current;
-
-        if (headingEl) {
-            const words = headingEl.querySelectorAll("span");
-
-            // Set initial state
-            gsap.set(words, {
-                opacity: 0,
-                y: 100,
-                rotateX: 100,
-                transformOrigin: "bottom center"
-            });
-
-            ScrollTrigger.create({
-                trigger: centerRef.current,
-                start: "top center",
-                end: "bottom top",
-                toggleActions: "play none none reverse",
-                onEnter: animateIn,
-                onEnterBack: animateIn,
-                onLeave: animateOut,
-                onLeaveBack: animateOut
-            });
-
-            function animateIn() {
-                const tl = gsap.timeline();
-                tl.to(words, {
-                    opacity: 1,
-                    y: 0,
-                    rotateX: 0,
-                    ease: "linear",
-                    duration: 0.5,
-                    stagger: {
-                        each: 0.12,
-                        from: "start"
-                    }
-                }).fromTo(
-                    words,
-                    {
-                        rotateX: 100,
-                        transformOrigin: "bottom center"
-                    },
-                    {
-                        rotateX: 0,
-                        duration: 0.5,
-                        ease: "power4.out",
-                        stagger: {
-                            each: 0.12,
-                            from: "start"
-                        }
-                    },
-                    "<" // run in parallel with opacity/y
-                );
-            }
-
-            function animateOut() {
-                gsap.to(words, {
-                    opacity: 0,
-                    y: 60,
-                    duration: 0.6,
-                    ease: "power2.inOut"
-                });
-            }
-        }
-
         window.addEventListener("wheel", handleWheel, { passive: false });
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("keydown", handleSpaceButton);
@@ -410,6 +346,79 @@ const Entrance = () => {
             }
         });
 
+        const headingEl = headingRef.current;
+
+        if (headingEl) {
+            const words = headingEl.querySelectorAll(".word");
+
+
+            // Loop through each word and wrap each letter
+            words.forEach(word => {
+                const letters = word.textContent?.split('');
+                if (letters) {
+                    word.innerHTML = '';
+                    letters.forEach(letter => {
+                        const span = document.createElement('span');
+                        span.classList.add('letter');
+                        span.textContent = letter;
+                        word.appendChild(span);
+                    });
+                }
+            });
+
+            const letters = headingEl.querySelectorAll('.letter');
+            let animationIn: GSAPTimeline | null = null;
+            let animationOut: GSAPTimeline | null = null;
+
+
+            // Set initial state
+            gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
+
+            const animateIn = () => {
+                // Kill the out animation if it's running
+                if (animationOut) animationOut.kill();
+
+                animationIn = gsap.timeline();
+                animationIn.to(letters, {
+                    clipPath: 'inset(0% 0% 0% 0%)',
+                    duration: 0.1,
+                    ease: 'linear',
+                    stagger: {
+                        each: 0.04,
+                    },
+                });
+            };
+
+            const animateOut = () => {
+                // Kill the in animation if it's running
+                if (animationIn) animationIn.kill();
+
+                animationOut = gsap.timeline();
+                animationOut.to(letters, {
+                    clipPath: 'inset(0% 100% 0% 0%)',
+                    duration: 0.0005,
+                    ease: 'power2.in',
+                    onComplete: () => {
+                        // Just to be safe, ensure all letters are fully hidden
+                        gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
+                    },
+                });
+            };
+
+            const trigger = ScrollTrigger.create({
+                trigger: centerRef.current,
+                start: "top center",
+                end: "bottom top",
+                toggleActions: "play none none reverse",
+                onEnter: animateIn,
+                onEnterBack: animateIn,
+                onLeave: animateOut,
+                onLeaveBack: animateOut
+            });
+
+        }
+
+
         return () => {
             window.removeEventListener("wheel", handleWheel);
             window.removeEventListener("keydown", handleKeyDown);
@@ -422,6 +431,8 @@ const Entrance = () => {
         };
     }, [rive1, rive2, rive1Ready, rive2Ready, canTransition, transition]);
 
+
+
     return (
         <div
             id="entrance-section"
@@ -429,7 +440,7 @@ const Entrance = () => {
             className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
         >
             {/* Labels Column */}
-            <div className="absolute w-full md:w-fit left-1/2 md:left-2 md:top-1/2 top-4 -translate-x-1/2 md:-translate-x-0 md:-translate-y-1/2 flex flex-row md:flex-col md:items-start  items-center justify-center md:gap-2 gap-6 z-10">
+            <div className="absolute w-full lg:w-fit left-1/2 lg:left-2 lg:top-1/2 top-4 -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 flex flex-row lg:flex-col lg:items-start  items-center justify-center lg:gap-2 gap-6 z-10">
                 {LABELS.map((label, index) => (
                     <button
                         key={label.title}
@@ -448,37 +459,174 @@ const Entrance = () => {
             </div>
             {/* Content 1 */}
             <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-24 lg:gap-8">
-                <div>
+                <div className="relative w-full -translate-y-20 lg:-translate-y-14">
                     <p
-                        className="text-3xl md:text-5xl lg:text-6xl leading-tight text-left whitespace-pre-wrap"
-                        ref={animTextRef}
+                        className="text-3xl md:text-5xl text-left whitespace-pre-wrap absolute top-0 left-0 z-0"
                     >
-                        <span className="white-silver-animated-text">We </span>
-                        <span className="white-silver-animated-text1">spend </span>
-                        <span className="white-silver-animated-text2">our </span>
-                        <span className="white-silver-animated-text2">days </span>
-                        <br className="block lg:hidden" />
-                        <span className="white-silver-animated-text1">guiding </span>
-                        <br className="hidden lg:block" />
-                        <span className="white-silver-animated-text">companies </span>
-                        <span className="white-silver-animated-text1">through </span>
-                        <br className="block lg:hidden" />
-                        <span className="white-silver-animated-text2">these </span>
-                        <br className="hidden lg:block" />
-                        <span className="green-text">three </span>
-                        <span className="white-silver-animated-text">core </span>
-                        <span className="white-silver-animated-text1">stages</span>
+                        <span className="">
+                            <span className="gray-text">W</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <span className="gray-text">s</span>
+                            <span className="gray-text">p</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">n</span>
+                            <span className="gray-text">d</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <span className="gray-text">o</span>
+                            <span className="gray-text">u</span>
+                            <span className="gray-text">r</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <span className="gray-text">d</span>
+                            <span className="gray-text">a</span>
+                            <span className="gray-text">y</span>
+                            <span className="gray-text">s</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <br className="block lg:hidden" />
+                            <span className="gray-text">g</span>
+                            <span className="gray-text">u</span>
+                            <span className="gray-text">i</span>
+                            <span className="gray-text">d</span>
+                            <span className="gray-text">i</span>
+                            <span className="gray-text">n</span>
+                            <span className="gray-text">g</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <br className="hidden lg:block" />
+                            <span className="gray-text">c</span>
+                            <span className="gray-text">o</span>
+                            <span className="gray-text">m</span>
+                            <span className="gray-text">p</span>
+                            <span className="gray-text">a</span>
+                            <span className="gray-text">n</span>
+                            <span className="gray-text">i</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">s</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <span className="gray-text">t</span>
+                            <span className="gray-text">h</span>
+                            <span className="gray-text">r</span>
+                            <span className="gray-text">o</span>
+                            <span className="gray-text">u</span>
+                            <span className="gray-text">g</span>
+                            <span className="gray-text">h</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <br className="block lg:hidden" />
+                            <span className="gray-text">t</span>
+                            <span className="gray-text">h</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">s</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <br className="hidden lg:block" />
+                            <span className="gray-text">t</span>
+                            <span className="gray-text">h</span>
+                            <span className="gray-text">r</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <span className="gray-text">c</span>
+                            <span className="gray-text">o</span>
+                            <span className="gray-text">r</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">&nbsp;</span>
+                            <span className="gray-text">s</span>
+                            <span className="gray-text">t</span>
+                            <span className="gray-text">a</span>
+                            <span className="gray-text">g</span>
+                            <span className="gray-text">e</span>
+                            <span className="gray-text">s</span>
+                            <span className="gray-text">&nbsp;</span>
+                        </span>
+                    </p>
+                    <p
+                        className="text-3xl md:text-5xl text-left whitespace-pre-wrap absolute top-0 left-0 z-10"
+                        ref={headingRef}
+                    >
+                        <span className="">
+                            <span className="letter text-white">W</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <span className="letter text-white">s</span>
+                            <span className="letter text-white">p</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">n</span>
+                            <span className="letter text-white">d</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <span className="letter text-white">o</span>
+                            <span className="letter text-white">u</span>
+                            <span className="letter text-white">r</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <span className="letter text-white">d</span>
+                            <span className="letter text-white">a</span>
+                            <span className="letter text-white">y</span>
+                            <span className="letter text-white">s</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <br className="block letter lg:hidden" />
+                            <span className="letter text-white">g</span>
+                            <span className="letter text-white">u</span>
+                            <span className="letter text-white">i</span>
+                            <span className="letter text-white">d</span>
+                            <span className="letter text-white">i</span>
+                            <span className="letter text-white">n</span>
+                            <span className="letter text-white">g</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <br className="hidden letter lg:block" />
+                            <span className="letter text-white">c</span>
+                            <span className="letter text-white">o</span>
+                            <span className="letter text-white">m</span>
+                            <span className="letter text-white">p</span>
+                            <span className="letter text-white">a</span>
+                            <span className="letter text-white">n</span>
+                            <span className="letter text-white">i</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">s</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <span className="letter text-white">t</span>
+                            <span className="letter text-white">h</span>
+                            <span className="letter text-white">r</span>
+                            <span className="letter text-white">o</span>
+                            <span className="letter text-white">u</span>
+                            <span className="letter text-white">g</span>
+                            <span className="letter text-white">h</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <br className="block letter lg:hidden" />
+                            <span className="letter text-white">t</span>
+                            <span className="letter text-white">h</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">s</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <br className="hidden letter lg:block" />
+                            <span className="letter green-text">t</span>
+                            <span className="letter green-text">h</span>
+                            <span className="letter green-text">r</span>
+                            <span className="letter green-text">e</span>
+                            <span className="letter green-text">e</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <span className="letter text-white">c</span>
+                            <span className="letter text-white">o</span>
+                            <span className="letter text-white">r</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">&nbsp;</span>
+                            <span className="letter text-white">s</span>
+                            <span className="letter text-white">t</span>
+                            <span className="letter text-white">a</span>
+                            <span className="letter text-white">g</span>
+                            <span className="letter text-white">e</span>
+                            <span className="letter text-white">s</span>
+                            <span className="letter text-white">&nbsp;</span>
+                        </span>
                     </p>
                 </div>
                 <div className="w-full flex justify-center lg:justify-end">
-                    <Step3 className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
+                    <Step3 className="w-[60vw] h-[50vw] sm:w-[50vw] sm:h[40vh] md:w-[35vw] md:h-[25vh] lg:w-[35vw] lg:h-[25vw] mt-4 sm:mt-6 md:mt-8 lg:mt-2" />
                 </div>
             </div>
 
             {/* Content 2 */}
             <div ref={contentRefs[1]} className="w-full flex-col items-center justify-center gap-8">
                 <div className="w-full flex justify-center">
-                    <Step32 className="w-[50vw] h-[40vw] lg:w-[20vw] lg:h-[20vw]" />
+                    <Step32 className="w-[60vw] h-[50vw] sm:w-[50vw] sm:h[40vh] md:w-[30vw] md:h-[20vh] lg:w-[30vw] lg:h-[20vw]" />
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
                     Identify
@@ -495,7 +643,7 @@ const Entrance = () => {
                         <LearnRive />
                     </div>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Educate </p>
+                <p className="lg:text-9xl md:text-8xl text-6xl landscape:text-7xl font-light text-center capitalize">Educate </p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
                     Our experts equip your team with the tools, frameworks, and strategic know-how to adopt Al confidently across all organizational levels.
                 </p>
@@ -504,13 +652,13 @@ const Entrance = () => {
             {/* Content 4 */}
             <div ref={contentRefs[3]} className="w-full flex-col items-center justify-center gap-8">
                 <div className="w-full flex justify-center">
-                    <div className="w-[100vw] h-[250px] md:w-[400px] md:h-[250px] lg:w-[500px] lg:h-[300px]">
+                    <div className="w-[100vw] h-[250px] md:w-[80vw] md:h-[400px] lg:w-[500px] lg:h-[300px]">
                         <BuildRive />
                     </div>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Develop</p>
+                <p className="lg:text-9xl md:text-8xl text-6xl landscape:text-7xl font-light text-center capitalize">Develop</p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center lg:w-9/12 w-11/12 text-[#A0A4A1]">
-                We design and develop custom AI systems, automations, and state-of-the-art solutions that are proven to move the needle inside your business, thanks to our extensive experience and network of AI Automation Agencies building such solutions.
+                    We design and develop custom AI systems, automations, and state-of-the-art solutions that are proven to move the needle inside your business, thanks to our extensive experience and network of AI Automation Agencies building such solutions.
                 </p>
             </div>
         </div>
