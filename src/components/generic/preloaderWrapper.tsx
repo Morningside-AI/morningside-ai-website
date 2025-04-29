@@ -24,7 +24,6 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
       window.addEventListener('wheel', blockScroll, options);
       window.addEventListener('touchmove', blockScroll, options);
       window.addEventListener('scroll', blockScroll, options);
-      
 
       // Lock scrolling at document level
       document.body.style.overflow = 'hidden';
@@ -66,11 +65,10 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
     <>
       <Preloader onComplete={() => setIsPreloaderDone(true)} />
       <div
-        className={`transition-opacity duration-700 ${
-          isPreloaderDone
+        className={`transition-opacity duration-700 ${isPreloaderDone
             ? "opacity-100"
             : "opacity-0 pointer-events-none touch-none"
-        }`}
+          }`}
         style={{
           height: isPreloaderDone ? "auto" : "100vh",
           overflow: isPreloaderDone ? "visible" : "hidden",
