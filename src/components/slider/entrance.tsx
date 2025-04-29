@@ -235,7 +235,7 @@ const Entrance = () => {
                             ease: "power2.out",
                             onComplete: () => {
                                 hasSnapped = false;
-                                setTimeout(() => enableScroll(), 300);
+                                setTimeout(() => enableScroll(), 500);
                             },
                         }
                     );
@@ -643,7 +643,7 @@ const Entrance = () => {
                         <LearnRive />
                     </div>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Educate </p>
+                <p className="lg:text-9xl md:text-8xl text-6xl landscape:text-7xl font-light text-center capitalize">Educate </p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
                     Our experts equip your team with the tools, frameworks, and strategic know-how to adopt Al confidently across all organizational levels.
                 </p>
@@ -656,7 +656,7 @@ const Entrance = () => {
                         <BuildRive />
                     </div>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">Develop</p>
+                <p className="lg:text-9xl md:text-8xl text-6xl landscape:text-7xl font-light text-center capitalize">Develop</p>
                 <p className="text-base md:text-xl lg:text-2xl font-light text-center lg:w-9/12 w-11/12 text-[#A0A4A1]">
                     We design and develop custom AI systems, automations, and state-of-the-art solutions that are proven to move the needle inside your business, thanks to our extensive experience and network of AI Automation Agencies building such solutions.
                 </p>
