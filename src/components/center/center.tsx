@@ -265,7 +265,7 @@ const Center = () => {
       ref={centerRef}
       className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal overflow-hidden touch-none"
     >
-      <div className="relative w-full ">
+      <div className="relative w-full md:-translate-y-16 lg:-translate-y-0">
         <p
           className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap absolute top-1/2 left-1/2 -translate-x-1/2 w-full "
         >
@@ -357,7 +357,7 @@ const Center = () => {
       </div>
       <p
         ref={subTextRef}
-        className="text-xl lg:text-2xl text-center mt-40 text-[#C0C0C0]"
+        className="text-xl lg:text-2xl text-center mt-40 sm:mt-40 md:mt-40 lg:mt-40 text-[#C0C0C0]"
       >
         One trusted partner to guide you <br /> through your entire AI journey.
       </p>
