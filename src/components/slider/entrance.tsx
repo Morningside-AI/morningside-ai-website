@@ -619,14 +619,14 @@ const Entrance = () => {
                     </p>
                 </div>
                 <div className="w-full flex justify-center lg:justify-end">
-                    <Step3 className="w-[60vw] h-[50vw] lg:w-[35vw] lg:h-[25vw]" />
+                    <Step3 className="w-[60vw] h-[50vw] sm:w-[50vw] sm:h[40vh] md:w-[35vw] md:h-[25vh] lg:w-[35vw] lg:h-[25vw] mt-4 sm:mt-6 md:mt-8 lg:mt-2" />
                 </div>
             </div>
 
             {/* Content 2 */}
             <div ref={contentRefs[1]} className="w-full flex-col items-center justify-center gap-8">
                 <div className="w-full flex justify-center">
-                    <Step32 className="w-[50vw] h-[40vw] lg:w-[20vw] lg:h-[20vw]" />
+                    <Step32 className="w-[60vw] h-[50vw] sm:w-[50vw] sm:h[40vh] md:w-[30vw] md:h-[20vh] lg:w-[30vw] lg:h-[20vw]" />
                 </div>
                 <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
                     Identify
@@ -652,7 +652,7 @@ const Entrance = () => {
             {/* Content 4 */}
             <div ref={contentRefs[3]} className="w-full flex-col items-center justify-center gap-8">
                 <div className="w-full flex justify-center">
-                    <div className="w-[100vw] h-[250px] md:w-[400px] md:h-[250px] lg:w-[500px] lg:h-[300px]">
+                    <div className="w-[100vw] h-[250px] md:w-[80vw] md:h-[400px] lg:w-[500px] lg:h-[300px]">
                         <BuildRive />
                     </div>
                 </div>
