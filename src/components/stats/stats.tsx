@@ -316,7 +316,7 @@ const Stats = () => {
         <p
           className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-0"
         >
-          <span className="">
+          <span className="lg:mr-1">
             <span className="gray-text">W</span>
             <span className="gray-text">e</span>
             <span className="gray-text">&nbsp;</span>
@@ -334,7 +334,6 @@ const Stats = () => {
             <span className="gray-text">A</span>
             <span className="gray-text">I</span>
             <span className="gray-text">.</span>
-            
           </span>
           <br className="block lg:hidden" />
           <span className="">
@@ -362,7 +361,7 @@ const Stats = () => {
           className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-10"
           ref={headingRef}
         >
-          <span className="text-white word">
+          <span className="text-white word lg:mr-1">
             <span className="letter">W</span>
             <span className="letter">e</span>
             <span className="letter">&nbsp;</span>
