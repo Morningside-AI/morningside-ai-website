@@ -300,7 +300,7 @@ const Partnership = () => {
               <span className="">I</span>
               <span className=""> </span>
             </span>
-            <br className="block lg:hidden" />
+            <br className="block md:hidden" />
             <span className="gray-text ">
               <span className="">s</span>
               <span className="">y</span>
@@ -368,7 +368,7 @@ const Partnership = () => {
               <span className="letter">I</span>
               <span className="letter"> </span>
             </span>
-            <br className="block lg:hidden" />
+            <br className="block md:hidden" />
             <span className="text-white word">
               <span className="letter">s</span>
               <span className="letter">y</span>

@@ -272,7 +272,7 @@ const Center = () => {
           <span className="gray-text">We </span>
           <span className="gray-text">put </span>
           <span className="gray-text">AI </span>
-          <br className="block lg:hidden" />
+          <br className="block md:hidden" />
           <span className="gray-text">at </span>
           <span className="gray-text">the </span>
           <span className="gray-text">center </span>
@@ -302,7 +302,7 @@ const Center = () => {
             <span className="letter">I</span>
             <span className="letter"> </span>
           </span>
-          <br className="block lg:hidden" />
+          <br className="block md:hidden" />
           <span className="text-white word">
             <span className="letter">a</span>
             <span className="letter">t</span>
@@ -357,7 +357,7 @@ const Center = () => {
       </div>
       <p
         ref={subTextRef}
-        className="text-xl lg:text-2xl text-center mt-40 sm:mt-40 md:mt-40 lg:mt-40 text-[#C0C0C0]"
+        className="text-xl lg:text-2xl text-center mt-40 sm:mt-40 md:mt-24 lg:mt-40 text-[#C0C0C0]"
       >
         One trusted partner to guide you <br /> through your entire AI journey.
       </p>
