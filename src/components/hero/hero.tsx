@@ -255,7 +255,7 @@ const Hero = () => {
     <div
       id="hero-section"
       ref={heroRef}
-      className="w-full h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] pt-10 will-change-transform overflow-hidden touch-none"
+      className="w-full h-[100dvh] flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] pt-10 will-change-transform overflow-hidden touch-none"
     >
       <div>
         <p className="text-5xl md:text-7xl lg:text-9xl white-silver-animated-text">

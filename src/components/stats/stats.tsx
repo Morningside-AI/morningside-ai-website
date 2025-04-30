@@ -325,7 +325,7 @@ const Stats = () => {
     <div
       ref={statsRef}
       id="stats-section"
-      className="w-full will-change-transform h-screen flex flex-col justify-center text-white leading-normal tracking-normal md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
+      className="w-full will-change-transform h-[100dvh] flex flex-col justify-center text-white leading-normal tracking-normal md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />

@@ -289,7 +289,7 @@ const Partnership = () => {
       <div
         id="partnership-section"
         ref={centerRef}
-        className="w-full h-screen flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 relative overflow-hidden touch-none"
+        className="w-full h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 relative overflow-hidden touch-none"
       >
         <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
           <PartnershipMarquee />
