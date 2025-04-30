@@ -235,7 +235,7 @@ const Center = () => {
           duration: 0.5,
           ease: "power3.out",
         },
-        "-=0.2" // 👈 starts 0.6s *before* heading animation finishes
+        0 // 👈 starts 0.6s *before* heading animation finishes
       );
 
       animationIn.call(() => {
