@@ -204,9 +204,9 @@ const Center = () => {
     const animateIn = () => {
       if (animationOut) animationOut.kill();
       isAnimatingRef.current = true;
-    
+
       animationIn = gsap.timeline();
-    
+
       animationIn.fromTo(
         headingRef.current,
         {
@@ -218,38 +218,37 @@ const Center = () => {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 1.2,
+          duration: 1,
           ease: "power4.out",
         }
       );
-    
+
       animationIn.fromTo(
         subTextRef.current,
         {
           opacity: 0,
-          y: 40,
           filter: "blur(6px)",
         },
         {
           opacity: 1,
-          y: 0,
           filter: "blur(0px)",
-          duration: 1,
+          duration: 0.5,
           ease: "power3.out",
         },
-        ">0.05" // <-- delay start by 0.2s after heading finishes
+        "-=0.2" // 👈 starts 0.6s *before* heading animation finishes
       );
-    
+
       animationIn.call(() => {
         isAnimatingRef.current = false;
       });
     };
-    
+
+
     const animateOut = () => {
       if (animationIn) animationIn.kill();
-    
+
       animationOut = gsap.timeline();
-    
+
       animationOut.to(headingRef.current, {
         opacity: 0,
         y: 40,
@@ -257,21 +256,20 @@ const Center = () => {
         duration: 0.5,
         ease: "power2.in",
       });
-    
+
       animationOut.to(
         subTextRef.current,
         {
           opacity: 0,
-          y: 30,
           filter: "blur(6px)",
           duration: 0.4,
           ease: "power2.in",
         },
-        "<0.1" // <-- start subText fade-out slightly after heading starts
+        0.001 // <-- start subText fade-out slightly after heading starts
       );
     };
-    
-    
+
+
 
     const trigger = ScrollTrigger.create({
       trigger: centerRef.current,
