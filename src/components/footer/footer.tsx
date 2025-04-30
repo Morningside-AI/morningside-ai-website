@@ -1,191 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import Logo from "@/assets/images/morningside-assets/logo-FullWhite.svg";
 import { GoArrowUpRight } from "react-icons/go";
 import Link from "next/link";
-import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Footer = () => {
-    const mtd = new MagicTrackpadDetector();
     const footerRef = useRef<HTMLDivElement>(null);
-    const touchStartY = useRef(0);
     const textRef = useRef<HTMLParagraphElement>(null);
-    const lastScrollTime = useRef(0);
-    const lastScrollDelta = useRef(0);
-
-    const lastTransitionTime = useRef(0);
-    const TRANSITION_COOLDOWN = 500;
 
     const handleContactClick = () => {
         window.location.href = "/contact"; // This forces a full page reload
     };
 
-    const canTransition = () => {
-        return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
-    };
-
     useEffect(() => {
-        const threshold = 45;
-        let accumulated = 0;
-        let hasSnapped = false;
-        let scrollLocked = false;
-        let scrollCooldown = false;
-
-        const preventDefault = (e: TouchEvent) => e.preventDefault();
-
-        const disableScroll = () => {
-            if (!scrollLocked) {
-                scrollLocked = true;
-                document.body.style.touchAction = "none";
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-            }
-        };
-
-        const enableScroll = () => {
-            scrollLocked = false;
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-            document.body.style.touchAction = "";
-            document.documentElement.style.touchAction = "";
-            window.removeEventListener("touchmove", preventDefault);
-        };
-
-        const isInView = () => {
-            const el = footerRef.current;
-            if (!el) return false;
-            const rect = el.getBoundingClientRect();
-            return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
-        };
-
-        const scrollToSection = (targetId: string) => {
-            if (scrollCooldown) return;
-            scrollCooldown = true;
-            hasSnapped = true;
-            accumulated = 0;
-
-            gsap.to(window, {
-                scrollTo: targetId,
-                duration: 0.08,
-                ease: "linear",
-                overwrite: "auto",
-                onComplete: () => {
-                    enableScroll();
-                    setTimeout(() => {
-                        scrollCooldown = false;
-                    }, 6);
-                },
-            });
-        };
-
-        const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
-            accumulated += delta;
-
-            if (accumulated <= -threshold) {
-                lastTransitionTime.current = Date.now();
-                disableScroll();
-                scrollToSection("#partnership-section");
-            }
-        };
-
-        const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            if (!canTransition()) return;
-
-            // 1. Use mtd as primary trackpad detector
-            const isTrackpad = mtd.inertial(e);
-
-            // 2. Apply different handling based on input type
-            const sensitivity = isTrackpad ? 0.1 : 0.2;
-            const maxDelta = isTrackpad ? 10 : 20;
-
-            // 3. Normalize delta values
-            const baseDelta = e.deltaY * sensitivity;
-            const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
-
-            // 4. Momentum scroll prevention
-            const now = Date.now();
-            const isMomentumScroll = isTrackpad &&
-                (now - lastScrollTime.current < 16) && // < 60fps
-                Math.abs(normalizedDelta) > 8;
-
-            if (!isMomentumScroll) {
-                handleIntent(normalizedDelta);
-            }
-
-            // 5. Update timing refs
-            lastScrollTime.current = now;
-            lastScrollDelta.current = normalizedDelta;
-        };
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "ArrowUp" || e.key === "PageUp") {
-                if (isInView()) {
-                    e.preventDefault();
-                    disableScroll();
-                    handleIntent(-60);
-                }
-            } else if (e.key === "ArrowDown" || e.key === "PageDown") {
-                if (isInView()) {
-                    e.preventDefault();
-                    disableScroll();
-                    handleIntent(60);
-                }
-            }
-        };
-
-        const handleSpaceButton = (e: KeyboardEvent) => {
-            if (e.key === " ") {
-                disableScroll();
-                handleIntent(60);
-            }
-        }
-
-        const handleTouchStart = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                touchStartY.current = touch.clientY;
-                disableScroll();
-            }
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            const touch = e.touches.item(0);
-            if (touch) {
-                const deltaY = (touchStartY.current - touch.clientY) * 0.5;
-                handleIntent(deltaY);
-                touchStartY.current = touch.clientY;
-            }
-        };
-
-        const handleTouchEnd = () => {
-            enableScroll();
-        };
-
-        window.addEventListener("wheel", handleWheel, { passive: false });
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("keydown", handleSpaceButton);
-        window.addEventListener("touchstart", handleTouchStart, { passive: false });
-        window.addEventListener("touchmove", handleTouchMove, { passive: false });
-        window.addEventListener("touchend", handleTouchEnd);
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry?.isIntersecting) {
-                    hasSnapped = false;
-                    accumulated = 0;
-                }
-            },
-            { threshold: 0.5 }
-        );
-        if (footerRef.current) observer.observe(footerRef.current);
-
         const contactEl = document.querySelector(".footer-contact");
         const followEl = document.querySelector(".footer-follow");
         const textEl = textRef.current;
@@ -293,16 +125,6 @@ const Footer = () => {
             });
         };
 
-        return () => {
-            window.removeEventListener("wheel", handleWheel);
-            window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("keydown", handleSpaceButton);
-            window.removeEventListener("touchstart", handleTouchStart);
-            window.removeEventListener("touchmove", handleTouchMove);
-            window.removeEventListener("touchend", handleTouchEnd);
-            observer.disconnect();
-            enableScroll();
-        };
     }, []);
 
     return (

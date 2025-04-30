@@ -20,7 +20,6 @@ export default function HomePage() {
         <Navbar />
         <Hero />
         <Center />
-        <Entrance />
         <Stats />
         <Partnership />
         <Footer />

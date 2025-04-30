@@ -66,13 +66,8 @@ const PreloaderWrapper = ({ children }: { children: React.ReactNode }) => {
       <Preloader onComplete={() => setIsPreloaderDone(true)} />
       <div
         className={`transition-opacity duration-700 ${isPreloaderDone
-            ? "opacity-100"
-            : "opacity-0 pointer-events-none touch-none"
+            ? "opacity-100" : "opacity-0"
           }`}
-        style={{
-          height: isPreloaderDone ? "auto" : "100vh",
-          overflow: isPreloaderDone ? "visible" : "hidden",
-        }}
       >
         {children}
       </div>

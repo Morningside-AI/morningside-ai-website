@@ -7,26 +7,13 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import StatsBox from "./statsBox";
 import LogoMarkWhite from "@/assets/images/morningside-assets/Logomark-White.svg";
 import "@/styles/fonts.css";
-import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Stats = () => {
-  const mtd = new MagicTrackpadDetector();
   const statsRef = useRef<HTMLDivElement>(null);
   const svgContainerRef = useRef<SVGSVGElement>(null);
-  const touchStartY = useRef(0);
-  const isAnimatingRef = useRef(false);
   const headingRef = useRef<HTMLDivElement>(null);
-  const lastScrollTime = useRef(0);
-  const lastScrollDelta = useRef(0);
-
-  const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 500; // Same as Entrance
-
-  const canTransition = () => {
-    return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
-  };
 
   useEffect(() => {
     const svg = svgContainerRef.current;
@@ -40,14 +27,16 @@ const Stats = () => {
 
       const animateSVGIn = () => {
         gsap.timeline()
-          .to(part3, { opacity: 0.03, duration: 0.2, ease: "power2.inOut" })
-          .to(part2, { opacity: 0.03, duration: 0.3, ease: "power2.inOut" }, "+=0.2")
-          .to(part1, { opacity: 0.03, duration: 0.4, ease: "power2.inOut" }, "+=0.35");
+          .to(part3, { opacity: 0.03, duration: 0.1, ease: "power2.inOut" })
+          .to(part2, { opacity: 0.03, duration: 0.15, ease: "power2.inOut" }, "+=0.1")
+          .to(part1, { opacity: 0.03, duration: 0.2, ease: "power2.inOut" }, "+=0.1");
       };
 
       const animateSVGOut = () => {
         gsap.timeline()
-          .to([part1, part2, part3], { opacity: 0.001, duration: 0.00001, ease: "power2.inOut" });
+        .to(part3, { opacity: 0.001, duration: 0.1, ease: "linear" })
+        .to(part2, { opacity: 0.001, duration: 0.1, ease: "linear" }, "+=0.1")
+        .to(part1, { opacity: 0.001, duration: 0.1, ease: "linear" }, "+=0.1");
       };
 
       // Set up ScrollTrigger
@@ -68,189 +57,12 @@ const Stats = () => {
     };
   }, []);
 
-
-  useEffect(() => {
-    const threshold = 45; // same as Hero
-    let accumulated = 0;
-    let hasSnapped = false;
-    let scrollLocked = false;
-    let scrollCooldown = false;
-
-    const preventDefault = (e: TouchEvent): void => {
-      e.preventDefault();
-    };
-
-    const disableScroll = () => {
-      if (!scrollLocked) {
-        scrollLocked = true;
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.touchAction = "none";
-        document.documentElement.style.touchAction = "none";
-        window.addEventListener("touchmove", preventDefault, { passive: false });
-      }
-    };
-
-    const enableScroll = () => {
-      scrollLocked = false;
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      document.body.style.touchAction = "";
-      document.documentElement.style.touchAction = "";
-      window.removeEventListener("touchmove", preventDefault);
-    };
-
-    const isInView = () => {
-      const el = statsRef.current;
-      if (!el) return false;
-      const rect = el.getBoundingClientRect();
-      // Tighter viewport check
-      return rect.top <= window.innerHeight * 0.4 &&
-        rect.bottom > window.innerHeight * 0.4;
-    };
-
-    const scrollToSection = (targetId: string) => {
-      if (scrollCooldown) return;
-
-      scrollCooldown = true;
-      hasSnapped = true;
-      accumulated = 0;
-
-      gsap.to(window, {
-        scrollTo: {
-          y: targetId,
-        },
-        duration: 0.08,
-        ease: "power2.inOut",
-        overwrite: "auto",
-        onComplete: () => {
-          enableScroll();
-          setTimeout(() => {
-            scrollCooldown = false;
-          }, 6);
-        },
-      });
-    };
-
-    const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) return; // Add cooldown check
-      accumulated += delta;
-
-      if (accumulated >= threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
-        scrollToSection("#partnership-section");
-      } else if (accumulated <= -threshold) {
-        lastTransitionTime.current = Date.now(); // Record transition time
-        disableScroll();
-        scrollToSection("#entrance-section");
-      }
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (!canTransition()) return;
-
-      const isTrackpad = mtd.inertial(e);
-      const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
-      const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
-
-      const baseDelta = e.deltaY * sensitivity;
-      const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
-
-      // Additional velocity check
-      const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
-      if (velocity > 0.5) return;
-
-      handleIntent(normalizedDelta);
-
-      lastScrollTime.current = Date.now();
-      lastScrollDelta.current = normalizedDelta;
-    };
-
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown" || e.key === "PageDown") {
-        if (isInView()) {
-          e.preventDefault();
-          disableScroll();
-          handleIntent(60);
-        }
-      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-        if (isInView()) {
-          e.preventDefault();
-          disableScroll();
-          handleIntent(-60);
-        }
-      }
-    };
-
-    const handleSpaceButton = (e: KeyboardEvent) => {
-      if (e.key === " ") {
-        disableScroll();
-        handleIntent(60);
-      }
-    }
-    const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches.item(0);
-      if (touch) {
-        touchStartY.current = touch.clientY;
-        disableScroll();
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      const touch = e.touches.item(0);
-      if (touch) {
-        const deltaY = (touchStartY.current - touch.clientY) * 0.5; // Reduce touch sensitivity
-        handleIntent(deltaY);
-        touchStartY.current = touch.clientY;
-      }
-    };
-
-
-    const handleTouchEnd = () => {
-      enableScroll();
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keydown", handleSpaceButton);
-    window.addEventListener("touchstart", handleTouchStart, { passive: false });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    window.addEventListener("touchend", handleTouchEnd);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          hasSnapped = false;
-          accumulated = 0;
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (statsRef.current) observer.observe(statsRef.current);
-
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keydown", handleSpaceButton);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
-      observer.disconnect();
-      enableScroll();
-    };
-  }, []);
-
   useEffect(() => {
     const heading = headingRef.current;
     if (!heading) return;
 
+    // Wrap letters in spans (same as before)
     const words = heading.querySelectorAll('.word');
-
-    // Loop through each word and wrap each letter
     words.forEach(word => {
       const letters = word.textContent?.split('');
       if (letters) {
@@ -265,59 +77,32 @@ const Stats = () => {
     });
 
     const letters = heading.querySelectorAll('.letter');
-    let animationIn: GSAPTimeline | null = null;
-    let animationOut: GSAPTimeline | null = null;
-
-    // Initially hide each letter
     gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
 
-    const animateIn = () => {
-      // Kill the out animation if it's running
-      if (animationOut) animationOut.kill();
-      isAnimatingRef.current = true;
-      animationIn = gsap.timeline();
-      animationIn.to(letters, {
-        clipPath: 'inset(0% 0% 0% 0%)',
-        duration: 0.1,
-        ease: 'linear',
-        stagger: {
-          each: 0.04,
-        },
-        onComplete: () => {
-          // Just to be safe, ensure all letters are fully hidden
-          isAnimatingRef.current = false
-        },
-      });
-    };
+    // Create a timeline for the reveal animation
+    const tl = gsap.timeline({
+      defaults: { ease: 'linear' }
+    });
 
-    const animateOut = () => {
-      // Kill the in animation if it's running
-      if (animationIn) animationIn.kill();
+    tl.to(letters, {
+      clipPath: 'inset(0% 0% 0% 0%)',
+      duration: 0.1,
+      stagger: 0.04
+    });
 
-      animationOut = gsap.timeline();
-      animationOut.to(letters, {
-        clipPath: 'inset(0% 100% 0% 0%)',
-        duration: 0.0005,
-        ease: 'power2.in',
-        onComplete: () => {
-          // Just to be safe, ensure all letters are fully hidden
-          gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
-        },
-      });
-    };
-
+    // Create scroll trigger with scrub
     const trigger = ScrollTrigger.create({
       trigger: statsRef.current,
       start: 'top 60%',
-      end: 'bottom 40%',
-      onEnter: animateIn,
-      onEnterBack: animateIn,
-      onLeave: animateOut,
-      onLeaveBack: animateOut,
+      end: 'bottom 90%',
+      scrub: true,
+      animation: tl,
+      markers: false // Set to true to see trigger positions
     });
 
     return () => {
       trigger.kill();
+      tl.kill();
     };
   }, []);
 
