@@ -86,7 +86,7 @@ const Center = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) {
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) {
         return;
       }
       accumulated += delta;
@@ -224,7 +224,7 @@ const Center = () => {
     const animateIn = () => {
       // Kill the out animation if it's running
       if (animationOut) animationOut.kill();
-
+      isAnimatingRef.current = true;
       animationIn = gsap.timeline();
       animationIn.to(letters, {
         clipPath: 'inset(0% 0% 0% 0%)',
@@ -232,6 +232,10 @@ const Center = () => {
         ease: 'linear',
         stagger: {
           each: 0.04,
+        },
+        onComplete: () => {
+          // Just to be safe, ensure all letters are fully hidden
+          isAnimatingRef.current = false
         },
       });
     };

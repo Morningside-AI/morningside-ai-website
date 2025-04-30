@@ -133,7 +133,7 @@ const Stats = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) return; // Add cooldown check
       accumulated += delta;
 
       if (accumulated >= threshold) {
@@ -274,7 +274,7 @@ const Stats = () => {
     const animateIn = () => {
       // Kill the out animation if it's running
       if (animationOut) animationOut.kill();
-
+      isAnimatingRef.current = true;
       animationIn = gsap.timeline();
       animationIn.to(letters, {
         clipPath: 'inset(0% 0% 0% 0%)',
@@ -282,6 +282,10 @@ const Stats = () => {
         ease: 'linear',
         stagger: {
           each: 0.04,
+        },
+        onComplete: () => {
+          // Just to be safe, ensure all letters are fully hidden
+          isAnimatingRef.current = false
         },
       });
     };
