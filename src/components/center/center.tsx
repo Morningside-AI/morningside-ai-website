@@ -218,7 +218,7 @@ const Center = () => {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 0.5,
+          duration: 0.4,
           ease: "power4.out",
         }
       );
@@ -253,7 +253,7 @@ const Center = () => {
         opacity: 0,
         y: 40,
         filter: "blur(6px)",
-        duration: 0.5,
+        duration: 0.3,
         ease: "power2.in",
       });
 
@@ -262,7 +262,7 @@ const Center = () => {
         {
           opacity: 0,
           filter: "blur(6px)",
-          duration: 0.4,
+          duration: 0.3,
           ease: "power2.in",
         },
         0 // <-- start subText fade-out slightly after heading starts
