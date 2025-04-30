@@ -218,7 +218,7 @@ const Center = () => {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 1,
+          duration: 0.5,
           ease: "power4.out",
         }
       );
@@ -232,7 +232,7 @@ const Center = () => {
         {
           opacity: 1,
           filter: "blur(0px)",
-          duration: 0.5,
+          duration: 0.2,
           ease: "power3.out",
         },
         0 // 👈 starts 0.6s *before* heading animation finishes
@@ -265,7 +265,7 @@ const Center = () => {
           duration: 0.4,
           ease: "power2.in",
         },
-        0.001 // <-- start subText fade-out slightly after heading starts
+        0 // <-- start subText fade-out slightly after heading starts
       );
     };
 
