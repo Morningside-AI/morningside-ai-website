@@ -210,9 +210,9 @@ const Center = () => {
       animationIn.fromTo(
         headingRef.current,
         {
-          opacity: 0,
-          y: 80,
-          filter: "blur(10px)",
+          opacity: 1,
+          y: 0,
+          filter: "blur(1px)",
         },
         {
           opacity: 1,
@@ -226,8 +226,8 @@ const Center = () => {
       animationIn.fromTo(
         subTextRef.current,
         {
-          opacity: 0,
-          filter: "blur(6px)",
+          opacity: 1,
+          filter: "blur(0px)",
         },
         {
           opacity: 1,
