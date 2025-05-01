@@ -355,7 +355,7 @@ const Entrance = () => {
                 isLandingLocked.current = true;
                 setTimeout(() => {
                   isLandingLocked.current = false;
-                }, 400);
+                }, 500);
               }
             },
             { threshold: 0.5 }
