@@ -187,12 +187,11 @@ const Footer = () => {
         if (footerRef.current) observer.observe(footerRef.current);
 
         const contactEl = document.querySelector(".footer-contact");
-        const followEl = document.querySelector(".footer-follow");
+        
         const textEl = textRef.current;
 
-        if (contactEl && followEl && footerRef.current) {
+        if (contactEl && footerRef.current) {
             gsap.set(contactEl, { opacity: 0, y: 60 });
-            gsap.set(followEl, { opacity: 0, x: 60 });
 
             const trigger = ScrollTrigger.create({
                 trigger: footerRef.current,
@@ -211,25 +210,12 @@ const Footer = () => {
                     duration: 1.2,
                     ease: "power4.out",
                 });
-                gsap.to(followEl, {
-                    opacity: 1,
-                    x: 0,
-                    duration: 1.2,
-                    ease: "power4.out",
-                    delay: 0.4,
-                });
             }
 
             function animateOut() {
                 gsap.to(contactEl, {
                     opacity: 0,
                     y: 60,
-                    duration: 0.8,
-                    ease: "power2.inOut",
-                });
-                gsap.to(followEl, {
-                    opacity: 0,
-                    x: 60,
                     duration: 0.8,
                     ease: "power2.inOut",
                 });
@@ -310,10 +296,10 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="w-full min-h-[100dvh] flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 sm:pt-4 lg:pt-6 pb-[env(safe-area-inset-bottom)] overflow-hidden"
+                className="w-full min-h-[100dvh] flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-tight pt-6 sm:pt-4 lg:pt-6 pb-[env(safe-area-inset-bottom)] overflow-hidden"
             >
                 <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>
-                    <p className="w-full lg:text-6xl text-5xl text-left leading-normal">
+                    <p className="w-full lg:text-6xl text-5xl text-left leading-tight">
                         <span className="white-silver-animated-text">We&nbsp;</span>
                         <span className="white-silver-animated-text">look&nbsp;</span>
                         <span className="white-silver-animated-text">forward&nbsp;</span>

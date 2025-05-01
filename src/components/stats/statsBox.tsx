@@ -161,7 +161,7 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
   return (
     <div
       ref={contentRef}
-      className="flex flex-col w-full lg:w-1/3 md:mb-0 mb-2 gap-1 lg:gap-4"
+      className="flex flex-col w-full lg:w-1/3 md:mb-0 mb-0 gap-1 lg:gap-4"
     >
       <p className="lg:text-8xl md:text-7xl text-6xl tracking-widest">
         <span ref={numberRef}>0</span>
