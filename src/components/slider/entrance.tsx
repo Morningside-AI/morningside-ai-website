@@ -25,11 +25,13 @@ const Entrance = () => {
     const [rive2Ready, setRive2Ready] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
     const entranceStepRef = useRef(0);
-
+    const isAnimatingRef = useRef(false);
     const mtd = new MagicTrackpadDetector();
     const centerRef = useRef<HTMLDivElement>(null);
     const animTextRef = useRef<HTMLParagraphElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
+    const lastScrollTime = useRef(0);
+    const lastScrollDelta = useRef(0);
     const contentRefs = [
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
@@ -84,6 +86,7 @@ const Entrance = () => {
                 rive2.play();
             }, 450);
         }
+        
 
         gsap.to(fromRef, {
             opacity: 0,
@@ -215,6 +218,7 @@ const Entrance = () => {
             disableScroll();
             hasSnapped = true;
             accumulated = 0;
+            isAnimatingRef.current = true;
 
             gsap.to(fromRef, {
                 opacity: 0,
@@ -224,7 +228,7 @@ const Entrance = () => {
                 onComplete: () => {
                     fromRef.style.display = "none";
                     toRef.style.display = "flex";
-
+                    disableScroll()
                     gsap.fromTo(
                         toRef,
                         { opacity: 0, x: direction === "forward" ? 150 : -150 },
@@ -235,7 +239,11 @@ const Entrance = () => {
                             ease: "power2.out",
                             onComplete: () => {
                                 hasSnapped = false;
-                                setTimeout(() => enableScroll(), 500);
+                                isAnimatingRef.current = false
+                                setTimeout(() => {
+                                    enableScroll()
+                                }, 500);
+                                
                             },
                         }
                     );
@@ -248,7 +256,7 @@ const Entrance = () => {
         };
 
         const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped || !canTransition()) return;
+            if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) return;
 
             accumulated += delta;
 
@@ -269,11 +277,23 @@ const Entrance = () => {
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-            if (mtd.inertial(e)) return;
+            if (!canTransition()) return;
 
-            // Slower wheel sensitivity
-            const deltaY = e.deltaY * 0.3; // Reduced multiplier
-            handleIntent(deltaY);
+            const isTrackpad = mtd.inertial(e);
+            const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
+            const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
+
+            const baseDelta = e.deltaY * sensitivity;
+            const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+            // Additional velocity check
+            const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
+            if (velocity > 0.5) return;
+
+            handleIntent(normalizedDelta);
+
+            lastScrollTime.current = Date.now();
+            lastScrollDelta.current = normalizedDelta;
         };
 
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -331,13 +351,18 @@ const Entrance = () => {
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry?.isIntersecting) {
-                    hasSnapped = false;
-                    accumulated = 0;
-                }
+              if (entry?.isIntersecting) {
+                hasSnapped = false;
+                accumulated = 0;
+                isAnimatingRef.current = true; // prevent transition
+                setTimeout(() => {
+                  isAnimatingRef.current = false; // allow transition after short delay
+                }, 100); // 400–600ms depending on your feel
+              }
             },
             { threshold: 0.5 }
-        );
+          );
+          
         if (centerRef.current) observer.observe(centerRef.current);
 
         contentRefs.forEach((ref, i) => {
