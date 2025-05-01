@@ -228,7 +228,6 @@ const Entrance = () => {
                 onComplete: () => {
                     fromRef.style.display = "none";
                     toRef.style.display = "flex";
-                    disableScroll()
                     gsap.fromTo(
                         toRef,
                         { opacity: 0, x: direction === "forward" ? 150 : -150 },
