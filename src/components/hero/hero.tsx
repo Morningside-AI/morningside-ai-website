@@ -20,7 +20,7 @@ const Hero = () => {
   const lastScrollDelta = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 500;
+  const TRANSITION_COOLDOWN = 500; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
@@ -59,11 +59,9 @@ const Hero = () => {
       const el = heroRef.current;
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top <= window.innerHeight * 0.35 &&
-        rect.bottom > window.innerHeight * 0.35;
+      return rect.top <= 0 && rect.bottom > window.innerHeight * 0.5;
     };
 
-    // In both Hero and Center sections
     const goToNext = () => {
       if (scrollCooldown) return;
       scrollCooldown = true;
@@ -88,12 +86,14 @@ const Hero = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isHeroInView() || hasSnapped || !canTransition()) return;
-      disableScroll();
+      if (!isHeroInView() || hasSnapped || !canTransition()) {
+        return;
+      }
       accumulated += delta;
 
       if (accumulated >= threshold) {
         lastTransitionTime.current = Date.now();
+        accumulated = 0;
         goToNext();
       }
     };
@@ -102,29 +102,19 @@ const Hero = () => {
       e.preventDefault();
       if (!canTransition()) return;
 
-      // 1. Use mtd as primary trackpad detector
       const isTrackpad = mtd.inertial(e);
+      const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
+      const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
 
-      // 2. Apply different handling based on input type
-      const sensitivity = isTrackpad ? 0.1 : 0.2;
-      const maxDelta = isTrackpad ? 10 : 20;
-
-      // 3. Normalize delta values
       const baseDelta = e.deltaY * sensitivity;
       const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
 
-      // 4. Momentum scroll prevention
-      const now = Date.now();
-      const isMomentumScroll = isTrackpad &&
-        (now - lastScrollTime.current < 16) && // < 60fps
-        Math.abs(normalizedDelta) > 8;
+      // Additional velocity check
+      const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
+      if (velocity > 0.5) return;
 
-      if (!isMomentumScroll) {
-        handleIntent(normalizedDelta);
-      }
-
-      // 5. Update timing refs
-      lastScrollTime.current = now;
+      handleIntent(normalizedDelta);
+      lastScrollTime.current = Date.now();
       lastScrollDelta.current = normalizedDelta;
     };
 
@@ -187,7 +177,7 @@ const Hero = () => {
     // Animate paragraph
     if (paragraphRef.current) {
       const para = paragraphRef.current;
-      gsap.set(para, { opacity: 0, y: 80 });
+      gsap.set(para, { opacity: 0, y: 200 });
 
       ScrollTrigger.create({
         trigger: heroRef.current,
@@ -212,7 +202,7 @@ const Hero = () => {
         onLeave: () => {
           gsap.to(para, {
             opacity: 0,
-            y: 80,
+            y: 200,
             duration: 1.2,
             ease: "power2.inOut",
           });
@@ -220,7 +210,7 @@ const Hero = () => {
         onLeaveBack: () => {
           gsap.to(para, {
             opacity: 0,
-            y: 80,
+            y: 200,
             duration: 1.2,
             ease: "power2.inOut",
           });
@@ -255,7 +245,7 @@ const Hero = () => {
     <div
       id="hero-section"
       ref={heroRef}
-      className="w-full h-[100dvh] flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] pt-10 will-change-transform overflow-hidden touch-none"
+      className="w-full h-screen flex flex-col justify-center text-white tracking-[-0.04em] leading-[90%] pt-10 will-change-transform overflow-hidden touch-none"
     >
       <div>
         <p className="text-5xl md:text-7xl lg:text-9xl white-silver-animated-text">
