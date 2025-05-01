@@ -354,7 +354,7 @@ const Stats = () => {
             <span className="">l</span>
             <span className="">&nbsp;</span>
           </span>
-          <span className="white-silver-animated-text2" style={{fontFamily: "DM-Sans-Italic, monospace"}}>
+          <span className="white-silver-animated-text2 italic">
             <span className="">R</span>
             <span className="">e</span>
             <span className="">s</span>
