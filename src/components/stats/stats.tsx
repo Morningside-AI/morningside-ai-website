@@ -20,6 +20,7 @@ const Stats = () => {
   const headingRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef(0);
   const lastScrollDelta = useRef(0);
+  const isLandingLocked = useRef(false);
 
   const lastTransitionTime = useRef(0);
   const TRANSITION_COOLDOWN = 500; // Same as Entrance
@@ -133,7 +134,7 @@ const Stats = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current || isLandingLocked.current) return; // Add cooldown check
       accumulated += delta;
 
       if (accumulated >= threshold) {
@@ -225,6 +226,11 @@ const Stats = () => {
         if (entry?.isIntersecting) {
           hasSnapped = false;
           accumulated = 0;
+
+          isLandingLocked.current = true;
+          setTimeout(() => {
+            isLandingLocked.current = false;
+          }, 300); // Adjust as needed
         }
       },
       { threshold: 0.5 }
