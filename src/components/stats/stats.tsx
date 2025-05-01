@@ -268,7 +268,7 @@ const Stats = () => {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 0.5,
+          duration: 0.1,
           ease: "power4.out",
         }
       );
@@ -288,7 +288,7 @@ const Stats = () => {
         opacity: 0,
         y: 40,
         filter: "blur(6px)",
-        duration: 0.5,
+        duration: 0.1,
         ease: "power2.in",
       });
 

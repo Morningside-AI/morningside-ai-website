@@ -231,7 +231,7 @@ const Partnership = () => {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 0.5,
+          duration: 0.1,
           ease: "power4.out",
         }
       );
@@ -249,9 +249,9 @@ const Partnership = () => {
 
       animationOut.to(headingRef.current, {
         opacity: 0,
-        y: 40,
-        filter: "blur(6px)",
-        duration: 0.5,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.1,
         ease: "power2.in",
       });
     };
