@@ -15,9 +15,11 @@ const Footer = () => {
     const footerRef = useRef<HTMLDivElement>(null);
     const touchStartY = useRef(0);
     const textRef = useRef<HTMLParagraphElement>(null);
+    const lastScrollTime = useRef(0);
+    const lastScrollDelta = useRef(0);
 
     const lastTransitionTime = useRef(0);
-    const TRANSITION_COOLDOWN = 300;
+    const TRANSITION_COOLDOWN = 500;
 
     const handleContactClick = () => {
         window.location.href = "/contact"; // This forces a full page reload
@@ -28,7 +30,7 @@ const Footer = () => {
     };
 
     useEffect(() => {
-        const threshold = 30;
+        const threshold = 45;
         let accumulated = 0;
         let hasSnapped = false;
         let scrollLocked = false;
@@ -94,10 +96,32 @@ const Footer = () => {
 
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-            if (mtd.inertial(e)) return; // Ignore inertial events
+            if (!canTransition()) return;
 
-            const deltaY = e.deltaY * 0.3; // Reduced sensitivity
-            handleIntent(deltaY);
+            // 1. Use mtd as primary trackpad detector
+            const isTrackpad = mtd.inertial(e);
+
+            // 2. Apply different handling based on input type
+            const sensitivity = isTrackpad ? 0.1 : 0.2;
+            const maxDelta = isTrackpad ? 10 : 20;
+
+            // 3. Normalize delta values
+            const baseDelta = e.deltaY * sensitivity;
+            const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+            // 4. Momentum scroll prevention
+            const now = Date.now();
+            const isMomentumScroll = isTrackpad &&
+                (now - lastScrollTime.current < 16) && // < 60fps
+                Math.abs(normalizedDelta) > 8;
+
+            if (!isMomentumScroll) {
+                handleIntent(normalizedDelta);
+            }
+
+            // 5. Update timing refs
+            lastScrollTime.current = now;
+            lastScrollDelta.current = normalizedDelta;
         };
 
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -286,7 +310,7 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="w-full h-screen min-h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 sm:pt-4 lg:pt-6 overflow-hidden"
+                className="w-full min-h-[100dvh] flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 sm:pt-4 lg:pt-6 pb-[env(safe-area-inset-bottom)] overflow-hidden"
             >
                 <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>
                     <p className="w-full lg:text-6xl text-5xl text-left leading-normal">
@@ -303,7 +327,7 @@ const Footer = () => {
                     <Logo className="w-48 h-10 mt-4 hidden lg:block" />
                 </div>
 
-                <div className="w-full h-fit flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between mb-16 sm:mb-0 md:mb-0 lg:mb-0 pb-4 sm:pb-0 md:pb-2 lg:pb-0 tracking-wider text-sm relative">
+                <div className="w-full h-fit flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between mb-4 md:mb-0 lg:mb-0 pb-4 md:pb-2 lg:pb-0 tracking-wider text-sm relative">
                     <div className="flex flex-col gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
                         <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
                         <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">

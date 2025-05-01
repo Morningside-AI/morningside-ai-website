@@ -16,16 +16,18 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
+  const lastScrollTime = useRef(0);
+  const lastScrollDelta = useRef(0);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 300;
+  const TRANSITION_COOLDOWN = 500; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
   };
-  
+
   useEffect(() => {
-    const threshold = 30;
+    const threshold = 45;
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -57,8 +59,7 @@ const Hero = () => {
       const el = heroRef.current;
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top <= window.innerHeight * 0.35 &&
-        rect.bottom > window.innerHeight * 0.35;
+      return rect.top <= 0 && rect.bottom > window.innerHeight * 0.5;
     };
 
     const goToNext = () => {
@@ -67,38 +68,54 @@ const Hero = () => {
       hasSnapped = true;
       accumulated = 0;
 
+      // Add temporary scroll lock
+      disableScroll();
+
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.08,
+        duration: 0.08, // Slightly longer duration
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           enableScroll();
           setTimeout(() => {
             scrollCooldown = false;
-          }, 6);
+          }, 6); // Longer cooldown after animation
         },
       });
     };
 
     const handleIntent = (delta: number) => {
-      if (!isHeroInView() || hasSnapped || !canTransition()) return;
-      disableScroll();
+      if (!isHeroInView() || hasSnapped || !canTransition()) {
+        return;
+      }
       accumulated += delta;
 
       if (accumulated >= threshold) {
         lastTransitionTime.current = Date.now();
+        accumulated = 0;
         goToNext();
       }
     };
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return;
+      if (!canTransition()) return;
 
-      // Reduced sensitivity further
-      const deltaY = e.deltaY * 0.2; // Changed from 0.3 to 0.2
-      handleIntent(deltaY);
+      const isTrackpad = mtd.inertial(e);
+      const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
+      const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
+
+      const baseDelta = e.deltaY * sensitivity;
+      const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+      // Additional velocity check
+      const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
+      if (velocity > 0.5) return;
+
+      handleIntent(normalizedDelta);
+      lastScrollTime.current = Date.now();
+      lastScrollDelta.current = normalizedDelta;
     };
 
 

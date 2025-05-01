@@ -18,9 +18,12 @@ const Stats = () => {
   const touchStartY = useRef(0);
   const isAnimatingRef = useRef(false);
   const headingRef = useRef<HTMLDivElement>(null);
+  const lastScrollTime = useRef(0);
+  const lastScrollDelta = useRef(0);
+  const isLandingLocked = useRef(false);
 
   const lastTransitionTime = useRef(0);
-  const TRANSITION_COOLDOWN = 300; // Same as Entrance
+  const TRANSITION_COOLDOWN = 500; // Same as Entrance
 
   const canTransition = () => {
     return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
@@ -68,7 +71,7 @@ const Stats = () => {
 
 
   useEffect(() => {
-    const threshold = 30; // same as Hero
+    const threshold = 45; // same as Hero
     let accumulated = 0;
     let hasSnapped = false;
     let scrollLocked = false;
@@ -131,7 +134,7 @@ const Stats = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition()) return; // Add cooldown check
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current || isLandingLocked.current) return; // Add cooldown check
       accumulated += delta;
 
       if (accumulated >= threshold) {
@@ -147,12 +150,23 @@ const Stats = () => {
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (mtd.inertial(e)) return;
+      if (!canTransition()) return;
 
-      // Add delta normalization
-      const baseDelta = e.deltaY * 0.3;
-      const deltaY = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), 20);
-      handleIntent(deltaY);
+      const isTrackpad = mtd.inertial(e);
+      const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
+      const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
+
+      const baseDelta = e.deltaY * sensitivity;
+      const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
+
+      // Additional velocity check
+      const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
+      if (velocity > 0.5) return;
+
+      handleIntent(normalizedDelta);
+
+      lastScrollTime.current = Date.now();
+      lastScrollDelta.current = normalizedDelta;
     };
 
 
@@ -212,6 +226,11 @@ const Stats = () => {
         if (entry?.isIntersecting) {
           hasSnapped = false;
           accumulated = 0;
+
+          isLandingLocked.current = true;
+          setTimeout(() => {
+            isLandingLocked.current = false;
+          }, 300); // Adjust as needed
         }
       },
       { threshold: 0.5 }
@@ -235,64 +254,58 @@ const Stats = () => {
     const heading = headingRef.current;
     if (!heading) return;
 
-    const words = heading.querySelectorAll('.word');
-
-    // Loop through each word and wrap each letter
-    words.forEach(word => {
-      const letters = word.textContent?.split('');
-      if (letters) {
-        word.innerHTML = '';
-        letters.forEach(letter => {
-          const span = document.createElement('span');
-          span.classList.add('letter');
-          span.textContent = letter;
-          word.appendChild(span);
-        });
-      }
-    });
-
-    const letters = heading.querySelectorAll('.letter');
     let animationIn: GSAPTimeline | null = null;
     let animationOut: GSAPTimeline | null = null;
 
-    // Initially hide each letter
-    gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
-
     const animateIn = () => {
-      // Kill the out animation if it's running
       if (animationOut) animationOut.kill();
+      isAnimatingRef.current = true;
 
       animationIn = gsap.timeline();
-      animationIn.to(letters, {
-        clipPath: 'inset(0% 0% 0% 0%)',
-        duration: 0.1,
-        ease: 'linear',
-        stagger: {
-          each: 0.04,
+
+      animationIn.fromTo(
+        headingRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
         },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.1,
+          ease: "power4.out",
+        }
+      );
+
+      animationIn.call(() => {
+        isAnimatingRef.current = false;
       });
     };
 
+
     const animateOut = () => {
-      // Kill the in animation if it's running
       if (animationIn) animationIn.kill();
 
       animationOut = gsap.timeline();
-      animationOut.to(letters, {
-        clipPath: 'inset(0% 100% 0% 0%)',
-        duration: 0.0005,
-        ease: 'power2.in',
-        onComplete: () => {
-          // Just to be safe, ensure all letters are fully hidden
-          gsap.set(letters, { clipPath: 'inset(0% 100% 0% 0%)' });
-        },
+
+      animationOut.to(headingRef.current, {
+        opacity: 0,
+        y: 40,
+        filter: "blur(6px)",
+        duration: 0.1,
+        ease: "power2.in",
       });
+
     };
+
+
 
     const trigger = ScrollTrigger.create({
       trigger: statsRef.current,
-      start: 'top 60%',
-      end: 'bottom 40%',
+      start: "top 60%",
+      end: "bottom 40%",
       onEnter: animateIn,
       onEnterBack: animateIn,
       onLeave: animateOut,
@@ -308,99 +321,54 @@ const Stats = () => {
     <div
       ref={statsRef}
       id="stats-section"
-      className="w-full will-change-transform h-screen flex flex-col justify-center text-white leading-normal tracking-normal md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
+      className="w-full will-change-transform h-[100dvh] flex flex-col justify-center text-white leading-normal tracking-normal md:gap-32 gap-12 my-auto relative overflow-hidden touch-none"
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
       <div className="relative w-full -translate-y-20 lg:-translate-y-14">
         <p
+          ref={headingRef}
           className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-0"
         >
-          <span className="">
-            <span className="gray-text">W</span>
-            <span className="gray-text">e</span>
-            <span className="gray-text">&nbsp;</span>
-            <span className="gray-text">d</span>
-            <span className="gray-text">o</span>
-            <span className="gray-text">n</span>
-            <span className="gray-text">&apos;</span>
-            <span className="gray-text">t</span>
-            <span className="gray-text">&nbsp;</span>
-            <span className="gray-text">s</span>
-            <span className="gray-text">e</span>
-            <span className="gray-text">l</span>
-            <span className="gray-text">l</span>
-            <span className="gray-text">&nbsp;</span>
-            <span className="gray-text">A</span>
-            <span className="gray-text">I</span>
-            <span className="gray-text">.</span>
-            
+          <span className="lg:mr-1 white-silver-animated-text">
+            <span className="">W</span>
+            <span className="">e</span>
+            <span className="">&nbsp;</span>
+            <span className="">d</span>
+            <span className="">o</span>
+            <span className="">n</span>
+            <span className="">&apos;</span>
+            <span className="">t</span>
+            <span className="">&nbsp;</span>
+            <span className="">s</span>
+            <span className="">e</span>
+            <span className="">l</span>
+            <span className="">l</span>
+            <span className="">&nbsp;</span>
+            <span className="">A</span>
+            <span className="">I</span>
+            <span className="">.</span>
           </span>
           <br className="block lg:hidden" />
-          <span className="">
-            <span className="gray-text">W</span>
-            <span className="gray-text">e</span>
-            <span className="gray-text">&nbsp;</span>
-            <span className="gray-text">s</span>
-            <span className="gray-text">e</span>
-            <span className="gray-text">l</span>
-            <span className="gray-text">l</span>
-            <span className="gray-text">&nbsp;</span>
+          <span className="white-silver-animated-text1">
+            <span className="">W</span>
+            <span className="">e</span>
+            <span className="">&nbsp;</span>
+            <span className="">s</span>
+            <span className="">e</span>
+            <span className="">l</span>
+            <span className="">l</span>
+            <span className="">&nbsp;</span>
           </span>
-          <span className="">
-            <span className="gray-text">R</span>
-            <span className="gray-text">e</span>
-            <span className="gray-text">s</span>
-            <span className="gray-text">u</span>
-            <span className="gray-text">l</span>
-            <span className="gray-text">t</span>
-            <span className="gray-text">s</span>
-            <span className="gray-text">.</span>
-          </span>
-        </p>
-        <p
-          className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-10"
-          ref={headingRef}
-        >
-          <span className="text-white word">
-            <span className="letter">W</span>
-            <span className="letter">e</span>
-            <span className="letter">&nbsp;</span>
-            <span className="letter">d</span>
-            <span className="letter">o</span>
-            <span className="letter">n</span>
-            <span className="letter">&apos;</span>
-            <span className="letter">t</span>
-            <span className="letter">&nbsp;</span>
-            <span className="letter">s</span>
-            <span className="letter">e</span>
-            <span className="letter">l</span>
-            <span className="letter">l</span>
-            <span className="letter">&nbsp;</span>
-            <span className="letter">A</span>
-            <span className="letter">I</span>
-            <span className="letter">.</span>
-          </span>
-          <br className="block lg:hidden" />
-          <span className="text-white word">
-            <span className="letter">W</span>
-            <span className="letter">e</span>
-            <span className="letter">&nbsp;</span>
-            <span className="letter">s</span>
-            <span className="letter">e</span>
-            <span className="letter">l</span>
-            <span className="letter">l</span>
-            <span className="letter">&nbsp;</span>
-          </span>
-          <span className="green-text word">
-            <span className="letter">R</span>
-            <span className="letter">e</span>
-            <span className="letter">s</span>
-            <span className="letter">u</span>
-            <span className="letter">l</span>
-            <span className="letter">t</span>
-            <span className="letter">s</span>
-            <span className="letter">.</span>
+          <span className="white-silver-animated-text2 italic">
+            <span className="">R</span>
+            <span className="">e</span>
+            <span className="">s</span>
+            <span className="">u</span>
+            <span className="">l</span>
+            <span className="">t</span>
+            <span className="">s</span>
+            <span className="">.</span>
           </span>
         </p>
       </div>
