@@ -73,7 +73,7 @@ const Hero = () => {
 
       gsap.to(window, {
         scrollTo: "#center-section",
-        duration: 0.1, // Slightly longer duration
+        duration: 0.08, // Slightly longer duration
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
