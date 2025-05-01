@@ -181,7 +181,7 @@ const Center = () => {
           isLandingLocked.current = true;
           setTimeout(() => {
             isLandingLocked.current = false;
-          }, 500); // Adjust as needed
+          }, 300); // Adjust as needed
         }
 
       },

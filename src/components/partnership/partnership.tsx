@@ -17,6 +17,7 @@ const Partnership = () => {
   const headingRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef(0);
+  const isLandingLocked = useRef(false);
   const isAnimatingRef = useRef(false);
   const lastScrollTime = useRef(0);
   const lastScrollDelta = useRef(0);
@@ -93,7 +94,7 @@ const Partnership = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) {
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current || isLandingLocked.current) {
         return;
       }
       accumulated += delta;
@@ -188,6 +189,11 @@ const Partnership = () => {
         if (entry?.isIntersecting) {
           hasSnapped = false;
           accumulated = 0;
+
+          isLandingLocked.current = true;
+          setTimeout(() => {
+            isLandingLocked.current = false;
+          }, 300); // Adjust as needed
         }
       },
       { threshold: 0.5 }
