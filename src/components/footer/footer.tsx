@@ -310,7 +310,7 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="w-full h-[95dvh] min-h-screen flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 sm:pt-4 lg:pt-6 overflow-hidden"
+                className="w-full h-[99dvh] min-h-[99dvh] flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-[90%] pt-6 sm:pt-4 lg:pt-6 overflow-hidden"
             >
                 <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>
                     <p className="w-full lg:text-6xl text-5xl text-left leading-normal">
