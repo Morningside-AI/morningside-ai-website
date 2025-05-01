@@ -15,6 +15,7 @@ const Center = () => {
   const subTextRef = useRef<HTMLParagraphElement>(null);
   const touchStartY = useRef(0);
   const isAnimatingRef = useRef(false);
+  const isLandingLocked = useRef(false);
   const lastScrollTime = useRef(0);
   const lastScrollDelta = useRef(0);
 
@@ -86,7 +87,7 @@ const Center = () => {
     };
 
     const handleIntent = (delta: number) => {
-      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current) {
+      if (!isInView() || hasSnapped || !canTransition() || isAnimatingRef.current || isLandingLocked.current) {
         return;
       }
       accumulated += delta;
@@ -176,7 +177,13 @@ const Center = () => {
         if (entry?.isIntersecting) {
           hasSnapped = false;
           accumulated = 0;
+
+          isLandingLocked.current = true;
+          setTimeout(() => {
+            isLandingLocked.current = false;
+          }, 500); // Adjust as needed
         }
+
       },
       { threshold: 0.5 }
     );
