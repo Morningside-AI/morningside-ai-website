@@ -356,7 +356,7 @@ const Entrance = () => {
                 isAnimatingRef.current = true; // prevent transition
                 setTimeout(() => {
                   isAnimatingRef.current = false; // allow transition after short delay
-                }, 100); // 400–600ms depending on your feel
+                }, 300); // 400–600ms depending on your feel
               }
             },
             { threshold: 0.5 }
