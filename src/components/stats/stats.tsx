@@ -325,10 +325,10 @@ const Stats = () => {
     >
 
       <LogoMarkWhite ref={svgContainerRef} className="absolute -top-[50vh] -left-[50vw] lg:top-0 lg:left-0 h-[200vh] w-[200vw] lg:w-full lg:h-full z-[-1]" />
-      <div className="relative w-full -translate-y-20 lg:-translate-y-14">
+      <div className="relative w-full">
         <p
           ref={headingRef}
-          className="text-4xl md:text-5xl text-center whitespace-pre-wrap absolute top-0 left-0 z-0"
+          className="text-4xl md:text-5xl whitespace-pre-wrap"
         >
           <span className="lg:mr-1 white-silver-animated-text">
             <span className="">W</span>
@@ -360,7 +360,7 @@ const Stats = () => {
             <span className="">l</span>
             <span className="">&nbsp;</span>
           </span>
-          <span className="white-silver-animated-text2 italic">
+          <span className="green-text">
             <span className="">R</span>
             <span className="">e</span>
             <span className="">s</span>
