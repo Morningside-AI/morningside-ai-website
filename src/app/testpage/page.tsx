@@ -19,19 +19,22 @@ export default function Home() {
         ref={scrollContainerRef}
         className="snap-y snap-mandatory overflow-y-scroll h-screen w-full overflow-x-hidden no-scrollbar"
       >
-        <div className="snap-always snap-start">
+        <div className="snap-always snap-center">
           <SnappySection1 />
         </div>
-        <div className="snap-always snap-start" id="snappyCenter">
+        <div className="snap-always snap-center" id="snappyCenter">
           <SnappySection2 />
         </div>
-        <div className="snap-start" id="snappyStats">
+        <div className="snap-always snap-center">
+          <SnappySection3 scrollContainerRef={scrollContainerRef} />
+        </div>
+        <div className="snap-always snap-center" id="snappyStats">
           <SnappySection4 scrollContainerRef={scrollContainerRef} />
         </div>
-        <div className="snap-always snap-start">
+        <div className="snap-always snap-center">
           <SnappySection5 />
         </div>
-        <div className="snap-always snap-start">
+        <div className="snap-always snap-center">
           <SnappySection6 />
         </div>
       </div>
