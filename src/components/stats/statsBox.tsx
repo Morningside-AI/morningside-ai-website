@@ -191,7 +191,7 @@ const StatsBox = ({ number, numberText, text, link, linkText, scrollContainerRef
           if (link == "" || linkText == "") e.preventDefault()
         }}
       >
-        <p className="text-md green-text font-bold" style={{fontSize: "1rem"}}>{linkText}</p>
+        <p className="text-md green-text font-bold">{linkText}</p>
         {
           link != "" && linkText != "" && <GoArrowUpRight
             className="mt-1"
