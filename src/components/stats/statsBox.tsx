@@ -14,9 +14,10 @@ interface StatsBoxProps {
   text: string;
   link: string;
   linkText: string;
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) => {
+const StatsBox = ({ number, numberText, text, link, linkText, scrollContainerRef  }: StatsBoxProps) => {
   const numberRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const hrRef = useRef<HTMLHRElement>(null);
@@ -24,6 +25,7 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
+    const scroller = scrollContainerRef.current;
     const numberEl = numberRef.current;
     const contentEl = contentRef.current;
     const hrEl = hrRef.current;
@@ -34,8 +36,9 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
 
     const obj = { val: 0 };
 
-    ScrollTrigger.create({
+    const trigger = ScrollTrigger.create({
       trigger: contentEl,
+      scroller,
       start: "top 80%",
       end: "bottom 30%",
       onEnter: () => {
@@ -154,6 +157,10 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
         gsap.set([hrEl, textEl, linkEl], { opacity: 0 });
       },
     });
+
+    return () => {
+      trigger.kill();
+    };
   }, [number]);
 
 
@@ -179,12 +186,12 @@ const StatsBox = ({ number, numberText, text, link, linkText }: StatsBoxProps) =
         href={link}
         target="_blank"
         ref={linkRef}
-        className={`decoration-none flex flex-row items-center gap-1 ${link == "" || linkText == "" ? "cursor-default" : "cursor-pointer"}`}
+        className={`decoration-none flex text-md flex-row items-center gap-1 ${link == "" || linkText == "" ? "cursor-default" : "cursor-pointer"}`}
         onClick={(e) => {
           if (link == "" || linkText == "") e.preventDefault()
         }}
       >
-        <p className="text-md green-text font-bold">{linkText}</p>
+        <p className="text-md green-text font-bold" style={{fontSize: "1rem"}}>{linkText}</p>
         {
           link != "" && linkText != "" && <GoArrowUpRight
             className="mt-1"
