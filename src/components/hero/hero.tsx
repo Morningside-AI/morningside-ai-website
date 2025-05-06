@@ -16,7 +16,7 @@ const Hero = () => {
   return (
     <div
       id="hero-section"
-      className="box-border w-full h-screen min-h-screen snap-always snap-center flex flex-col justify-center"
+      className="box-border w-full h-[100dvh] flex flex-col justify-center"
     >
       <div className="w-full flex flex-col justify-center gap-12 px-4 md:px-8 lg:px-12 mx-auto">
         <div>

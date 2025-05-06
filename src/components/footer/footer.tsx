@@ -22,7 +22,7 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="box-border w-full min-h-[100dvh] snap-always snap-center flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-tight px-4 md:px-8 lg:px-12 pt-6 sm:pt-4 lg:pt-6 pb-[env(safe-area-inset-bottom)] overflow-hidden"
+                className="box-border w-full h-[calc(100dvh-1px)] flex flex-col will-change-transform justify-between items-center text-white tracking-[-0.04em] leading-tight px-4 md:px-8 lg:px-12 pt-6 sm:pt-4 lg:pt-6 pb-[env(safe-area-inset-bottom)] overflow-hidden touch-pan-down"
             >
                 <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>
                     <p className="w-full lg:text-6xl text-5xl text-left leading-tight">

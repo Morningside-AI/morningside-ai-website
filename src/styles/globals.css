@@ -21,6 +21,18 @@
     display: flex;
     flex-direction: column;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .overscroll-contain {
+    overscroll-behavior: contain;
+}
 }
 
 /* Fix scroll container */
@@ -299,5 +311,15 @@ body::-webkit-scrollbar-thumb:hover {
   @media (min-width: 1024px) { /* lg breakpoint */
     padding-left: 3rem; /* lg:px-12 = 48px = 3rem */
     padding-right: 3rem;
+  }
+}
+
+.overscroll-contain {
+  overscroll-behavior: contain;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .snap-section {
+    height: -webkit-fill-available;
   }
 }

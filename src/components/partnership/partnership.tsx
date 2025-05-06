@@ -22,7 +22,7 @@ const Partnership = () => {
       <div
         id="partnership-section"
         ref={centerRef}
-        className="box-border w-full h-screen min-h-screen snap-always snap-center flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
+        className="box-border w-full h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
       >
         <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
           <PartnershipMarquee />
@@ -30,7 +30,7 @@ const Partnership = () => {
 
         <div className="relative w-full mt-8 ">
           <p
-          ref={headingRef}
+            ref={headingRef}
             className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap w-full "
           >
             <span className="white-silver-animated-text">

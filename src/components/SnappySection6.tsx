@@ -2,11 +2,9 @@ import Footer from "@/components/footer/footer";
 
 function SnappySection6() {
     return (
-        <div className={`relative min-h-screen w-full flex`}>
-            <div className="w-full mx-auto flex justify-center items-center">
-                <div className="w-full h-full">
-                    <Footer />
-                </div>
+        <div className={`relative min-h-[100dvh] w-full h-full flex`}>
+            <div className="w-full h-full">
+                <Footer />
             </div>
         </div>
     );
