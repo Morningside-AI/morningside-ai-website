@@ -25,9 +25,6 @@ export default function Home() {
         <div className="snap-always snap-center" id="snappyCenter">
           <SnappySection2 />
         </div>
-        <div className="snap-always snap-center">
-          <SnappySection3 scrollContainerRef={scrollContainerRef} />
-        </div>
         <div className="snap-always snap-center" id="snappyStats">
           <SnappySection4 scrollContainerRef={scrollContainerRef} />
         </div>
