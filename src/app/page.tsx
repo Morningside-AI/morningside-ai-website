@@ -24,7 +24,7 @@ export default function Home() {
         tabIndex={0}
         role="region"
         aria-label="Main content sections"
-        className="snap-y snap-mandatory overflow-y-scroll h-screen w-full overflow-x-hidden no-scrollbar"
+        className="snap-y snap-mandatory overflow-y-scroll h-[100dvh] min-h-[100dvh] w-full overflow-x-hidden no-scrollbar"
       >
         <div className="snap-always snap-center min-h-screen">
           <SnappySection1 />
