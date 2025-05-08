@@ -95,12 +95,12 @@ const Footer = () => {
                                 <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                             </Link>
                             <div className="flex flex-row gap-2 relative z-10">
-                                <button onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
+                                <button onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black whitespace-nowrap">
                                     Get In Touch
                                     <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
                                 </button>
                                 <Link href="https://tally.so/r/wbYr52" target="_blank" className="w-full cursor-pointer">
-                                    <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
+                                    <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black whitespace-nowrap">
                                         Explore Careers
                                         <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
                                     </button>
@@ -144,7 +144,7 @@ const Footer = () => {
             {/* Drawer Component */}
             <div
                 ref={drawerRef}
-                className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-white text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
+                className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-[#EDECE4] text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
             >
                 {/* Drawer Header */}
                 <div className="flex flex-col p-6">

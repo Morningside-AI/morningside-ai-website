@@ -23,8 +23,8 @@ const Slide3 = () => {
                     <Step3 className="w-[35vw] h-[50vh] lg:w-[35vw] lg:h-[28vw]" />
                 </div>
                 <div className="w-full flex flex-col items-center justify-center gap-4">
-                    <p className="text-7xl lg:text-8xl font-light">Educate</p>
-                    <p className="text-xl text-center max-w-[700px] text-[#A0A4A1]">
+                    <p className="text-6xl lg:text-8xl font-light">Educate</p>
+                    <p className="text-lg lg:text-xl text-center max-w-[700px] text-[#A0A4A1]">
                         Our experts equip your team with tools and strategic know-how
                         <br />
                         this second line is just for testing a two lines text as requested in design

@@ -149,7 +149,7 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+          <div onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
             <FiArrowUpRight
               size={34}
@@ -170,7 +170,7 @@ const Partnership = () => {
       {/* Drawer Component */}
       <div
         ref={drawerRef}
-        className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-white text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
+        className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-[#EDECE4] text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
       >
         {/* Drawer Header */}
         <div className="flex flex-col p-6">
