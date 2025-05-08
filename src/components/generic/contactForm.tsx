@@ -68,7 +68,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                 <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
                     <div className="w-full lg:w-1/2 flex flex-col gap-2">
                         <Label name="What is your name?" field="name" />
-                        <Field type="text" name="name" placeholder="name" className="border" />
+                        <Field type="text" name="name" placeholder="Name" className="border" />
                         <Error name="name" />
                     </div>
                     {/* Email */}
