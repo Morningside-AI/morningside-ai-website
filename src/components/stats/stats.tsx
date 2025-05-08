@@ -113,7 +113,7 @@ function Stats({ scrollContainerRef }: {
             <span className="">l</span>
             <span className="">&nbsp;</span>
           </span>
-          <span className="green-text">
+          <span className="italic white-silver-animated-text2">
             <span className="">R</span>
             <span className="">e</span>
             <span className="">s</span>
