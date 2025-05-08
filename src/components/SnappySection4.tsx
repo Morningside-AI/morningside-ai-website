@@ -7,7 +7,7 @@ type SnappySection4Props = {
 
 function SnappySection4({ scrollContainerRef }: SnappySection4Props) {
     return (
-        <div className={`relative min-h-[100dvh] w-full flex`}>
+        <div className={`relative h-[100dvh] min-h-[100dvh] w-full flex`}>
             <div className="w-full h-full">
                 <Stats scrollContainerRef={scrollContainerRef} />
             </div>

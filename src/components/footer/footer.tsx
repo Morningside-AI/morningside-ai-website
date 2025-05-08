@@ -70,9 +70,9 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="box-border w-full h-[100vh] snap-always snap-center flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-tight px-4 md:px-8 lg:px-12 pb-[env(safe-area-inset-bottom)] overflow-hidden touch-pan-down"
+                className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-tight px-4 md:px-8 lg:px-12 overflow-hidden touch-pan-down"
             >
-                <div className="w-full h-10/12 lg:h-11/12 flex flex-col justify-between">
+                <div className="w-full h-11/12 flex flex-col justify-between">
                     <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>
                         <p className="w-full lg:text-6xl text-5xl text-left leading-tight">
                             <span className="white-silver-animated-text">We&nbsp;</span>
@@ -85,7 +85,7 @@ const Footer = () => {
                             <span className="green-text">your&nbsp;</span>
                             <span className="green-text">business</span>
                         </p>
-                        <Logo className="w-48 h-10 mt-4 hidden lg:block" />
+                        <Logo className="w-48 h-0 lg:h-10 mt-0 lg:mt-4 hidden lg:block" />
                     </div>
 
                     <div className="w-full h-fit flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between tracking-wider text-sm relative gap-8 lg:gap-0">

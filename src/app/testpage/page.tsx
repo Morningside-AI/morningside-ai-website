@@ -26,34 +26,34 @@ export default function Home() {
         aria-label="Main content sections"
         className="snap-y snap-mandatory overflow-y-scroll h-screen w-full overflow-x-hidden no-scrollbar"
       >
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection1 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection2 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection31 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection32 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection33 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection34 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection4 scrollContainerRef={scrollContainerRef} />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection5 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection6 />
         </div>
-        <div className="snap-always snap-center">
+        <div className="snap-always snap-center min-h-screen">
           <SnappySection7 />
         </div>
       </div>

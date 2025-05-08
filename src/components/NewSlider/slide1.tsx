@@ -16,7 +16,7 @@ const Slide1 = () => {
     <div
       id="center-section"
       ref={centerRef}
-      className="box-border gap-8 w-full h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
+      className="box-border gap-8 w-full h-[100dvh] min-h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
     >
       <div className="w-full flex-col items-center justify-center gap-12 px-4 md:px-8 lg:px-12 mx-auto">
         <p

@@ -68,7 +68,7 @@ const Partnership = () => {
       <div
         id="partnership-section"
         ref={centerRef}
-        className="box-border w-full h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
+        className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
       >
         <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
           <PartnershipMarquee />

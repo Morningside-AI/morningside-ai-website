@@ -17,9 +17,9 @@ const HoverVideo = () => {
         <div
             id="center-section"
             ref={centerRef}
-            className="box-border gap-8 w-full h-[100vh] max-h-[100vh] snap-always snap-center flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
+            className="box-border gap-8 w-full h-[100dvh] min-h-[100dvh] snap-always snap-center flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
         >
-            <div className="w-full h-10/12 lg:h-11/12 flex flex-col items-start justify-between gap-12 pb-6 lg:pb-0 px-4 md:px-8 lg:px-12 mx-auto">
+            <div className="w-full h-11/12 flex flex-col items-start justify-between gap-12 px-4 md:px-8 lg:px-12 mx-auto">
                 <p
                     ref={headingRef}
                     className="text-3xl md:text-4xl lg:text-5xl whitespace-pre-wrap w-full "
