@@ -142,7 +142,6 @@ const Footer = () => {
             />
 
             {/* Drawer Component */}
-            {/* Drawer Component */}
             <div
                 ref={drawerRef}
                 className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-white text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"

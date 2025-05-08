@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { FiArrowUpRight } from "react-icons/fi";
 import PartnershipMarquee from "./partnersMarquee";
+import { GoArrowUpRight, GoX } from "react-icons/go";
+import Link from "next/link";
+import ContactForm from "@/components/generic/contactForm";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
@@ -12,10 +15,53 @@ const Partnership = () => {
   const centerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const handleContactClick = () => {
-    window.location.href = "/contact"; // This forces a full page reload
-  };
+  const toggleDrawer = useCallback(() => {
+    const tl = gsap.timeline();
+
+    if (!isDrawerOpen) {
+      tl.to(overlayRef.current, {
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.inOut",
+        onStart: () => {
+          if (overlayRef.current) overlayRef.current.style.pointerEvents = 'auto';
+        }
+      })
+        .to(drawerRef.current, {
+          x: 0,
+          duration: 0.4,
+          ease: "power3.out"
+        }, 0);
+    } else {
+      tl.to(drawerRef.current, {
+        x: "103%",
+        duration: 0.4,
+        ease: "power3.in"
+      })
+        .to(overlayRef.current, {
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.inOut",
+          onComplete: () => {
+            if (overlayRef.current) overlayRef.current.style.pointerEvents = 'none';
+            // Reset success state only if it was true
+            setSuccess(prevSuccess => {
+              if (prevSuccess) {
+                return false;
+              }
+              return prevSuccess;
+            });
+          }
+        }, 0);
+    }
+
+    setIsDrawerOpen(!isDrawerOpen);
+  }, [isDrawerOpen]);
 
   return (
     <>
@@ -103,13 +149,60 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={handleContactClick} className="flex cursor-pointer items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+          <div onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
             <FiArrowUpRight
               size={34}
               strokeWidth={2}
               className="mt-1 transition-all duration-300"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Drawer Overlay */}
+      <div
+        ref={overlayRef}
+        className="fixed inset-0 bg-black/70 backdrop-blur-[2px] opacity-0 pointer-events-none z-40 transition-opacity"
+        onClick={toggleDrawer}
+      />
+
+      {/* Drawer Component */}
+      <div
+        ref={drawerRef}
+        className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-white text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
+      >
+        {/* Drawer Header */}
+        <div className="flex flex-col p-6">
+          <div className="flex flex-row justify-end">
+            <button
+              onClick={toggleDrawer}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              <GoX size={24} className="text-gray-600" />
+            </button>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-medium text-left">
+            {!success ? 'Get In Touch' : 'Thank you'}
+          </h2>
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="h-[calc(100%-56px)] overflow-y-auto p-4 md:p-6">
+          <div className="space-y-4 msaiDrawer">
+            {!success ? (
+              <>
+                <ContactForm setSuccess={setSuccess} />
+                <div className="h-[50px] w-full"></div>
+              </>
+            ) : (
+              <div className="flex flex-col">
+                <p className="w-full md:w-9/12 text-base md:text-inherit">
+                  Thank you for sending your inquiry, our sales team will get in touch
+                  with you within a couple of days.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
