@@ -21,6 +21,9 @@ export default function Home() {
       <div
         id="page-wrapper"
         ref={scrollContainerRef}
+        tabIndex={0}
+        role="region"
+        aria-label="Main content sections"
         className="snap-y snap-mandatory overflow-y-scroll h-screen w-full overflow-x-hidden no-scrollbar"
       >
         <div className="snap-always snap-center">

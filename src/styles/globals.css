@@ -186,7 +186,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Enhanced Input Styles */
 .msaiDrawer input {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   border-top: none;
   border-left: none;
@@ -210,7 +210,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Enhanced Select Styles */
 .msaiDrawer select {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   border-bottom: 1px solid #060E0A;
   border-left: none;
@@ -240,7 +240,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .msaiDrawer select option {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   font-weight: 300;
   padding: 8px 0px;
@@ -254,7 +254,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .msaiDrawer textarea {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   border-left: none;
   border-right: none;
@@ -321,4 +321,13 @@ body::-webkit-scrollbar-thumb:hover {
   .snap-section {
     height: -webkit-fill-available;
   }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
