@@ -16,7 +16,7 @@ const Center = () => {
     <div
       id="center-section"
       ref={centerRef}
-      className="box-border gap-8 w-full h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
+      className="box-border gap-8 w-full h-[100dvh] snap-always snap-center flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
     >
       <p
         ref={headingRef}
@@ -29,8 +29,9 @@ const Center = () => {
         <span className="white-silver-animated-text1">at </span>
         <span className="white-silver-animated-text2">the </span>
         <span className="white-silver-animated-text2">center </span>
+        <br className="hidden lg:block" />
         <span className="white-silver-animated-text">of </span>
-        <br />
+        <br className="block lg:hidden" />
         <span className="green-text">everything </span>
         <span className="white-silver-animated-text">we </span>
         <span className="white-silver-animated-text1">do.</span>
@@ -39,7 +40,7 @@ const Center = () => {
         ref={subTextRef}
         className="text-xl lg:text-2xl text-center text-[#C0C0C0]"
       >
-        One trusted partner to guide you <br /> through your entire AI journey.
+        One trusted partner to guide you through your entire AI journey.
       </p>
     </div>
   );

@@ -1,13 +1,13 @@
-import HoverVideo from "./video/hoverVideo";
+import Slide3 from "./NewSlider/slide3";
 
-function SnappySection6() {
+function SnappySection33() {
     return (
         <div className={`relative min-h-[100dvh] w-full flex`}>
             <div className="w-full h-full">
-                <HoverVideo />
+                <Slide3 />
             </div>
         </div>
     );
 }
 
-export default SnappySection6;
+export default SnappySection33;

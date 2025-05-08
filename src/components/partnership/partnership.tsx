@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
-import { GoArrowUpRight } from "react-icons/go";
+import { FiArrowUpRight } from "react-icons/fi";
 import PartnershipMarquee from "./partnersMarquee";
 
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
@@ -22,7 +22,7 @@ const Partnership = () => {
       <div
         id="partnership-section"
         ref={centerRef}
-        className="box-border w-full h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
+        className="box-border w-full h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
       >
         <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
           <PartnershipMarquee />
@@ -103,11 +103,11 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={handleContactClick} className="flex cursor-pointer items-center gap-1 px-4 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
-            <p className="text-3xl lg:text-5xl">Let&apos;s Partner Up</p>
-            <GoArrowUpRight
-              size={32}
-              strokeWidth={1}
+          <div onClick={handleContactClick} className="flex cursor-pointer items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300">
+            <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
+            <FiArrowUpRight
+              size={34}
+              strokeWidth={2}
               className="mt-1 transition-all duration-300"
             />
           </div>
