@@ -89,7 +89,7 @@ const Slide3 = () => {
             </div>
 
             {/* Fixed overlay for animated text */}
-            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 text-center pointer-events-none z-50">
+            <div className="fixed w-11/12 lg:w-full bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 text-center pointer-events-none z-50">
                 <p
                     ref={titleRef}
                     id="snappy-33-title"
