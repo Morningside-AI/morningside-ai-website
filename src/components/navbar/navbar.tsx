@@ -125,7 +125,7 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
       >
         {/* Drawer Header */}
         <div className="flex flex-col p-6">
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row justify-end mb-4">
             <button
               onClick={toggleDrawer}
               className="p-2 hover:bg-gray-100 rounded-full"
@@ -139,12 +139,12 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="h-[calc(100%-56px)] overflow-y-auto p-4 md:p-6">
+        <div className="h-[calc(100%-56px)] overflow-y-auto px-4 py-1 md:px-6 md:py-2">
           <div className="space-y-4 msaiDrawer">
             {!success ? (
               <>
                 <ContactForm setSuccess={setSuccess} />
-                <div className="h-[50px] w-full"></div>
+                <div className="h-[80px] w-full"></div>
               </>
             ) : (
               <div className="flex flex-col">
