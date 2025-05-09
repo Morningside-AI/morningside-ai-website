@@ -12,12 +12,14 @@ import SnappySection4 from "@/components/SnappySection4";
 import SnappySection5 from "@/components/SnappySection5";
 import SnappySection6 from "@/components/SnappySection6";
 import SnappySection7 from "@/components/SnappySection7";
+import MorphingShape from "@/components/MorphingShape";
 
 export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <NewPreloaderWrapper>
+      <MorphingShape />
       <div
         id="page-wrapper"
         ref={scrollContainerRef}
@@ -29,22 +31,22 @@ export default function Home() {
         <div className="snap-always snap-center min-h-screen">
           <SnappySection1 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div id="snappy-2" className="snap-always snap-center min-h-screen">
           <SnappySection2 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div id="snappy-31" className="snap-always snap-center min-h-screen">
           <SnappySection31 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div id="snappy-32" className="snap-always snap-center min-h-screen">
           <SnappySection32 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div id="snappy-33" className="snap-always snap-center min-h-screen">
           <SnappySection33 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div id="snappy-34" className="snap-always snap-center min-h-screen">
           <SnappySection34 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div id="snappy-4" className="snap-always snap-center min-h-screen">
           <SnappySection4 scrollContainerRef={scrollContainerRef} />
         </div>
         <div className="snap-always snap-center min-h-screen">
