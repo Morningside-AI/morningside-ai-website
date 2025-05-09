@@ -182,7 +182,7 @@ const Partnership = () => {
               <GoX size={24} className="text-gray-600" />
             </button>
           </div>
-          <h2 className="text-3xl md:text-4xl font-medium text-left">
+          <h2 className="text-3xl md:text-4xl font-medium pt-2 text-left">
             {!success ? 'Get In Touch' : 'Thank you'}
           </h2>
         </div>
