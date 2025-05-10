@@ -1,14 +1,55 @@
 @import "tailwindcss";
+@import "tailwindcss/utilities";
 
-@theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+/* Add this at the top of your global.css */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .overscroll-contain {
+    overscroll-behavior: contain;
+}
+}
+
+/* Fix scroll container */
+main {
+  flex: 1 1 auto;
+  overflow-y: auto !important;
+  scroll-snap-type: y mandatory;
+}
+
+/* Ensure snap alignment */
+[class*="snap-"] {
+  scroll-snap-align: start;
 }
 
 html {
-  scroll-behavior: smooth;
   overflow-y: scroll;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -145,7 +186,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Enhanced Input Styles */
 .msaiDrawer input {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   border-top: none;
   border-left: none;
@@ -169,7 +210,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Enhanced Select Styles */
 .msaiDrawer select {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   border-bottom: 1px solid #060E0A;
   border-left: none;
@@ -199,7 +240,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .msaiDrawer select option {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   font-weight: 300;
   padding: 8px 0px;
@@ -213,7 +254,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .msaiDrawer textarea {
-  background-color: #EDECE4;
+  background-color: transparent;
   color: #060E0A;
   border-left: none;
   border-right: none;
@@ -256,3 +297,48 @@ body::-webkit-scrollbar-thumb:hover {
   object-fit: cover;
 }
 
+/* In your global CSS file */
+.section-padding {
+  padding-left: 1rem;   /* px-4 = 16px = 1rem */
+  padding-right: 1rem;
+  
+  @media (min-width: 768px) { /* md breakpoint */
+    padding-left: 2rem; /* md:px-8 = 32px = 2rem */
+    padding-right: 2rem;
+  }
+
+  @media (min-width: 1024px) { /* lg breakpoint */
+    padding-left: 3rem; /* lg:px-12 = 48px = 3rem */
+    padding-right: 3rem;
+  }
+}
+
+.overscroll-contain {
+  overscroll-behavior: contain;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .snap-section {
+    height: -webkit-fill-available;
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+.herovideobg{
+  background-image: url('../assets/images/backgrounds/ms.webp');
+}
+
+@media (max-width: 767px) {
+  .herovideobg {
+    background-image: url('../assets/images/backgrounds/ms2mob.webp');
+  }
+}

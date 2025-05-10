@@ -3,12 +3,12 @@
 import "@/styles/fonts.css";
 import Step3 from "@/assets/images/animation/entrance.svg";
 import Step32 from "@/assets/images/animation/step3.svg";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MagicTrackpadDetector } from "@hscmap/magic-trackpad-detector";
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 const LABELS = [
     { title: "Introduction", index: 0 },
@@ -17,23 +17,15 @@ const LABELS = [
     { title: "Develop", index: 3 },
 ];
 
+type EntranceProps = {
+    scrollContainerRef: RefObject<HTMLDivElement | null>;
+};
 
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
-
-const Entrance = () => {
-    const [rive1Ready, setRive1Ready] = useState(false);
-    const [rive2Ready, setRive2Ready] = useState(false);
+const Entrance = ({ scrollContainerRef }: EntranceProps) => {
     const [activeStep, setActiveStep] = useState(0);
     const entranceStepRef = useRef(0);
-
-    const mtd = new MagicTrackpadDetector();
-    const isLandingLocked = useRef(false);
-
     const centerRef = useRef<HTMLDivElement>(null);
-    const animTextRef = useRef<HTMLParagraphElement>(null);
-    const headingRef = useRef<HTMLDivElement>(null);
-    const lastScrollTime = useRef(0);
-    const lastScrollDelta = useRef(0);
+    const scrollRef = useRef<HTMLDivElement>(null);
     const contentRefs = [
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
@@ -41,6 +33,7 @@ const Entrance = () => {
         useRef<HTMLDivElement>(null),
     ];
     const touchStartY = useRef(0);
+    const TOUCH_SWIPE_THRESHOLD = 30;
 
     const { rive: rive1, RiveComponent: LearnRive } = useRive({
         src: "/rive/animation1.riv",
@@ -57,407 +50,327 @@ const Entrance = () => {
     const lastTransitionTime = useRef(0);
     const TRANSITION_COOLDOWN = 400;
 
+    // Add these helper functions inside the Entrance component
+    const handleExitToNextSection = () => {
+        const el = document.querySelector("#page-wrapper");
+        const wrapper = el instanceof HTMLElement ? el : null;
+        if (wrapper) {
+            wrapper.classList.add("snap-y");
+            wrapper.classList.remove("overflow-hidden");
+            wrapper.style.overflowY = "";
+        }
+        document.body.style.overflow = "";
+
+        setTimeout(() => {
+            if (scrollContainerRef.current) {
+                gsap.to(scrollContainerRef.current, {
+                    scrollTo: "#snappyStats",
+                    duration: 0.4,
+                    ease: "power2.out",
+                    autoKill: false,
+                });
+            }
+        }, 150);
+    };
+
+    const handleExitToPreviousSection = () => {
+        const el = document.querySelector("#page-wrapper");
+        const wrapper = el instanceof HTMLElement ? el : null;
+        if (wrapper) {
+            wrapper.classList.add("snap-y");
+            wrapper.classList.remove("overflow-hidden");
+            wrapper.style.overflowY = "";
+        }
+        document.body.style.overflow = "";
+
+        setTimeout(() => {
+            if (scrollContainerRef.current) {
+                gsap.to(scrollContainerRef.current, {
+                    scrollTo: "#snappyCenter",
+                    duration: 0.4,
+                    ease: "power2.out",
+                    autoKill: false,
+                });
+            }
+        }, 150);
+    };
+
     const canTransition = useCallback(() => {
         return Date.now() - lastTransitionTime.current > TRANSITION_COOLDOWN;
     }, []);
 
-    const transition = useCallback((
-        fromIndex: number,
-        toIndex: number,
-        direction: "forward" | "backward"
-    ) => {
-        if (!canTransition()) return;
-
-        lastTransitionTime.current = Date.now();
-        const fromRef = contentRefs[fromIndex]?.current;
-        const toRef = contentRefs[toIndex]?.current;
-        if (!fromRef || !toRef) return;
-
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
-
-        if (toIndex === 2 && rive1) {
-            setTimeout(() => {
-                rive1.reset();
-                rive1.play();
-            }, 300);
-        }
-        if (toIndex === 3 && rive2) {
-            setTimeout(() => {
-                rive2.reset();
-                rive2.play();
-            }, 450);
-        }
-
-        gsap.to(fromRef, {
-            opacity: 0,
-            x: direction === "forward" ? -100 : 100,
-            duration: 0.8,
-            ease: "power2.out",
-            onComplete: () => {
-                fromRef.style.display = "none";
-                toRef.style.display = "flex";
-
-                gsap.fromTo(
-                    toRef,
-                    { opacity: 0, x: direction === "forward" ? 150 : -150 },
-                    {
-                        opacity: 1,
-                        x: 0,
-                        duration: 0.8,
-                        ease: "power2.out",
-                        onComplete: () => {
-                            document.body.style.overflow = "";
-                            document.documentElement.style.overflow = "";
-                        },
-                    }
-                );
-            },
-        });
-
-        setActiveStep(toIndex);
-        entranceStepRef.current = toIndex;
-    }, [rive1, rive2, rive1Ready, rive2Ready, canTransition]);
-
-    const handleLabelClick = useCallback((index: number) => {
-        if (activeStep === index || !canTransition()) return;
-        const direction = index > activeStep ? "forward" : "backward";
-        transition(activeStep, index, direction);
-    }, [activeStep, canTransition, transition]);
-
-    useEffect(() => {
-        if (rive1) setRive1Ready(true);
-        if (rive2) setRive2Ready(true);
-    }, [rive1, rive2]);
-
-
-    useEffect(() => {
-        const threshold = 30;
-        let accumulated = 0;
-        let hasSnapped = false;
-        let scrollLocked = false;
-        let scrollCooldown = false;
-        let entranceStep = 0;
-
-        const preventDefault = (e: TouchEvent): void => e.preventDefault();
-
-        const disableScroll = () => {
-            if (!scrollLocked) {
-                scrollLocked = true;
-                document.body.style.overflow = "hidden";
-                document.documentElement.style.overflow = "hidden";
-                document.body.style.touchAction = "none";
-                document.documentElement.style.touchAction = "none";
-                window.addEventListener("touchmove", preventDefault, { passive: false });
-            }
-        };
-
-        const enableScroll = () => {
-            if (scrollLocked) {
-                scrollLocked = false;
-                document.body.style.overflow = "";
-                document.documentElement.style.overflow = "";
-                document.body.style.touchAction = "";
-                document.documentElement.style.touchAction = "";
-                window.removeEventListener("touchmove", preventDefault);
-            }
-        };
-
-        const isInView = () => {
-            const el = centerRef.current;
-            if (!el) return false;
-            const rect = el.getBoundingClientRect();
-            return rect.top <= window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.25;
-        };
-
-
-        const scrollToSection = (targetId: string) => {
-            if (scrollCooldown) return;
-            scrollCooldown = true;
-            hasSnapped = true;
-            accumulated = 0;
-
-            gsap.to(window, {
-                scrollTo: targetId,
-                duration: 0.08,
-                ease: "power2.out",
-                overwrite: "auto",
-                onComplete: () => {
-                    enableScroll();
-                    setTimeout(() => {
-                        scrollCooldown = false;
-                    }, 6);
-                },
-            });
-        };
-
-        const localTransition = (
-            fromIndex: number,
-            toIndex: number,
-            direction: "forward" | "backward"
-        ) => {
+    const transition = useCallback(
+        (fromIndex: number, toIndex: number, direction: "forward" | "backward") => {
             if (!canTransition()) return;
 
-            lastTransitionTime.current = Date.now();
             const fromRef = contentRefs[fromIndex]?.current;
             const toRef = contentRefs[toIndex]?.current;
             if (!fromRef || !toRef) return;
 
+            lastTransitionTime.current = Date.now();
+
             if (toIndex === 2 && rive1) {
-                setTimeout(() => {
-                    rive1.reset();
-                    rive1.play();
-                }, 250);
+                rive1.reset();
+                rive1.play();
             }
             if (toIndex === 3 && rive2) {
-                setTimeout(() => {
-                    rive2.reset();
-                    rive2.play();
-                }, 250);
+                rive2.reset();
+                rive2.play();
             }
-
-            disableScroll();
-            hasSnapped = true;
-            accumulated = 0;
 
             gsap.to(fromRef, {
                 opacity: 0,
                 x: direction === "forward" ? -100 : 100,
-                duration: 0.4,
+                duration: 0.5,
                 ease: "power2.out",
                 onComplete: () => {
                     fromRef.style.display = "none";
                     toRef.style.display = "flex";
-
                     gsap.fromTo(
                         toRef,
-                        { opacity: 0, x: direction === "forward" ? 150 : -150 },
-                        {
-                            opacity: 1,
-                            x: 0,
-                            duration: 0.4,
-                            ease: "power2.out",
-                            onComplete: () => {
-                                hasSnapped = false;
-                                setTimeout(() => enableScroll(), 500);
-                            },
-                        }
+                        { opacity: 0, x: direction === "forward" ? 100 : -100 },
+                        { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
                     );
                 },
             });
 
-            entranceStep = toIndex;
             entranceStepRef.current = toIndex;
             setActiveStep(toIndex);
-        };
+        },
+        [rive1, rive2, canTransition]
+    );
 
-        const handleIntent = (delta: number) => {
-            if (!isInView() || hasSnapped || !canTransition() || isLandingLocked.current) return;
+    const handleLabelClick = useCallback(
+        (index: number) => {
+            if (activeStep === index || !canTransition()) return;
+            const direction = index > activeStep ? "forward" : "backward";
+            transition(activeStep, index, direction);
+        },
+        [activeStep, canTransition, transition]
+    );
 
-            accumulated += delta;
-
-            if (accumulated >= threshold) {
-                if (entranceStepRef.current < contentRefs.length - 1) {
-                    localTransition(entranceStepRef.current, entranceStepRef.current + 1, "forward");
-                } else {
-                    scrollToSection("#stats-section");
-                }
-            } else if (accumulated <= -threshold) {
-                if (entranceStepRef.current > 0) {
-                    localTransition(entranceStepRef.current, entranceStepRef.current - 1, "backward");
-                } else {
-                    scrollToSection("#center-section");
-                }
-            }
-        };
-
-        const handleWheel = (e: WheelEvent) => {
-            e.preventDefault();
-            if (!canTransition()) return;
-
-            const isTrackpad = mtd.inertial(e);
-            const sensitivity = isTrackpad ? 0.08 : 0.18; // Slightly different values
-            const maxDelta = isTrackpad ? 12 : 25; // Different thresholds
-
-            const baseDelta = e.deltaY * sensitivity;
-            const normalizedDelta = Math.sign(baseDelta) * Math.min(Math.abs(baseDelta), maxDelta);
-
-            // Additional velocity check
-            const velocity = Math.abs(normalizedDelta) / (Date.now() - lastScrollTime.current || 1);
-            if (velocity > 0.5) return;
-
-            handleIntent(normalizedDelta);
-
-            lastScrollTime.current = Date.now();
-            lastScrollDelta.current = normalizedDelta;
-        };
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (!isInView()) return;
-
-            e.preventDefault();
-
-            if (e.key === "ArrowDown" || e.key === "PageDown") {
-                handleIntent(threshold + 5); // Scroll down
-            } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-                handleIntent(-(threshold + 5)); // Scroll up
-            }
-        };
-
-        const handleSpaceButton = (e: KeyboardEvent) => {
-            if (e.key === " " && isInView()) {
-                e.preventDefault();
-                handleIntent(threshold + 5); // Scroll down
-            }
-        };
-
-        const handleTouchStart = (e: TouchEvent) => {
-            if (isInView() && e.touches && e.touches.length > 0) {
-                const touch = e.touches[0];
-                if (touch) {
-                    touchStartY.current = touch.clientY;
-                    disableScroll();
-                }
-            }
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (isInView() && e.touches && e.touches.length > 0 && touchStartY.current !== 0) {
-                // Slower touch sensitivity with momentum reduction
-                const touch = e.touches[0];
-                if (touch) {
-                    const deltaY = (touchStartY.current - touch.clientY) * 0.5;
-                    handleIntent(deltaY);
-                    touchStartY.current = touch.clientY;
-                }
-            }
-        };
-
-        const handleTouchEnd = () => {
-            touchStartY.current = 0;
-            // Don't enable scroll immediately - let the transition complete it
-        };
-
-        window.addEventListener("wheel", handleWheel, { passive: false });
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("keydown", handleSpaceButton);
-        window.addEventListener("touchstart", handleTouchStart, { passive: false });
-        window.addEventListener("touchmove", handleTouchMove, { passive: false });
-        window.addEventListener("touchend", handleTouchEnd);
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-              if (entry?.isIntersecting) {
-                hasSnapped = false;
-                accumulated = 0;
-          
-                // Lock scroll intent for 500ms to avoid skipping the first slide
-                isLandingLocked.current = true;
-                setTimeout(() => {
-                  isLandingLocked.current = false;
-                }, 500);
-              }
-            },
-            { threshold: 0.5 }
-          );
-          
-        if (centerRef.current) observer.observe(centerRef.current);
-
+    useEffect(() => {
         contentRefs.forEach((ref, i) => {
             if (ref.current) {
                 ref.current.style.display = i === 0 ? "flex" : "none";
             }
         });
+    }, []);
 
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (!container) return;
 
-        const heading = headingRef.current;
-        if (!heading) return;
+        const onWheel = (e: WheelEvent) => {
+            if (!canTransition()) return;
 
-        let animationIn: GSAPTimeline | null = null;
-        let animationOut: GSAPTimeline | null = null;
+            const delta = e.deltaY;
+            const step = entranceStepRef.current;
 
-        const animateIn = () => {
-            if (animationOut) animationOut.kill();
-
-            animationIn = gsap.timeline();
-
-            animationIn.fromTo(
-                headingRef.current,
-                {
-                    opacity: 1,
-                    y: 0,
-                    filter: "blur(0px)",
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                    filter: "blur(0px)",
-                    duration: 0.5,
-                    ease: "power4.out",
+            if (delta > 20) {
+                if (step < contentRefs.length - 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    transition(step, step + 1, "forward");
+                } else {
+                    // Last block: re-enable outer scroll before scrolling down
+                    handleExitToNextSection(); // slight delay to ensure styles apply
                 }
-            );
+            } else if (delta < -20) {
+                if (step > 0) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    transition(step, step - 1, "backward");
+                } else {
+                    // First block: re-enable outer scroll before scrolling up
+                    handleExitToPreviousSection();
+                }
+            }
 
         };
 
-
-        const animateOut = () => {
-            if (animationIn) animationIn.kill();
-
-            animationOut = gsap.timeline();
-
-            animationOut.to(headingRef.current, {
-                opacity: 0,
-                y: 40,
-                filter: "blur(6px)",
-                duration: 0.5,
-                ease: "power2.in",
-            });
-
+        const onTouchStart = (e: TouchEvent) => {
+            const touch = e.touches?.[0];
+            if (!touch) return;
+            touchStartY.current = touch.clientY;
         };
 
 
+        // Touch end handler
+        const onTouchEnd = (e: TouchEvent) => {
+            const touchEndY = e.changedTouches?.[0]?.clientY;
+            if (!canTransition() || touchEndY === undefined) return;
 
-        const trigger = ScrollTrigger.create({
-            trigger: centerRef.current,
-            start: "top 60%",
-            end: "bottom 40%",
-            onEnter: animateIn,
-            onEnterBack: animateIn,
-            onLeave: animateOut,
-            onLeaveBack: animateOut,
-        });
+            const deltaY = touchStartY.current - touchEndY;
+            const step = entranceStepRef.current;
+
+            if (deltaY < -TOUCH_SWIPE_THRESHOLD) {
+                if (step > 0) {
+                    transition(step, step - 1, "backward");
+                } else {
+                    handleExitToPreviousSection();
+                }
+            } else if (deltaY > TOUCH_SWIPE_THRESHOLD) {
+                if (step < contentRefs.length - 1) {
+                    transition(step, step + 1, "forward");
+                } else {
+                    handleExitToNextSection();
+                }
+            }
+        };
 
 
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (!canTransition()) return;
+
+            const step = entranceStepRef.current;
+
+            switch (e.key) {
+                case 'ArrowDown':
+                case 'PageDown':
+                    e.preventDefault();
+                    if (step < contentRefs.length - 1) {
+                        transition(step, step + 1, "forward");
+                    } else {
+                        handleExitToNextSection();
+                    }
+                    break;
+
+                case 'ArrowUp':
+                case 'PageUp':
+                    e.preventDefault();
+                    if (step > 0) {
+                        transition(step, step - 1, "backward");
+                    } else {
+                        handleExitToPreviousSection();
+                    }
+                    break;
+            }
+        };
+
+        container.addEventListener("wheel", onWheel, { passive: false });
+        container.addEventListener('touchstart', onTouchStart, { passive: true });
+        container.addEventListener('touchend', onTouchEnd, { passive: true });
+        window.addEventListener('keydown', onKeyDown);
 
         return () => {
-            window.removeEventListener("wheel", handleWheel);
-            window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("keydown", handleSpaceButton);
-            window.removeEventListener("touchstart", handleTouchStart);
-            window.removeEventListener("touchmove", handleTouchMove);
-            window.removeEventListener("touchend", handleTouchEnd);
-            observer.disconnect();
-            enableScroll();
+            container.removeEventListener("wheel", onWheel);
+            container.removeEventListener('touchstart', onTouchStart);
+            container.removeEventListener('touchend', onTouchEnd);
+            window.removeEventListener('keydown', onKeyDown);
         };
-    }, [rive1, rive2, rive1Ready, rive2Ready, canTransition, transition]);
+    }, [canTransition, transition]);
 
+
+    useEffect(() => {
+        const section = centerRef.current;
+        const el = document.querySelector("#page-wrapper");
+        const pageWrapper = el instanceof HTMLElement ? el : null;
+
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0];
+                if (!entry) return;
+
+                if (entry.isIntersecting) {
+                    centerRef.current?.scrollIntoView({ behavior: "auto", inline: "start", block: "start" });
+                    if (pageWrapper) {
+                        pageWrapper.classList.remove("snap-y");
+                        pageWrapper.classList.add("overflow-hidden");
+                        pageWrapper.style.overflowY = "hidden";
+                    }
+                    document.body.style.overflow = "hidden";
+                    
+                } else {
+                    if (pageWrapper) {
+                        pageWrapper.classList.add("snap-y");
+                        pageWrapper.classList.remove("overflow-hidden");
+                        pageWrapper.style.overflowY = "";
+                    }
+                    document.body.style.overflow = "";
+                }
+            },
+            { threshold: 0.8 }
+        );
+
+        if (section) observer.observe(section);
+
+        return () => {
+            if (section) observer.unobserve(section);
+            if (pageWrapper) {
+                pageWrapper.classList.add("snap-y");
+                pageWrapper.classList.remove("overflow-hidden");
+                pageWrapper.style.overflowY = "";
+            }
+            document.body.style.overflow = "";
+        };
+    }, []);
+
+    const lastScrollTime = useRef(0); // Add this ref near your other refs
+
+    // Modified useEffect
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+
+        const trapScrollBounce = () => {
+            const now = Date.now();
+            // Throttle to prevent layout thrashing
+            if (now - lastScrollTime.current < 100) return;
+            lastScrollTime.current = now;
+
+            // Add buffer for mobile touch scroll
+            if (container.scrollTop <= 1) {
+                container.scrollTop = 1;
+            } else if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1) {
+                container.scrollTop = container.scrollHeight - container.clientHeight - 1;
+            }
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!container) return;
+
+            // Add null check for touch
+            const touch = e.touches?.[0];
+            if (!touch) return; // ← This is the key check
+
+            const scrollTop = container.scrollTop;
+            const clientHeight = container.clientHeight;
+            const scrollHeight = container.scrollHeight;
+            const deltaY = touch.clientY - touchStartY.current;
+
+            // Prevent boundary overscroll
+            if ((scrollTop <= 0 && deltaY > 0) ||
+                (scrollTop + clientHeight >= scrollHeight && deltaY < 0)) {
+                e.preventDefault();
+            }
+        };
+
+        container.addEventListener("scroll", trapScrollBounce);
+        container.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+        return () => {
+            container.removeEventListener("scroll", trapScrollBounce);
+            container.removeEventListener("touchmove", handleTouchMove);
+        };
+    }, []);
 
 
     return (
         <div
             id="entrance-section"
             ref={centerRef}
-            className="w-full h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] overflow-hidden touch-none"
+            className="w-full no-scrollbar overflow-x-hidden h-[100dvh] sticky top-0 flex flex-col justify-center items-center text-white z-10 overscroll-none"
         >
-            {/* Labels Column */}
-            <div className="absolute w-full lg:w-fit left-1/2 lg:left-2 lg:top-1/2 top-4 -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 flex flex-row lg:flex-col lg:items-start  items-center justify-center lg:gap-2 gap-6 z-10">
+            <div className="absolute left-1/2 lg:left-2 lg:top-1/2 top-[5vh] -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 -translate-y-1/2 flex flex-row lg:flex-col lg:items-start  items-center justify-center lg:gap-2 gap-6 z-10 px-4 md:px-8 lg:px-12 mx-auto">
                 {LABELS.map((label, index) => (
                     <button
                         key={label.title}
                         onClick={() => handleLabelClick(index)}
-                        className={`text-left ${index === 0 ? "hidden" : ""} cursor-pointer transition-all duration-300 ${activeStep === index
-                            ? "text-lg text-white md:text-2xl opacity-100"
-                            : "text-lg text-gray-400 md:text-xl opacity-50 hover:opacity-70"
+                        className={`text-left ${index === 0 ? "hidden" : ""} cursor-pointer lg:transition-all lg:duration-300 ${activeStep === index
+                            ? "text-white lg:text-xl opacity-100"
+                            : "text-gray-400 text-lg opacity-50 hover:opacity-80"
                             }`}
                         style={{
                             fontFamily: "DM-Mono-Light, monospace",
@@ -467,131 +380,71 @@ const Entrance = () => {
                     </button>
                 ))}
             </div>
-            {/* Content 1 */}
-            <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-24 lg:gap-8">
-                <div className="relative w-full -translate-y-20 lg:-translate-y-14">
+
+            <div
+                ref={scrollRef}
+                className="w-full [@supports(-webkit-touch-callout:none)]:[-webkit-overflow-scrolling:auto] h-full overflow-y-scroll no-scrollbar px-4 md:px-8 lg:px-12 mx-auto overflow-x-hidden flex flex-col items-center justify-center relative touch-pan-y overscroll-none"
+            >
+                {/* Content 1 */}
+                <div ref={contentRefs[0]} className="w-full flex-col items-start justify-start gap-12 px-4">
                     <p
-                        ref={headingRef}
-                        className="text-3xl md:text-5xl text-left leading-tight whitespace-pre-wrap absolute top-0 left-0 z-0"
+                        className="text-3xl md:text-5xl text-left leading-tight whitespace-pre-wrap"
                     >
-                        <span className="">
-                            <span className="white-silver-animated-text">W</span>
-                            <span className="white-silver-animated-text">e</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <span className="white-silver-animated-text1">s</span>
-                            <span className="white-silver-animated-text1">p</span>
-                            <span className="white-silver-animated-text1">e</span>
-                            <span className="white-silver-animated-text1">n</span>
-                            <span className="white-silver-animated-text1">d</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <span className="white-silver-animated-text2">o</span>
-                            <span className="white-silver-animated-text2">u</span>
-                            <span className="white-silver-animated-text2">r</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <span className="white-silver-animated-text">d</span>
-                            <span className="white-silver-animated-text">a</span>
-                            <span className="white-silver-animated-text">y</span>
-                            <span className="white-silver-animated-text">s</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <br className="block lg:hidden" />
-                            <span className="white-silver-animated-text1">g</span>
-                            <span className="white-silver-animated-text1">u</span>
-                            <span className="white-silver-animated-text1">i</span>
-                            <span className="white-silver-animated-text1">d</span>
-                            <span className="white-silver-animated-text1">i</span>
-                            <span className="white-silver-animated-text1">n</span>
-                            <span className="white-silver-animated-text1">g</span>
-                            <span className="white-silver-animated-text1">&nbsp;</span>
-                            <br className="hidden lg:block" />
-                            <span className="white-silver-animated-text2">c</span>
-                            <span className="white-silver-animated-text2">o</span>
-                            <span className="white-silver-animated-text2">m</span>
-                            <span className="white-silver-animated-text2">p</span>
-                            <span className="white-silver-animated-text2">a</span>
-                            <span className="white-silver-animated-text2">n</span>
-                            <span className="white-silver-animated-text2">i</span>
-                            <span className="white-silver-animated-text2">e</span>
-                            <span className="white-silver-animated-text2">s</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <span className="white-silver-animated-text">t</span>
-                            <span className="white-silver-animated-text">h</span>
-                            <span className="white-silver-animated-text">r</span>
-                            <span className="white-silver-animated-text">o</span>
-                            <span className="white-silver-animated-text">u</span>
-                            <span className="white-silver-animated-text">g</span>
-                            <span className="white-silver-animated-text">h</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <br className="block lg:hidden" />
-                            <span className="white-silver-animated-text1">t</span>
-                            <span className="white-silver-animated-text1">h</span>
-                            <span className="white-silver-animated-text1">e</span>
-                            <span className="white-silver-animated-text1">s</span>
-                            <span className="white-silver-animated-text1">e</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <br className="hidden lg:block" />
-                            <span className="green-text">t</span>
-                            <span className="green-text">h</span>
-                            <span className="green-text">r</span>
-                            <span className="green-text">e</span>
-                            <span className="green-text">e</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <span className="white-silver-animated-text2">c</span>
-                            <span className="white-silver-animated-text2">o</span>
-                            <span className="white-silver-animated-text2">r</span>
-                            <span className="white-silver-animated-text2">e</span>
-                            <span className="gray-text">&nbsp;</span>
-                            <span className="white-silver-animated-text">s</span>
-                            <span className="white-silver-animated-text">t</span>
-                            <span className="white-silver-animated-text">a</span>
-                            <span className="white-silver-animated-text">g</span>
-                            <span className="white-silver-animated-text">e</span>
-                            <span className="white-silver-animated-text">s</span>
-                            <span className="white-silver-animated-text">&nbsp;</span>
-                        </span>
+                        <span className="white-silver-animated-text">We </span>
+                        <span className="white-silver-animated-text1">spend </span>
+                        <span className="white-silver-animated-text2">our </span>
+                        <span className="white-silver-animated-text2">days </span>
+                        <br className="block lg:hidden" />
+                        <span className="white-silver-animated-text1">guiding </span>
+                        <br className="hidden lg:block" />
+                        <span className="white-silver-animated-text">companies </span>
+                        <span className="white-silver-animated-text1">through </span>
+                        <br className="block lg:hidden" />
+                        <span className="white-silver-animated-text2">these </span>
+                        <br className="hidden lg:block" />
+                        <span className="green-text">three </span>
+                        <span className="white-silver-animated-text">core </span>
+                        <span className="white-silver-animated-text1">stages</span>
+                    </p>
+                    <div className="w-full flex justify-end">
+                        <Step3 className="w-[35vw] h-[25vw]" />
+                    </div>
+                </div>
+
+                {/* Content 2 */}
+                <div ref={contentRefs[1]} className="w-full flex-col items-center justify-center gap-8">
+                    <Step32 className="w-[30vw] h-[20vw]" />
+                    <p className="text-6xl font-light">Identify</p>
+                    <p className="text-xl text-center max-w-[700px] text-[#A0A4A1]">
+                        We analyze your business operations, identify high-impact AI opportunities...
                     </p>
                 </div>
-                <div className="w-full flex justify-center lg:justify-end">
-                    <Step3 className="w-[60vw] h-[50vw] sm:w-[50vw] sm:h[40vh] md:w-[35vw] md:h-[25vh] lg:w-[35vw] lg:h-[25vw] mt-4 sm:mt-6 md:mt-8 lg:mt-2" />
-                </div>
-            </div>
 
-            {/* Content 2 */}
-            <div ref={contentRefs[1]} className="w-full flex-col items-center justify-center gap-8">
-                <div className="w-full flex justify-center">
-                    <Step32 className="w-[60vw] h-[50vw] sm:w-[50vw] sm:h[40vh] md:w-[30vw] md:h-[20vh] lg:w-[30vw] lg:h-[20vw]" />
-                </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl font-light text-center capitalize">
-                    Identify
-                </p>
-                <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    We analyze your business operations, identify high-impact Al opportunities and co-design the Al Transformation Strategy that best aligns with your business goals.
-                </p>
-            </div>
-
-            {/* Content 3 */}
-            <div ref={contentRefs[2]} className="w-full flex-col items-center justify-center gap-8">
-                <div className="w-full flex justify-center">
-                    <div className="w-[100vw] h-[250px] lg:w-[700px] lg:h-[300px]">
-                        <LearnRive />
+                {/* Content 3 */}
+                <div ref={contentRefs[2]} className="w-full flex-col items-center justify-center gap-8">
+                    <div className="w-full flex justify-center">
+                        <div className="w-[100vw] h-[250px] lg:w-[700px] lg:h-[300px]">
+                            <LearnRive />
+                        </div>
                     </div>
+                    <p className="text-6xl font-light">Educate</p>
+                    <p className="text-xl text-center max-w-[700px] text-[#A0A4A1]">
+                        Our experts equip your team with tools and strategic know-how...
+                    </p>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl landscape:text-7xl font-light text-center capitalize">Educate </p>
-                <p className="text-base md:text-xl lg:text-2xl font-light text-center max-w-[700px] text-[#A0A4A1]">
-                    Our experts equip your team with the tools, frameworks, and strategic know-how to adopt Al confidently across all organizational levels.
-                </p>
-            </div>
 
-            {/* Content 4 */}
-            <div ref={contentRefs[3]} className="w-full flex-col items-center justify-center gap-8">
-                <div className="w-full flex justify-center">
-                    <div className="w-[100vw] h-[250px] md:w-[80vw] md:h-[400px] lg:w-[500px] lg:h-[300px]">
-                        <BuildRive />
+                {/* Content 4 */}
+                <div ref={contentRefs[3]} className="w-full flex-col items-center justify-center gap-8">
+                    <div className="w-full flex justify-center">
+                        <div className="w-[100vw] h-[250px] md:w-[80vw] md:h-[400px] lg:w-[500px] lg:h-[300px]">
+                            <BuildRive />
+                        </div>
                     </div>
+                    <p className="text-6xl font-light">Develop</p>
+                    <p className="text-xl text-center max-w-[700px] text-[#A0A4A1]">
+                        We design and develop custom AI systems and automations...
+                    </p>
                 </div>
-                <p className="lg:text-9xl md:text-8xl text-6xl landscape:text-7xl font-light text-center capitalize">Develop</p>
-                <p className="text-base md:text-xl lg:text-2xl font-light text-center lg:w-9/12 w-11/12 text-[#A0A4A1]">
-                    We design and develop custom AI systems, automations, and state-of-the-art solutions that are proven to move the needle inside your business, thanks to our extensive experience and network of AI Automation Agencies building such solutions.
-                </p>
             </div>
         </div>
     );

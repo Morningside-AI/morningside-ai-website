@@ -3,6 +3,7 @@
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers, type FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { IoMdAlert } from 'react-icons/io';
+import { PiArrowsClockwise } from "react-icons/pi";
 
 interface FormValues {
     name: string;
@@ -67,7 +68,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                 <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
                     <div className="w-full lg:w-1/2 flex flex-col gap-2">
                         <Label name="What is your name?" field="name" />
-                        <Field type="text" name="name" placeholder="name" className="border" />
+                        <Field type="text" name="name" placeholder="Name" className="border" />
                         <Error name="name" />
                     </div>
                     {/* Email */}
@@ -162,9 +163,16 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full text-white cursor-pointer py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/70"
+                    className={`w-fit text-black cursor-pointer py-2 px-4 rounded-full border border-black ${isSubmitting ? 'opacity-50' : ''}`}
                 >
-                    {isSubmitting ? 'Sending...' : 'Send'}
+                    {isSubmitting ? (
+                        <div className="flex flex-row items-center gap-2">
+                            <PiArrowsClockwise size={16} className="animate-spin" />
+                            Sending...
+                        </div>
+                    ) : (
+                        'Send inquiry'
+                    )}
                 </button>
             </Form>
         )}
