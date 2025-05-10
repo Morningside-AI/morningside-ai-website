@@ -70,7 +70,10 @@ export default function MorphingShape() {
 
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
+    const isMobile = window.innerWidth < 768;           // < 768px
+    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024; // 768px - 1023px
+    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth < 1366; // 1024px - 1365px
+
     const scrollContainer = document.querySelector("#page-wrapper");
     const svg = svgRef.current;
     const wrapper = wrapperRef.current;
@@ -129,10 +132,10 @@ export default function MorphingShape() {
     });
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
-    const fromY = isMobile ? 300 : 450;
-    const toY = isMobile ? "-40vh" : "-65vh";
-    const fromScale = isMobile ? 1.1 : 1.4;
-    const toScale = isMobile ? 0.4 : 0.4;
+    const fromY = isMobile ? 300 : isTablet ? 250 : 450;
+    const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-65vh";
+    const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
+    const toScale = isMobile ? 0.4 : isTablet ? 0.5 : 0.4;
     gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-31",
@@ -269,9 +272,9 @@ export default function MorphingShape() {
 
     // Animate gap reduction
     moveTimeline.to(smallSpheresRef.current, {
-      gap: isMobile ? "1.5rem" : "1.25rem", // Tailwind's gap-5 ≈ 1.25rem
+      gap: isMobile ? "1.5rem" : isTablet ? "1.125rem" : "1.25rem", // Tailwind's gap-5 ≈ 1.25rem
       scale: 0.8,
-      marginBottom: isMobile ? ".5rem" : "1.5rem",
+      marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "1.5rem",
       duration: 0.2,
       ease: "power1.inOut",
     });
@@ -285,7 +288,7 @@ export default function MorphingShape() {
     smallSpheres.forEach((sphere, index) => {
       const direction = index % 2 === 0 ? 1 : -1;
       const baseOffset = sphere.getBoundingClientRect().height / 3.52;
-      const offset = isMobile ? baseOffset * 2 : baseOffset;
+      const offset = isMobile ? baseOffset * 2 : isTablet ? baseOffset * 1.65 : baseOffset;
 
       moveTimeline.to(sphere, {
         y: direction * offset,
@@ -353,7 +356,7 @@ export default function MorphingShape() {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 294 294"
         fill="none"
-        className="absolute left-1/2 -bottom-10 lg:-bottom-96 -translate-x-1/2 max-w-screen w-[90vw] lg:w-[50vw] aspect-square"
+        className="absolute left-1/2 -bottom-10 md:-bottom-64 lg:-bottom-96 -translate-x-1/2 max-w-screen w-[90vw] md:w-[80vw] lg:w-[50vw] aspect-square"
       >
         <g opacity={0.8} id="outerCircle">
           <g filter="url(#a)">
@@ -476,12 +479,12 @@ export default function MorphingShape() {
         </defs>
       </svg>
 
-      <div ref={smallSpheresRef} className="absolute w-8/12 mt-16 lg:mt-0 lg:w-7/12 h-fit flex flex-row items-center justify-center gap-11 lg:gap-8 left-1/2 top-[24.5%] -translate-x-1/2 pointer-events-none opacity-0">
+      <div ref={smallSpheresRef} className="absolute w-8/12 md:w-9/12 mt-16 md:mt-40 lg:mt-0 lg:w-7/12 h-fit flex flex-row items-center justify-center gap-11 md:gap-20 lg:gap-8 left-1/2 top-[24.5%] -translate-x-1/2 pointer-events-none opacity-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 294 294"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 lg:scale-200 opacity-20"
+          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-20"
         >
           <g filter="url(#d)">
             <path
@@ -595,7 +598,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 294 294"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 lg:scale-200 opacity-35"
+          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-35"
         >
           <g filter="url(#d)">
             <path
@@ -709,7 +712,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 294 294"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 lg:scale-200 opacity-50"
+          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-50"
         >
           <g filter="url(#d)">
             <path
@@ -823,7 +826,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 294 294"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 lg:scale-200 opacity-75"
+          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-75"
         >
           <g filter="url(#d)">
             <path
@@ -937,7 +940,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 294 294"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 lg:scale-200 opacity-100"
+          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-100"
         >
           <g filter="url(#d)">
             <path
