@@ -70,7 +70,7 @@ const Footer = () => {
             <div
                 id="footer-section"
                 ref={footerRef}
-                className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-tight px-4 md:px-8 lg:px-12 overflow-hidden touch-pan-down"
+                className="box-border w-full h-[100dvh] min-h-[100dvh] max-h-[100dvh] flex flex-col justify-center items-center text-white tracking-[-0.04em] leading-tight px-4 md:px-8 lg:px-12 overflow-hidden"
             >
                 <div className="w-full h-11/12 flex flex-col justify-between">
                     <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>

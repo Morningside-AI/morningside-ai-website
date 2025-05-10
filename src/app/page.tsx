@@ -52,10 +52,10 @@ export default function Home() {
         <div className="snap-always snap-center min-h-screen">
           <SnappySection5 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div className="snap-always snap-center">
           <SnappySection6 />
         </div>
-        <div className="snap-always snap-center min-h-screen">
+        <div className="snap-always snap-center">
           <SnappySection7 />
         </div>
       </div>
