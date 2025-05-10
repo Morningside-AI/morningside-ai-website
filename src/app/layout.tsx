@@ -27,7 +27,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="relative bg-black" style={{ fontFamily: "DM-Sans" }}>
+      <body className="relative w-screen bg-black" style={{ fontFamily: "DM-Sans" }}>
         <Analytics />
         <AnimatedMeshBackground />
         {children}
