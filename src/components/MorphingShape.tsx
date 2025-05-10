@@ -125,7 +125,7 @@ export default function MorphingShape() {
       onLeaveBack: () => {
         gsap.to(wrapper, {
           autoAlpha: 0,
-          duration: 0.1,
+          duration: 0.25,
           ease: "none",
         });
       },
@@ -288,7 +288,7 @@ export default function MorphingShape() {
     smallSpheres.forEach((sphere, index) => {
       const direction = index % 2 === 0 ? 1 : -1;
       const baseOffset = sphere.getBoundingClientRect().height / 3.52;
-      const offset = isMobile ? baseOffset * 2 : isTablet ? baseOffset * 2.1 : baseOffset;
+      const offset = isMobile ? baseOffset * 2.2 : isTablet ? baseOffset * 2.1 : baseOffset;
 
       moveTimeline.to(sphere, {
         y: direction * offset,

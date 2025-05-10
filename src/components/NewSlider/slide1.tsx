@@ -20,7 +20,7 @@ const Slide1 = () => {
     >
       <div className="w-full flex-col items-center justify-center gap-12 px-4 md:px-8 lg:px-12 mx-auto">
         <p
-          className="text-3xl md:text-5xl w-full text-center leading-tight whitespace-pre-wrap"
+          className="text-2xl md:text-5xl w-full text-center leading-tight whitespace-pre-wrap"
         >
           <span className="white-silver-animated-text">We </span>
           <span className="white-silver-animated-text1">spend </span>

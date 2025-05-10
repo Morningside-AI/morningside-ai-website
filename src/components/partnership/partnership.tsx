@@ -77,7 +77,7 @@ const Partnership = () => {
         <div className="relative w-full mt-8 ">
           <p
             ref={headingRef}
-            className="text-5xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap w-full "
+            className="text-4xl md:text-6xl lg:text-7xl text-center whitespace-pre-wrap w-full "
           >
             <span className="white-silver-animated-text">
               <span className="">T</span>

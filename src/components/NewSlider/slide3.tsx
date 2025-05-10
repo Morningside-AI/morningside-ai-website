@@ -93,7 +93,7 @@ const Slide3 = () => {
                 <p
                     ref={titleRef}
                     id="snappy-33-title"
-                    className="text-6xl lg:text-8xl font-light opacity-0"
+                    className="text-4xl lg:text-8xl font-light opacity-0"
                 >
                     Educate
                 </p>

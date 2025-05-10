@@ -20,7 +20,7 @@ const Center = () => {
     >
       <p
         ref={headingRef}
-        className="text-5xl md:text-6xl lg:text-7xl text-center h-fit whitespace-pre-wrap w-full "
+        className="text-4xl md:text-6xl lg:text-7xl text-center h-fit whitespace-pre-wrap w-full "
       >
         <span className="white-silver-animated-text">We </span>
         <span className="white-silver-animated-text">put </span>
@@ -38,7 +38,7 @@ const Center = () => {
       </p>
       <p
         ref={subTextRef}
-        className="text-xl lg:text-2xl text-center text-[#C0C0C0]"
+        className="text-xl lg:text-2xl w-10/12 lg:w-full text-center text-[#C0C0C0]"
       >
         One trusted partner to guide you through your entire AI journey.
       </p>
