@@ -103,8 +103,6 @@ const Slide4 = () => {
                     className="text-lg lg:text-xl text-[#A0A4A1] max-w-[700px] opacity-0"
                 >
                     We design and develop custom AI systems and automations
-                    <br />
-                    this second line is just for testing a two lines text as requested in design
                 </p>
             </div>
         </div>

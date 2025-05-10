@@ -30,8 +30,9 @@ const Slide1 = () => {
           <span className="white-silver-animated-text1">guiding </span>
           <br className="hidden lg:block" />
           <span className="white-silver-animated-text1">companies </span>
+          <br className="block md:hidden" />
           <span className="white-silver-animated-text1">through </span>
-          <br />
+          <br className="hidden lg:block" />
           <span className="white-silver-animated-text2">these </span>
           <span className="green-text">three </span>
           <span className="white-silver-animated-text1">things</span>

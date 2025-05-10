@@ -104,8 +104,6 @@ const Slide2 = () => {
           className="text-lg lg:text-xl text-[#A0A4A1] opacity-0"
         >
           We analyze your business operations, identify high-impact AI opportunities
-          <br />
-          this second line is just for testing a two lines text as requested in design
         </p>
       </div>
     </div>

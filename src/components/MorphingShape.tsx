@@ -181,11 +181,13 @@ export default function MorphingShape() {
         opacity: 1,
         duration: 1,
         delay: 0.6,
+        ease: "none"
       })
       .to([...clones, innerCircle], {
         opacity: 0,
         duration: 0.8,
         delay: 0.6,
+        ease: "none"
       }, "<");
 
     const circlePaths = document.querySelectorAll(".smallSphere .morph-shape");
