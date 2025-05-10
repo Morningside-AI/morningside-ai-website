@@ -110,8 +110,9 @@ export default function MorphingShape() {
       onEnter: () => {
         gsap.to(wrapper, {
           autoAlpha: 1,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: 1,
+          delay: 0.5,
+          ease: "none",
         });
       },
     });
@@ -125,7 +126,7 @@ export default function MorphingShape() {
       onLeaveBack: () => {
         gsap.to(wrapper, {
           autoAlpha: 0,
-          duration: 0.25,
+          duration: 0.1,
           ease: "none",
         });
       },
