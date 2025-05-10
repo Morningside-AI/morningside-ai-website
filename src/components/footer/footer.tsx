@@ -147,7 +147,7 @@ const Footer = () => {
                 className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[40vw] bg-[#EDECE4] text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
             >
                 {/* Drawer Header */}
-                <div className="flex flex-col p-6">
+                <div className="flex flex-col px-4 md:px-6 py-6">
                     <div className="flex flex-row justify-end">
                         <button
                             onClick={toggleDrawer}
