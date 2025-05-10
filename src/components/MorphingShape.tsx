@@ -120,7 +120,7 @@ export default function MorphingShape() {
     ScrollTrigger.create({
       trigger: "#snappy-31",
       start: "top center",
-      end: "top 60%",
+      end: "top center",
       scroller: scrollContainer,
       onLeaveBack: () => {
         gsap.to(wrapper, {
