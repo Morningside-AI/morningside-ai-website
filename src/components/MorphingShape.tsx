@@ -22,8 +22,11 @@ export default function MorphingShape() {
   const smallSpheresRef = useRef<HTMLDivElement>(null);
   const [activeLabelIndex, setActiveLabelIndex] = useState<number | null>(null);
 
+  let refreshTimeout: ReturnType<typeof setTimeout>;
+
   const scrollToLabel = (targetId: string | null) => {
     if (!targetId) return;
+
     const scrollContainer = document.querySelector("#page-wrapper");
     const target = document.getElementById(targetId);
 
@@ -36,10 +39,34 @@ export default function MorphingShape() {
         scrollTop: scrollOffset,
         duration: 1,
         ease: "power2.inOut",
+        onComplete: () => {
+          clearTimeout(refreshTimeout);
+          refreshTimeout = setTimeout(() => {
+            ScrollTrigger.refresh();
+
+            // 🔥 Force-hide all slide text/title elements
+            const allTitles = document.querySelectorAll('[id^="snappy-"][id$="-title"]');
+            const allTexts = document.querySelectorAll('[id^="snappy-"][id$="-text"]');
+            allTitles.forEach((el) => (el as HTMLElement).style.opacity = "0");
+            allTexts.forEach((el) => (el as HTMLElement).style.opacity = "0");
+
+            // Optional: re-trigger visibility for the active section's text/title
+            const visibleTitle = document.querySelector(`#${targetId}-title`);
+            const visibleText = document.querySelector(`#${targetId}-text`);
+            if (visibleTitle && visibleText) {
+              gsap.to([visibleTitle, visibleText], {
+                opacity: 1,
+                x: 0,
+                duration: 0.3,
+                ease: "power2.out",
+              });
+            }
+
+          }, 100);
+        },
       });
     }
   };
-
 
 
   useEffect(() => {
@@ -1036,7 +1063,6 @@ export default function MorphingShape() {
             className={`
               text-left 
               ${index === 0 ? "hidden" : ""} 
-              cursor-pointer 
               transition-colors duration-300
               ${activeLabelIndex === index ? "text-white" : "text-gray-500"}
             `}
