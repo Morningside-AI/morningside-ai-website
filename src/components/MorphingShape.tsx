@@ -110,8 +110,8 @@ export default function MorphingShape() {
       onEnter: () => {
         gsap.to(wrapper, {
           autoAlpha: 1,
-          duration: 1,
-          delay: 0.5,
+          duration: 0.6,
+          delay: 0.2,
           ease: "none",
         });
       },
@@ -121,7 +121,7 @@ export default function MorphingShape() {
     ScrollTrigger.create({
       trigger: "#snappy-31",
       start: "top center",
-      end: "top center",
+      end: "top 60%",
       scroller: scrollContainer,
       onLeaveBack: () => {
         gsap.to(wrapper, {
