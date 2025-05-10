@@ -4,13 +4,43 @@ import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import * as flubber from "flubber";
+import "@/styles/fonts.css";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const LABELS = [
+  { title: "Introduction", index: 0, targetId: null },
+  { title: "Identify", index: 1, targetId: "snappy-32" },
+  { title: "Educate", index: 2, targetId: "snappy-33" },
+  { title: "Develop", index: 3, targetId: "snappy-34" },
+];
+
 
 export default function MorphingShape() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const smallSpheresRef = useRef<HTMLDivElement>(null);
+  const [activeLabelIndex, setActiveLabelIndex] = useState<number | null>(null);
+
+  const scrollToLabel = (targetId: string | null) => {
+    if (!targetId) return;
+    const scrollContainer = document.querySelector("#page-wrapper");
+    const target = document.getElementById(targetId);
+
+    if (scrollContainer && target) {
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const scrollOffset = targetRect.top - containerRect.top + scrollContainer.scrollTop;
+
+      gsap.to(scrollContainer, {
+        scrollTop: scrollOffset,
+        duration: 1,
+        ease: "power2.inOut",
+      });
+    }
+  };
+
+
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
@@ -265,6 +295,23 @@ export default function MorphingShape() {
       },
     });
 
+    [
+      { trigger: "#snappy-31", labelIndex: null },
+      { trigger: "#snappy-32", labelIndex: 1 },
+      { trigger: "#snappy-33", labelIndex: 2 },
+      { trigger: "#snappy-34", labelIndex: 3 },
+    ].forEach(({ trigger, labelIndex }) => {
+      ScrollTrigger.create({
+        trigger,
+        start: "top center",
+        end: "bottom center",
+        scroller: scrollContainer,
+        onEnter: () => setActiveLabelIndex(labelIndex),
+        onEnterBack: () => setActiveLabelIndex(labelIndex),
+        onLeave: () => setActiveLabelIndex(null),
+        onLeaveBack: () => setActiveLabelIndex(null),
+      });
+    });
 
   }, []);
 
@@ -973,6 +1020,33 @@ export default function MorphingShape() {
             </filter>
           </defs>
         </svg>
+      </div>
+
+      <div
+        className="absolute left-1/2 lg:left-2 lg:top-1/2 top-[5vh] 
+             -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 
+             -translate-y-1/2 flex flex-row lg:flex-col lg:items-start 
+             items-center justify-center lg:gap-2 gap-6 
+             px-4 md:px-8 lg:px-12 mx-auto 
+             pointer-events-auto z-[999]"
+      >
+        {LABELS.map((label, index) => (
+          <button
+            key={label.title}
+            className={`
+              text-left 
+              ${index === 0 ? "hidden" : ""} 
+              cursor-pointer 
+              transition-colors duration-300
+              ${activeLabelIndex === index ? "text-white" : "text-gray-500"}
+            `}
+            style={{
+              fontFamily: "DM-Mono-Light, monospace",
+            }}
+          >
+            {label.title}
+          </button>
+        ))}
       </div>
     </div>
   );
