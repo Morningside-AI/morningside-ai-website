@@ -43,13 +43,13 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         opacity: 1,
         scale: 1,
         stagger: 0.2,
-        duration: 1.0,
+        duration: 0.8,
       });
 
       tl.to(text, {
         opacity: 1,
         x: 130,
-        duration: 1.2,
+        duration: 0.8,
       }, "-=0.3");
 
 
@@ -74,7 +74,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           x: dx,
           y: dy,
           scale,
-          duration: 1.2,
+          duration: 1,
           ease: "power2.inOut",
         });
       });

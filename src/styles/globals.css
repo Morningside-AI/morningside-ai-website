@@ -331,3 +331,14 @@ body::-webkit-scrollbar-thumb:hover {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+.herovideobg{
+  background-image: url('../assets/images/backgrounds/ms.webp');
+}
+
+@media (max-width: 767px) {
+  .herovideobg {
+    background-image: url('../assets/images/backgrounds/ms2mob.webp');
+  }
+}
