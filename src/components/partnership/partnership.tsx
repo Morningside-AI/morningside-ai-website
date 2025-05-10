@@ -97,7 +97,6 @@ const Partnership = () => {
               <span className="">I</span>
               <span className=""> </span>
             </span>
-            <br className="block md:hidden" />
             <span className="white-silver-animated-text ">
               <span className="">s</span>
               <span className="">y</span>
@@ -108,7 +107,7 @@ const Partnership = () => {
               <span className="">s</span>
               <span className=""> </span>
             </span>
-            <br className="hidden lg:block" />
+            <br />
             <span className="white-silver-animated-text1">
               <span className="">a</span>
               <span className="">r</span>
