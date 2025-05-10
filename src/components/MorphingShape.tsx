@@ -133,8 +133,8 @@ export default function MorphingShape() {
     });
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
-    const fromY = isMobile ? 300 : isTablet ? 250 : 450;
-    const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-65vh";
+    const fromY = isMobile ? 300 : isTablet ? 250 : 400;
+    const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-45vh";
     const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
     const toScale = isMobile ? 0.4 : isTablet ? 0.5 : 0.4;
     gsap.timeline({
@@ -359,7 +359,7 @@ export default function MorphingShape() {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 294 294"
         fill="none"
-        className="absolute left-1/2 -bottom-10 md:-bottom-64 lg:-bottom-96 -translate-x-1/2 max-w-screen w-[90vw] md:w-[80vw] lg:w-[50vw] aspect-square"
+        className="absolute left-1/2 -bottom-10 md:-bottom-64 lg:-bottom-[20vh] -translate-x-1/2 max-w-screen w-[90vw] md:w-[80vw] lg:w-[40vw] aspect-square"
       >
         <g opacity={0.8} id="outerCircle">
           <g filter="url(#a)">
