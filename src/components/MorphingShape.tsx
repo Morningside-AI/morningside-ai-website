@@ -196,7 +196,6 @@ export default function MorphingShape() {
 
     gsap.set(clone, {
       scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
-      backgroundColor: "red",
       x: isSmallLaptop ? (cloneWidth / 2) + 11 : (cloneWidth / 2) + 10,
       yPercent: 0,
     });
