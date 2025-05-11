@@ -152,9 +152,9 @@ const Footer = () => {
             {/* Drawer Component */}
             <div
                 ref={drawerRef}
-                className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[90vh] md:h-[90vh] lg:h-[95vh] w-full lg:w-[40vw] px-2 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
+                className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[95vh] md:h-[95vh] lg:h-[95vh] w-full lg:w-[40vw] px-2 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
             >
-                <div className="shadow-2xl rounded-xl w-[98%] md:w-[98%] lg:w-full h-full bg-[#EDECE4] overflow-hidden">
+                <div className="shadow-2xl rounded-xl w-[96%] md:w-[97%] lg:w-full h-full bg-[#EDECE4] overflow-hidden">
                     {/* Drawer Header */}
                     <div className="flex flex-col px-4 md:px-6 py-2">
                         <div className="flex flex-row justify-end">
