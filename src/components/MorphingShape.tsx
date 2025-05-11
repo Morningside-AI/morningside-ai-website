@@ -204,8 +204,7 @@ export default function MorphingShape() {
       xPercent: -50,
       yPercent: 0,
       scale: scaling,
-      duration: 0.4,
-      delay: 0.1,
+      duration: 0.1,
       ease: "none",
     })
     ;
