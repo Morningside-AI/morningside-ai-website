@@ -116,6 +116,7 @@ export default function MorphingShape() {
         });
       },
     });
+    
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;

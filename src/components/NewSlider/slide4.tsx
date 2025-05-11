@@ -79,14 +79,14 @@ const Slide4 = () => {
         <p
           ref={titleRef}
           id="snappy-34-title"
-          className="text-6xl lg:text-8xl font-light opacity-0"
+          className="text-6xl lg:text-6xl font-light opacity-0"
         >
           Develop
         </p>
         <p
           ref={textRef}
           id="snappy-34-text"
-          className="text-lg lg:text-xl lg:w-6/12 text-[#A0A4A1] px-2 opacity-0"
+          className="text-lg lg:text-lg lg:w-6/12 text-[#A0A4A1] px-2 opacity-0"
         >
           We leverage our extensive experience and network to develop custom AI systems that are proven to move the needle inside your business.
         </p>

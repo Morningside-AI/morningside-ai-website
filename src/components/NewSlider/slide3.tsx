@@ -79,14 +79,14 @@ const Slide3 = () => {
         <p
           ref={titleRef}
           id="snappy-33-title"
-          className="text-6xl lg:text-8xl font-light opacity-0"
+          className="text-6xl lg:text-6xl font-light opacity-0"
         >
           Educate
         </p>
         <p
           ref={textRef}
           id="snappy-33-text"
-          className="text-lg lg:text-xl lg:w-6/12 text-[#A0A4A1] px-2 opacity-0"
+          className="text-lg lg:text-lg lg:w-6/12 text-[#A0A4A1] px-2 opacity-0"
         >
           We train and support your team with the right tools and know-how to embed AI across your entire organization.
         </p>
