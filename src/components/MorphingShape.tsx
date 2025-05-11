@@ -70,9 +70,9 @@ export default function MorphingShape() {
 
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 640;           // < 768px
-    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024; // 768px - 1023px
-    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1505; // 1024px - 1365px
+    const isMobile = window.innerWidth < 640;
+    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1440;
 
     const scrollContainer = document.querySelector("#page-wrapper");
     const svg = svgRef.current;
@@ -120,7 +120,7 @@ export default function MorphingShape() {
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;
-    const toY = isMobile ? "-37vh" : isTablet ? "-50vh" : "-45vh";
+    const toY = isMobile ? "-46vh" : isTablet ? "-50vh" : "-45vh";
     const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
     const toScale = isMobile ? 0.5 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
@@ -152,7 +152,7 @@ export default function MorphingShape() {
 
     gsap.set(clone, {
       scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
-      opacity : 0,
+      opacity: 0,
       yPercent: 0,
     });
 
@@ -167,7 +167,7 @@ export default function MorphingShape() {
       },
     });
 
-    
+
 
     tl.to([outerCircle, innerCircleHighlight], {
       opacity: 0,
@@ -186,8 +186,8 @@ export default function MorphingShape() {
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
-    const spacing = isMobile ? 65 : isTablet ? 80 : 165;
-    const scaling = isMobile ? 0.7 : isTablet ? 0.8 : 1;
+    const spacing = isMobile ? 70 : isTablet ? 140 : 165;
+    const scaling = isMobile ? 0.7 : isTablet ? 0.7 : 1;
 
     tl.to(smallSpheres, {
       x: (i) => (i - centerIndex) * spacing,
@@ -206,8 +206,7 @@ export default function MorphingShape() {
       scale: scaling,
       duration: 0.1,
       ease: "none",
-    })
-    ;
+    });
 
 
 
@@ -313,7 +312,7 @@ export default function MorphingShape() {
     // Then move spheres
     smallSpheres.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 2.8 : isTablet ? baseOffset / 2 : baseOffset / 2.1;
+      const offset = isMobile ? baseOffset / 2.8 : isTablet ? baseOffset / 2.4 : baseOffset / 2.1;
 
       let direction = -1; // default to upward
       if (index === 1) direction = 1; // second square down
@@ -330,21 +329,23 @@ export default function MorphingShape() {
     // Add the clone animation separately (4th clone → down)
     if (clone) {
       const baseOffset = clone.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 2 : baseOffset / 2.1;
+      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 2.1;
 
-      moveTimeline.fromTo(clone, 
+      moveTimeline.fromTo(clone,
         {
           ease: "power2.inOut",
+          y: offset,
           opacity: 0,
           duration: 1.6,
         },
         {
-        y: offset, // move down
-        ease: "power2.inOut",
-        opacity: 1,
-        duration: 1.6,
-      }
-    );
+          y: offset, // move down
+          ease: "power2.inOut",
+          backgroundColor: isTablet ? "red" : "transparent",
+          opacity: 1,
+          duration: 1.6,
+        }
+      );
     }
 
 
