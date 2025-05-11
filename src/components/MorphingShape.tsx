@@ -116,7 +116,7 @@ export default function MorphingShape() {
         });
       },
     });
-    
+
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;
@@ -187,21 +187,25 @@ export default function MorphingShape() {
     const smallSpheresArray = Array.from(smallSpheres);
 
     // Clone the 4th sphere (index 3)
-    const fourthSphere = smallSpheresArray[3];
-    const clone = fourthSphere?.cloneNode(true) as SVGSVGElement;
+    const fourthSphere = smallSpheresArray[3] as SVGGraphicsElement;
+    const clone = fourthSphere.cloneNode(true) as SVGGraphicsElement;
     clone.classList.add("clonedSphere");
-    fourthSphere?.parentElement?.appendChild(clone); // Add to the same container
+    fourthSphere.parentElement?.appendChild(clone);
 
-    // Ensure clone is styled identically and stacked correctly
-    gsap.set(clone, {
-      position: "absolute",
-      opacity: 0,
-      scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
-      top: "50%",
-      left: isMobile ? "68.5%" : isTablet ? "70%" : isSmallLaptop ? "72%" :  "71%",
-      xPercent: 0,
-      yPercent: 0,
-    });
+    if (fourthSphere && wrapper) {
+      const fourthRect = fourthSphere.getBoundingClientRect();
+      const wrapperRect = wrapper.getBoundingClientRect();
+    
+      // Get center of the original fourth sphere relative to wrapper
+      const leftOffset = fourthRect.left - wrapperRect.left + fourthRect.width / 2;
+    
+      gsap.set(clone, {
+        scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
+        translateX: "58.5%",
+        yPercent: 0,
+      });
+    }
+
 
 
     const circlePaths = document.querySelectorAll(".smallSphere .morph-shape");
