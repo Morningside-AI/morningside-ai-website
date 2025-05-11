@@ -192,19 +192,14 @@ export default function MorphingShape() {
     clone.classList.add("clonedSphere");
     fourthSphere.parentElement?.appendChild(clone);
 
-    if (fourthSphere && wrapper) {
-      const fourthRect = fourthSphere.getBoundingClientRect();
-      const wrapperRect = wrapper.getBoundingClientRect();
-    
-      // Get center of the original fourth sphere relative to wrapper
-      const leftOffset = fourthRect.left - wrapperRect.left + fourthRect.width / 2;
-    
-      gsap.set(clone, {
-        scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
-        translateX: "58.5%",
-        yPercent: 0,
-      });
-    }
+    const cloneWidth = clone.getBoundingClientRect().width;
+
+    gsap.set(clone, {
+      scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
+      backgroundColor: "red",
+      x: isSmallLaptop ? (cloneWidth / 2) + 11 : (cloneWidth / 2) + 10,
+      yPercent: 0,
+    });
 
 
 
