@@ -10,9 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LABELS = [
   { title: "Introduction", index: 0, targetId: null },
-  { title: "Identify", index: 1, targetId: "snappy-32" },
-  { title: "Educate", index: 2, targetId: "snappy-33" },
-  { title: "Develop", index: 3, targetId: "snappy-34" },
+  { title: "IDENTIFY", index: 1, targetId: "snappy-32" },
+  { title: "EDUCATE", index: 2, targetId: "snappy-33" },
+  { title: "DEVELOP", index: 3, targetId: "snappy-34" },
 ];
 
 

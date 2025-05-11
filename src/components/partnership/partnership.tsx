@@ -148,7 +148,7 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
+          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
             <FiArrowUpRight
               size={34}
@@ -169,38 +169,40 @@ const Partnership = () => {
       {/* Drawer Component */}
       <div
         ref={drawerRef}
-        className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[99vw] lg:w-[40vw] bg-[#EDECE4] text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
+        className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[90vh] md:h-[90vh] lg:h-[95vh] w-full lg:w-[40vw] px-2 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
       >
-        {/* Drawer Header */}
-        <div className="flex flex-col px-4 md:px-6 py-2">
-          <div className="flex flex-row justify-end">
-            <button
-              onClick={toggleDrawer}
-              className="p-2 hover:bg-gray-100 rounded-full"
-            >
-              <GoX size={24} className="text-gray-600" />
-            </button>
+        <div className="shadow-2xl rounded-xl w-[96%] md:w-[97%] lg:w-full h-full bg-[#EDECE4] overflow-hidden">
+          {/* Drawer Header */}
+          <div className="flex flex-col px-4 md:px-6 py-2">
+            <div className="flex flex-row justify-end">
+              <button
+                onClick={toggleDrawer}
+                className="p-2 hover:bg-gray-100 rounded-full"
+              >
+                <GoX size={24} className="text-gray-600" />
+              </button>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
+              {!success ? "Tell us where you’re at" : 'We’ve got It. The next move is ours.'}
+            </h2>
           </div>
-          <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
-            {!success ? "Tell us where you’re at" : 'We’ve got It. The next move is ours.'}
-          </h2>
-        </div>
 
-        {/* Scrollable Content Area */}
-        <div className="h-[calc(100%-56px)] overflow-y-auto px-4 py-1 md:px-6 md:py-2">
-          <div className="space-y-4 msaiDrawer">
-            {!success ? (
-              <>
-                <ContactForm setSuccess={setSuccess} />
-                <div className="h-[80px] w-full"></div>
-              </>
-            ) : (
-              <div className="flex flex-col">
-                <p className="w-full md:w-11/12 text-base">
-                  We&apos;re aligning the right experts on our end and will get back to you within a couple of days to explore how we can move forward together.
-                </p>
-              </div>
-            )}
+          {/* Scrollable Content Area */}
+          <div className="h-[calc(100%-56px)] overflow-y-auto px-4 py-1 md:px-6 md:py-2">
+            <div className="space-y-4 msaiDrawer">
+              {!success ? (
+                <>
+                  <ContactForm setSuccess={setSuccess} />
+                  <div className="h-[80px] w-full"></div>
+                </>
+              ) : (
+                <div className="flex flex-col">
+                  <p className="w-full md:w-11/12 text-base">
+                    We&apos;re aligning the right experts on our end and will get back to you within a couple of days to explore how we can move forward together.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
