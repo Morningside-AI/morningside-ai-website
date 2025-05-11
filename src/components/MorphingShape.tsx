@@ -142,6 +142,20 @@ export default function MorphingShape() {
     // appearance of small spheres ONLY from 32 → 33
     const smallSpheres = document.querySelectorAll(".smallSphere");
 
+    const smallSpheresArray = Array.from(smallSpheres);
+
+    // Clone the 4th sphere (index 3)
+    const fourthSphere = smallSpheresArray[3] as SVGGraphicsElement;
+    const clone = fourthSphere.cloneNode(true) as SVGGraphicsElement;
+    clone.classList.add("clonedSphere");
+    fourthSphere.parentElement?.appendChild(clone);
+
+    gsap.set(clone, {
+      scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
+      opacity : 0,
+      yPercent: 0,
+    });
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-32",
@@ -152,6 +166,8 @@ export default function MorphingShape() {
         scroller: scrollContainer,
       },
     });
+
+    
 
     tl.to([outerCircle, innerCircleHighlight], {
       opacity: 0,
@@ -182,23 +198,17 @@ export default function MorphingShape() {
       duration: 0.4,
       delay: 0.1,
       ease: "none",
-    });
-
-    const smallSpheresArray = Array.from(smallSpheres);
-
-    // Clone the 4th sphere (index 3)
-    const fourthSphere = smallSpheresArray[3] as SVGGraphicsElement;
-    const clone = fourthSphere.cloneNode(true) as SVGGraphicsElement;
-    clone.classList.add("clonedSphere");
-    fourthSphere.parentElement?.appendChild(clone);
-
-    const cloneWidth = clone.getBoundingClientRect().width;
-
-    gsap.set(clone, {
-      scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
-      x: isSmallLaptop ? (cloneWidth / 2) + 12 : (cloneWidth / 2) + 10,
+    }).to(clone, {
+      x: (3 - centerIndex) * spacing,
+      y: 0,
+      xPercent: -50,
       yPercent: 0,
-    });
+      scale: scaling,
+      duration: 0.4,
+      delay: 0.1,
+      ease: "none",
+    })
+    ;
 
 
 
