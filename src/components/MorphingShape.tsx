@@ -70,8 +70,8 @@ export default function MorphingShape() {
 
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;           // < 768px
-    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024; // 768px - 1023px
+    const isMobile = window.innerWidth < 640;           // < 768px
+    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024; // 768px - 1023px
     const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth < 1366; // 1024px - 1365px
 
     const scrollContainer = document.querySelector("#page-wrapper");
@@ -82,20 +82,6 @@ export default function MorphingShape() {
     const innerCircleHighlight = document.getElementById("innerCircleHighlight");
 
     if (!svg || !wrapper || !scrollContainer || !outerCircle || !innerCircle || !innerCircleHighlight) return;
-
-    // Create 4 clones of innerCircle
-    const clones: SVGGElement[] = [];
-    for (let i = 0; i < 4; i++) {
-      const clone = innerCircle.cloneNode(true) as SVGGElement;
-      clone.removeAttribute("id");
-      gsap.set(clone, {
-        opacity: 0,
-        scale: 0,
-        transformOrigin: "center",
-      });
-      svg.appendChild(clone);
-      clones.push(clone);
-    }
 
     // Initial state
     gsap.set(wrapper, { autoAlpha: 0 });
@@ -133,9 +119,9 @@ export default function MorphingShape() {
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;
-    const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-45vh";
+    const toY = isMobile ? "-37vh" : isTablet ? "-50vh" : "-45vh";
     const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
-    const toScale = isMobile ? 0.4 : isTablet ? 0.5 : 0.4;
+    const toScale = isMobile ? 0.5 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-31",
@@ -152,42 +138,70 @@ export default function MorphingShape() {
     );
 
 
-    // Clone appearance and small spheres ONLY from 32 → 33
+    // appearance of small spheres ONLY from 32 → 33
     const smallSpheres = document.querySelectorAll(".smallSphere");
-    gsap.timeline({
+
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-32",
-        start: "center center",
+        start: "top top",
         endTrigger: "#snappy-33",
-        end: "top 10%",
+        end: "+=100%",
         scrub: true,
         scroller: scrollContainer,
       },
+    });
+
+    tl.to([outerCircle, innerCircleHighlight], {
+      opacity: 0,
+      ease: "none",
+      duration: 0.2,
     })
-      .to([outerCircle, innerCircleHighlight], {
+      .to([innerCircle], {
         opacity: 0,
+        duration: 0.2,
         ease: "none",
-        duration: 0.8,
-      })
-      .to([...clones], {
-        scale: 1,
-        x: (index) => (index - 2) * 2,
-        y: 0,
-        ease: "none",
-        duration: 0.6,
       })
       .to(smallSpheresRef.current, {
         opacity: 1,
-        duration: 1,
-        delay: 0.6,
-        ease: "none"
-      })
-      .to([...clones, innerCircle], {
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.6,
-        ease: "none"
-      }, "<");
+        duration: 0.2,
+        ease: "none",
+      });
+
+    const centerIndex = Math.floor(smallSpheres.length / 2);
+    const spacing = isMobile ? 65 : isTablet ? 80 : 165;
+    const scaling = isMobile ? 0.7 : isTablet ? 0.8 : 1;
+
+    tl.to(smallSpheres, {
+      x: (i) => (i - centerIndex) * spacing,
+      y: 0,
+      xPercent: -50,
+      yPercent: 0,
+      scale: scaling,
+      duration: 0.4,
+      delay: 0.1,
+      ease: "none",
+    });
+
+    const smallSpheresArray = Array.from(smallSpheres);
+
+    // Clone the 4th sphere (index 3)
+    const fourthSphere = smallSpheresArray[3];
+    const clone = fourthSphere?.cloneNode(true) as SVGSVGElement;
+    clone.classList.add("clonedSphere");
+    fourthSphere?.parentElement?.appendChild(clone); // Add to the same container
+
+    // Ensure clone is styled identically and stacked correctly
+    gsap.set(clone, {
+      position: "absolute",
+      opacity: 0,
+      scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
+      top: "50%",
+      left: isMobile ? "68.5%" : isTablet ? "10%" : "71.5%",
+      xPercent: 0,
+      yPercent: 0,
+    });
+
 
     const circlePaths = document.querySelectorAll(".smallSphere .morph-shape");
     const highlightPaths = document.querySelectorAll(".smallSphere .morph-shape-highlight");
@@ -274,9 +288,11 @@ export default function MorphingShape() {
 
     // Animate gap reduction
     moveTimeline.to(smallSpheresRef.current, {
-      gap: isMobile ? "1.5rem" : isTablet ? "1.125rem" : "1.25rem", // Tailwind's gap-5 ≈ 1.25rem
-      scale: 0.8,
-      marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "1.5rem",
+      gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
+      scale: isMobile ? 1 : isTablet ? 1 : 0.85,
+      marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
+      marginTop: "4rem",
+      opacity: 1,
       duration: 0.2,
       ease: "power1.inOut",
     });
@@ -288,9 +304,13 @@ export default function MorphingShape() {
 
     // Then move spheres
     smallSpheres.forEach((sphere, index) => {
-      const direction = index % 2 === 0 ? 1 : -1;
-      const baseOffset = sphere.getBoundingClientRect().height / 3.52;
-      const offset = isMobile ? baseOffset * 2.2 : isTablet ? baseOffset * 2.1 : baseOffset;
+      const baseOffset = sphere.getBoundingClientRect().height;
+      const offset = isMobile ? baseOffset / 2.8 : isTablet ? baseOffset / 2 : baseOffset / 2.1;
+
+      let direction = -1; // default to upward
+      if (index === 1) direction = 1; // second square down
+      if (index === 3) direction = -3; // fourth original goes up
+      if (index === 4) direction = -1; // fifth square up
 
       moveTimeline.to(sphere, {
         y: direction * offset,
@@ -298,6 +318,20 @@ export default function MorphingShape() {
         duration: 1.6,
       }, "<");
     });
+
+    // Add the clone animation separately (4th clone → down)
+    if (clone) {
+      const baseOffset = clone.getBoundingClientRect().height;
+      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 2 : baseOffset / 2.1;
+
+      moveTimeline.to(clone, {
+        y: offset, // move down
+        ease: "power2.inOut",
+        opacity: 1,
+        duration: 1.6,
+      }, "<");
+    }
+
 
     ScrollTrigger.create({
       trigger: "#snappy-4",
@@ -481,14 +515,14 @@ export default function MorphingShape() {
         </defs>
       </svg>
 
-      <div ref={smallSpheresRef} className="absolute w-8/12 md:w-9/12 mt-16 md:mt-40 lg:mt-0 lg:w-7/12 h-fit flex flex-row items-center justify-center gap-11 md:gap-20 lg:gap-8 left-1/2 top-[24.5%] -translate-x-1/2 pointer-events-none opacity-0">
+      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 mt-10 md:mt-10 lg:-mt-4 lg:w-6/12 h-fit flex flex-row items-center justify-center gap-2 md:gap-4 lg:gap-4 left-1/2 top-[24.5%] lg:py-1 lg:px-1 -translate-x-1/2 pointer-events-none opacity-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 294 294"
+          viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-20"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-20"
         >
-          <g filter="url(#d)">
+          <g>
             <path
               fill="url(#e)"
               d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
@@ -550,59 +584,15 @@ export default function MorphingShape() {
               <stop offset={0.4} stopColor="#549876" />
               <stop offset={1} stopColor="#fff" />
             </linearGradient>
-            <filter
-              id="a"
-              width={294}
-              height={318.088}
-              x={0}
-              y={-24.088}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
-            <filter
-              id="d"
-              width={162}
-              height={186.088}
-              x={65}
-              y={41.912}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
           </defs>
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 294 294"
+          viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-35"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-35"
         >
-          <g filter="url(#d)">
+          <g>
             <path
               fill="url(#e)"
               d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
@@ -664,59 +654,15 @@ export default function MorphingShape() {
               <stop offset={0.4} stopColor="#549876" />
               <stop offset={1} stopColor="#fff" />
             </linearGradient>
-            <filter
-              id="a"
-              width={294}
-              height={318.088}
-              x={0}
-              y={-24.088}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
-            <filter
-              id="d"
-              width={162}
-              height={186.088}
-              x={65}
-              y={41.912}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
           </defs>
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 294 294"
+          viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-50"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-50"
         >
-          <g filter="url(#d)">
+          <g>
             <path
               fill="url(#e)"
               d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
@@ -778,59 +724,15 @@ export default function MorphingShape() {
               <stop offset={0.4} stopColor="#549876" />
               <stop offset={1} stopColor="#fff" />
             </linearGradient>
-            <filter
-              id="a"
-              width={294}
-              height={318.088}
-              x={0}
-              y={-24.088}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
-            <filter
-              id="d"
-              width={162}
-              height={186.088}
-              x={65}
-              y={41.912}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
           </defs>
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 294 294"
+          viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-75"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-75"
         >
-          <g filter="url(#d)">
+          <g>
             <path
               fill="url(#e)"
               d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
@@ -892,59 +794,15 @@ export default function MorphingShape() {
               <stop offset={0.4} stopColor="#549876" />
               <stop offset={1} stopColor="#fff" />
             </linearGradient>
-            <filter
-              id="a"
-              width={294}
-              height={318.088}
-              x={0}
-              y={-24.088}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
-            <filter
-              id="d"
-              width={162}
-              height={186.088}
-              x={65}
-              y={41.912}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
           </defs>
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 294 294"
+          viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere w-80 aspect-square scale-500 md:scale-350 lg:scale-200 opacity-100"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-100"
         >
-          <g filter="url(#d)">
+          <g>
             <path
               fill="url(#e)"
               d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
@@ -1006,50 +864,6 @@ export default function MorphingShape() {
               <stop offset={0.4} stopColor="#549876" />
               <stop offset={1} stopColor="#fff" />
             </linearGradient>
-            <filter
-              id="a"
-              width={294}
-              height={318.088}
-              x={0}
-              y={-24.088}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
-            <filter
-              id="d"
-              width={162}
-              height={186.088}
-              x={65}
-              y={41.912}
-              colorInterpolationFilters="sRGB"
-              filterUnits="userSpaceOnUse"
-            >
-              <feFlood floodOpacity={0} result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-              <feColorMatrix
-                in="SourceAlpha"
-                result="hardAlpha"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-              />
-              <feOffset dy={-24.088} />
-              <feGaussianBlur stdDeviation={18.066} />
-              <feComposite in2="hardAlpha" k2={-1} k3={1} operator="arithmetic" />
-              <feColorMatrix values="0 0 0 0 0.536175 0 0 0 0 0.741662 0 0 0 0 0.638918 0 0 0 0.7 0" />
-              <feBlend in2="shape" result="effect1_innerShadow_0_1" />
-            </filter>
           </defs>
         </svg>
       </div>

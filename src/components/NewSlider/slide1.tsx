@@ -26,16 +26,15 @@ const Slide1 = () => {
           <span className="white-silver-animated-text1">spend </span>
           <span className="white-silver-animated-text2">our </span>
           <span className="white-silver-animated-text2">days </span>
-          <br className="block md:hidden" />
           <span className="white-silver-animated-text1">guiding </span>
-          <br className="hidden lg:block" />
           <span className="white-silver-animated-text1">companies </span>
-          <br className="block md:hidden" />
+          <br className="hidden lg:block"/>
           <span className="white-silver-animated-text1">through </span>
-          <br className="hidden lg:block" />
-          <span className="white-silver-animated-text2">these </span>
-          <span className="green-text">three </span>
-          <span className="white-silver-animated-text1">things</span>
+          <span className="white-silver-animated-text2">our </span>
+          <span className="white-silver-animated-text">3-step </span>
+          <span className="white-silver-animated-text1">AI </span>
+          <span className="white-silver-animated-text2">Transformation </span>
+          <span className="white-silver-animated-text">Journey</span>
         </p>
         <div className="w-full opacity-0 flex justify-center">
           <Step3 className="w-[50vw] h-[50vw] lg:w-[35vw] lg:h-[20vw]" />
