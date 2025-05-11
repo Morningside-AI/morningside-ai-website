@@ -72,7 +72,7 @@ export default function MorphingShape() {
   useEffect(() => {
     const isMobile = window.innerWidth < 640;           // < 768px
     const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024; // 768px - 1023px
-    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth < 1366; // 1024px - 1365px
+    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1505; // 1024px - 1365px
 
     const scrollContainer = document.querySelector("#page-wrapper");
     const svg = svgRef.current;
@@ -198,7 +198,7 @@ export default function MorphingShape() {
       opacity: 0,
       scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
       top: "50%",
-      left: isMobile ? "68.5%" : isTablet ? "70%" : isSmallLaptop ? "76%" :  "71%",
+      left: isMobile ? "68.5%" : isTablet ? "70%" : isSmallLaptop ? "72%" :  "71%",
       xPercent: 0,
       yPercent: 0,
     });
