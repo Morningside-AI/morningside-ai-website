@@ -329,12 +329,19 @@ export default function MorphingShape() {
       const baseOffset = clone.getBoundingClientRect().height;
       const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 2 : baseOffset / 2.1;
 
-      moveTimeline.to(clone, {
+      moveTimeline.fromTo(clone, 
+        {
+          ease: "power2.inOut",
+          opacity: 0,
+          duration: 1.6,
+        },
+        {
         y: offset, // move down
         ease: "power2.inOut",
         opacity: 1,
         duration: 1.6,
-      }, "<");
+      }
+    );
     }
 
 
