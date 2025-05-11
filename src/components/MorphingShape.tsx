@@ -341,7 +341,6 @@ export default function MorphingShape() {
         {
           y: offset, // move down
           ease: "power2.inOut",
-          backgroundColor: isTablet ? "red" : "transparent",
           opacity: 1,
           duration: 1.6,
         }
