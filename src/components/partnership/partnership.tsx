@@ -172,7 +172,7 @@ const Partnership = () => {
         className="fixed right-0 md:right-0 top-5 md:top-[2.5vh] h-[85vh] md:h-[95vh] w-full md:w-[99vw] lg:w-[40vw] bg-[#EDECE4] text-black transform translate-x-full shadow-2xl z-50 rounded-xl overflow-hidden"
       >
         {/* Drawer Header */}
-        <div className="flex flex-col px-4 md:px-6 py-6">
+        <div className="flex flex-col px-4 md:px-6 py-2">
           <div className="flex flex-row justify-end">
             <button
               onClick={toggleDrawer}
@@ -181,8 +181,8 @@ const Partnership = () => {
               <GoX size={24} className="text-gray-600" />
             </button>
           </div>
-          <h2 className="text-3xl md:text-4xl font-medium pt-2 text-left">
-            {!success ? 'Get In Touch' : 'Thank you'}
+          <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
+            {!success ? "Tell us where you’re at" : 'We’ve got It. The next move is ours.'}
           </h2>
         </div>
 
@@ -196,9 +196,8 @@ const Partnership = () => {
               </>
             ) : (
               <div className="flex flex-col">
-                <p className="w-full md:w-9/12 text-base md:text-inherit">
-                  Thank you for sending your inquiry, our sales team will get in touch
-                  with you within a couple of days.
+                <p className="w-full md:w-11/12 text-base">
+                  We&apos;re aligning the right experts on our end and will get back to you within a couple of days to explore how we can move forward together.
                 </p>
               </div>
             )}
