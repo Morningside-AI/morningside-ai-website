@@ -198,7 +198,7 @@ export default function MorphingShape() {
       opacity: 0,
       scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
       top: "50%",
-      left: isMobile ? "68.5%" : isTablet ? "70%" : "71%",
+      left: isMobile ? "68.5%" : isTablet ? "70%" : isSmallLaptop ? "76%" :  "71%",
       xPercent: 0,
       yPercent: 0,
     });
