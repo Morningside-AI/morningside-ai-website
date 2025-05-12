@@ -120,9 +120,9 @@ export default function MorphingShape() {
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;
-    const toY = isMobile ? "-46vh" : isTablet ? "-50vh" : "-45vh";
+    const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-45vh";
     const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
-    const toScale = isMobile ? 0.5 : isTablet ? 0.6 : 0.4;
+    const toScale = isMobile ? 0.35 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-31",
