@@ -120,7 +120,7 @@ export default function MorphingShape() {
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;
-    const toY = isMobile ? "-39vh" : isTablet ? "-50vh" : "-42vh";
+    const toY = isMobile ? "-46vh" : isTablet ? "-50vh" : "-45vh";
     const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
     const toScale = isMobile ? 0.5 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
@@ -295,9 +295,9 @@ export default function MorphingShape() {
     // Animate gap reduction
     masterTimeline.to(smallSpheresRef.current, {
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
-      scale: isMobile ? 0.9 : isTablet ? 0.9 : 0.65,
+      scale: isMobile ? 1 : isTablet ? 1 : 0.82,
       marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
-      marginTop: "2rem",
+      marginTop: "4rem",
       opacity: 1,
       duration: 0.2,
       delay: 0.2,

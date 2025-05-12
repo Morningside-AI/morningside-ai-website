@@ -78,7 +78,7 @@ const Slide2 = () => {
         <p
           ref={titleRef}
           id="snappy-32-title"
-          className="text-6xl lg:text-8xl font-light opacity-0"
+          className="text-6xl lg:text-7xl font-light opacity-0"
         >
           Identify
         </p>
