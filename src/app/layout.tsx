@@ -6,8 +6,8 @@ import { type Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "Morningside AI",
-  description: "Morningside AI",
+  title: "Morningside AI | AI Transformation",
+  description: "Morningside AI is fast-paced AI boutique helping companies evolve into AI-first organisations through AI opportunity mapping, team upskilling, and custom AI systems development.",
   icons: [
     {
       rel: "icon",
@@ -20,6 +20,9 @@ export const metadata: Metadata = {
     { rel: "apple-touch-icon", sizes: "180x180", url: "/apple-touch-icon.png" },
   ],
   manifest: "/site.webmanifest",
+  other: {
+    keywords: "AI, AI consulting, AI development, AI education, AI enterprise",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +30,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="relative bg-black" style={{ fontFamily: "DM-Sans" }}>
+      <body className="relative w-screen bg-black" style={{ fontFamily: "DM-Sans" }}>
         <Analytics />
         <AnimatedMeshBackground />
         {children}

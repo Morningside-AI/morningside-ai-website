@@ -12,7 +12,6 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
   const preloaderRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const logoWrapperRef = useRef<HTMLDivElement>(null);
-  const welcomeTextRef = useRef<HTMLParagraphElement>(null);
   const [isAnimating, setIsAnimating] = useState(true);
 
   useLayoutEffect(() => {
@@ -44,21 +43,15 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         opacity: 1,
         scale: 1,
         stagger: 0.2,
-        duration: 1.0,
+        duration: 0.8,
       });
 
       tl.to(text, {
         opacity: 1,
         x: 130,
-        duration: 1.2,
+        duration: 0.8,
       }, "-=0.3");
 
-      tl.to(welcomeTextRef.current, {
-        opacity: 0,
-        x: 20,
-        duration: 0.5,
-        delay: 0.5,
-      });
 
       tl.call(() => {
         const el = logoWrapperRef.current;
@@ -81,7 +74,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
           x: dx,
           y: dy,
           scale,
-          duration: 1.2,
+          duration: 1,
           ease: "power2.inOut",
         });
       });
@@ -104,9 +97,6 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
       className="fixed pt-4 inset-0 z-50 flex items-center justify-center bg-transparent text-white"
     >
       <div className="absolute inset-0 bg-black w-screen h-screen z-10 logoCover"></div>
-      <p className="text-white text-[42.4px] absolute top-10 left-10" ref={welcomeTextRef}>
-        Welcome to
-      </p>
       <div
         ref={logoWrapperRef}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[400px]"

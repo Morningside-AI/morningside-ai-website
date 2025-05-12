@@ -3,6 +3,7 @@
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers, type FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { IoMdAlert } from 'react-icons/io';
+import { PiArrowsClockwise } from "react-icons/pi";
 
 interface FormValues {
     name: string;
@@ -23,7 +24,10 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
     role: Yup.string().min(2, 'Role must be at least 2 characters').required('Required'),
     company_name: Yup.string().min(2, 'Company name must be at least 2 characters').required('Required'),
-    company_website: Yup.string().min(2, 'Company website must be at least 2 characters').required('Required'),
+    company_website: Yup.string()
+        .min(2, 'Company website must be at least 2 characters')
+        .url('Enter a valid URL (e.g. https://example.com)')
+        .required('Required'),
     company_size: Yup.string().required('Required'),
     companys_revenue: Yup.string().required('Required'),
     project_budget: Yup.string().required('Required'),
@@ -67,7 +71,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                 <div className="w-full flex flex-col lg:flex-row gap-2 mb-4">
                     <div className="w-full lg:w-1/2 flex flex-col gap-2">
                         <Label name="What is your name?" field="name" />
-                        <Field type="text" name="name" placeholder="name" className="border" />
+                        <Field type="text" name="name" placeholder="Name" className="border" />
                         <Error name="name" />
                     </div>
                     {/* Email */}
@@ -94,7 +98,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                     </div>
                     <div className="w-full lg:w-1/2 flex flex-col gap-2">
                         <Label name="Company Website" field="company_website" />
-                        <Field type="text" name="company_website" placeholder="Enter company website" className="border" />
+                        <Field type="url" name="company_website" placeholder="Enter company website" className="border" />
                         <Error name="company_website" />
                     </div>
                 </div>
@@ -162,9 +166,16 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full text-white cursor-pointer py-2 px-4 rounded-full bg-[#67AC88] hover:bg-[#67AC88]/70"
+                    className={`w-fit text-black cursor-pointer py-2 px-4 rounded-full border border-black ${isSubmitting ? 'opacity-50' : ''}`}
                 >
-                    {isSubmitting ? 'Sending...' : 'Send'}
+                    {isSubmitting ? (
+                        <div className="flex flex-row items-center gap-2">
+                            <PiArrowsClockwise size={16} className="animate-spin" />
+                            Sending...
+                        </div>
+                    ) : (
+                        'Send inquiry'
+                    )}
                 </button>
             </Form>
         )}
