@@ -24,7 +24,7 @@ const HoverVideo = () => {
                     ref={headingRef}
                     className="text-3xl md:text-4xl lg:text-5xl whitespace-pre-wrap w-full "
                 >
-                    Meet Our Founders
+                    Coming Soon
                 </p>
 
                 <div className="w-full h-fit flex flex-row items-end justify-end">
