@@ -80,7 +80,6 @@ const Footer = () => {
                                 <span className="text-white">your&nbsp;</span>
                                 <span className="green-text">AI&nbsp;</span>
                                 <span className="green-text">adoption&nbsp;</span>
-                                <br />
                                 <span className="text-white">journey.</span>
                             </p>
                         </div>
