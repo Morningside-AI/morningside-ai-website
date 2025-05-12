@@ -295,9 +295,9 @@ export default function MorphingShape() {
     // Animate gap reduction
     masterTimeline.to(smallSpheresRef.current, {
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
-      scale: isMobile ? 1 : isTablet ? 1 : 0.85,
+      scale: isMobile ? 1 : isTablet ? 1 : 0.65,
       marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
-      marginTop: "4rem",
+      marginTop: "2rem",
       opacity: 1,
       duration: 0.2,
       delay: 0.2,

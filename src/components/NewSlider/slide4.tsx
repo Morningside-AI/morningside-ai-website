@@ -79,7 +79,7 @@ const Slide4 = () => {
         <p
           ref={titleRef}
           id="snappy-34-title"
-          className="text-6xl lg:text-6xl font-light opacity-0"
+          className="text-6xl lg:text-8xl font-light opacity-0"
         >
           Develop
         </p>
