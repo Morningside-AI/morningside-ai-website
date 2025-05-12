@@ -78,19 +78,16 @@ const Footer = () => {
                             <p className="w-full lg:text-5xl text-5xl text-left leading-tight">
                                 <span className="white-silver-animated-text">You&apos;re&nbsp;</span>
                                 <span className="white-silver-animated-text">in&nbsp;</span>
-                                <span className="white-silver-animated-text">good&nbsp;</span>
+                                <span className="green-text">good&nbsp;</span>
                                 <span className="white-silver-animated-text">hands.</span>
                             </p>
-                            <p className="w-full lg:text-3xl text-2xl text-left leading-tight">
-                                <span className="white-silver-animated-text">We&apos;re&nbsp;</span>
-                                <span className="white-silver-animated-text">here&nbsp;</span>
-                                <span className="white-silver-animated-text">to&nbsp;</span>
-                                <span className="white-silver-animated-text">support&nbsp;</span>
-                                <span className="white-silver-animated-text">your&nbsp;</span>
-                                <span className="white-silver-animated-text">next&nbsp;</span>
-                                <span className="white-silver-animated-text">step&nbsp;</span>
-                                <span className="white-silver-animated-text">with&nbsp;</span>
-                                <span className="white-silver-animated-text">AI.</span>
+                            <p className="w-full lg:text-3xl text-2xl text-left text-white leading-tight">
+                                <span className="">Let&apos;s&nbsp;</span>
+                                <span className="">accelerate&nbsp;</span>
+                                <span className="">your&nbsp;</span>
+                                <span className="">AI&nbsp;</span>
+                                <span className="">adoption&nbsp;</span>
+                                <span className="">journey.</span>
                             </p>
                         </div>
                         <Logo className="w-48 h-0 lg:h-10 mt-0 lg:mt-4 hidden lg:block" />

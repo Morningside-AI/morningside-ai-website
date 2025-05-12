@@ -396,6 +396,52 @@ export default function MorphingShape() {
 
   }, []);
 
+  useEffect(() => {
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+  
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const wrapper = wrapperRef.current;
+        const svg = svgRef.current;
+        const scrollContainer = document.querySelector("#page-wrapper");
+        const snappy34 = document.querySelector("#snappy-34");
+  
+        if (!wrapper || !svg || !scrollContainer || !snappy34) return;
+  
+        // Recenter SVG
+        gsap.set(svg, {
+          x: 0,
+          xPercent: -50,
+        });
+  
+        // Calculate scroll position within scroll container
+        const scrollTop = scrollContainer.scrollTop;
+  
+        // Get snappy-34 position relative to scrollContainer
+        const containerTop = scrollContainer.getBoundingClientRect().top;
+        const snappy34Rect = snappy34.getBoundingClientRect();
+        const snappy34OffsetTop = snappy34Rect.top - containerTop + scrollTop;
+        const snappy34Bottom = snappy34OffsetTop + (snappy34 as HTMLElement).offsetHeight;
+  
+        const shouldHideWrapper = scrollTop >= snappy34Bottom;
+  
+        gsap.set(wrapper, { autoAlpha: shouldHideWrapper ? 0 : 1 });
+  
+        ScrollTrigger.refresh();
+      }, 100); // debounce
+    };
+  
+    window.addEventListener("resize", handleResize);
+    return () => {
+      clearTimeout(resizeTimeout);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  
+  
+  
+  
 
   return (
     <div ref={wrapperRef}

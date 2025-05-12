@@ -40,7 +40,7 @@ const Center = () => {
         ref={subTextRef}
         className="text-xl lg:text-2xl w-10/12 lg:w-full text-center text-[#C0C0C0]"
       >
-        One trusted partner to accelerate your transition to an AI-first company.
+        Your trusted partner in becoming an AI-first company.
       </p>
     </div>
   );
