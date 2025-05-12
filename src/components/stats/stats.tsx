@@ -130,7 +130,7 @@ function Stats({ scrollContainerRef }: {
         <StatsBox
           number={17}
           numberText="M+"
-          text="17M+ Professionals upskilled in AI via our platforms"
+          text="Professionals upskilled in AI via our platforms"
           link="https://www.youtube.com/@LiamOttley"
           linkText="Watch our content here"
           scrollContainerRef={scrollContainerRef}
@@ -138,7 +138,7 @@ function Stats({ scrollContainerRef }: {
         <StatsBox
           number={435}
           numberText="+"
-          text="435 AI Opportunities identified for businesses"
+          text="AI Opportunities identified for businesses"
           link=""
           linkText=""
           scrollContainerRef={scrollContainerRef}
@@ -146,7 +146,7 @@ function Stats({ scrollContainerRef }: {
         <StatsBox
           number={55}
           numberText="+"
-          text="55+ Bespoke AI solutions developed"
+          text="Bespoke AI solutions developed"
           link=""
           linkText=""
           scrollContainerRef={scrollContainerRef}

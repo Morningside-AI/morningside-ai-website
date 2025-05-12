@@ -32,8 +32,8 @@ const Slide1 = () => {
           <span className="white-silver-animated-text1">through </span>
           <span className="white-silver-animated-text2">our </span>
           <span className="white-silver-animated-text">3-step </span>
-          <span className="white-silver-animated-text1">AI </span>
-          <span className="white-silver-animated-text2">Transformation </span>
+          <span className="green-text">AI </span>
+          <span className="green-text">Transformation </span>
           <span className="white-silver-animated-text">Journey</span>
         </p>
         <div className="w-full opacity-0 flex justify-center">

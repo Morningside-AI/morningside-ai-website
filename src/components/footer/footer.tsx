@@ -76,18 +76,12 @@ const Footer = () => {
                     <div className="w-full h-fit flex flex-row justify-between" ref={textRef}>
                         <div className="w-full h-fit flex flex-col gap-1">
                             <p className="w-full lg:text-5xl text-5xl text-left leading-tight">
-                                <span className="white-silver-animated-text">You&apos;re&nbsp;</span>
-                                <span className="white-silver-animated-text">in&nbsp;</span>
-                                <span className="green-text">good&nbsp;</span>
-                                <span className="white-silver-animated-text">hands.</span>
-                            </p>
-                            <p className="w-full lg:text-3xl text-2xl text-left text-white leading-tight">
-                                <span className="">Let&apos;s&nbsp;</span>
-                                <span className="">accelerate&nbsp;</span>
-                                <span className="">your&nbsp;</span>
-                                <span className="">AI&nbsp;</span>
-                                <span className="">adoption&nbsp;</span>
-                                <span className="">journey.</span>
+                                <span className="text-white">Accelerate&nbsp;</span>
+                                <span className="text-white">your&nbsp;</span>
+                                <span className="green-text">AI&nbsp;</span>
+                                <span className="green-text">adoption&nbsp;</span>
+                                <br />
+                                <span className="text-white">journey.</span>
                             </p>
                         </div>
                         <Logo className="w-48 h-0 lg:h-10 mt-0 lg:mt-4 hidden lg:block" />
@@ -163,7 +157,7 @@ const Footer = () => {
                             </button>
                         </div>
                         <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
-                            {!success ? "Tell us where you’re at" : 'We’ve got It. The next move is ours.'}
+                            {!success ? "Tell us where you’re at" : 'We’ve got it. The next move is ours.'}
                         </h2>
                     </div>
 

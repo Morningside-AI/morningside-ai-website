@@ -209,6 +209,16 @@ export default function MorphingShape() {
     });
 
 
+    const masterTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#snappy-33",
+        start: "center center",
+        endTrigger: "#snappy-34",
+        end: "top 10%",
+        scrub: true,
+        scroller: scrollContainer,
+      },
+    });
 
     const circlePaths = document.querySelectorAll(".smallSphere .morph-shape");
     const highlightPaths = document.querySelectorAll(".smallSphere .morph-shape-highlight");
@@ -218,7 +228,7 @@ export default function MorphingShape() {
     const squareShape = `M78,66 H216 C222.627,66 228,71.373 228,78 V216 C228,222.627 222.627,228 216,228 H78 C71.373,228 66,222.627 66,216 V78 C66,71.373 71.373,66 78,66 Z`;
 
     smallSpheres.forEach((sphere) => {
-      gsap.to(sphere, {
+      masterTimeline.to(sphere, {
         opacity: 1,
         duration: 0.3,
         ease: "power1.out",
@@ -239,17 +249,9 @@ export default function MorphingShape() {
       }) as (t: number) => string;
 
 
-      gsap.to(path, {
+      masterTimeline.to(path, {
         duration: 1,
         ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: "#snappy-33",
-          start: "center center",
-          endTrigger: "#snappy-34",
-          end: "top 10%",
-          scrub: true,
-          scroller: scrollContainer,
-        },
         onUpdate: function () {
           const tween = this as unknown as gsap.core.Tween;
           const progress = tween.progress();
@@ -263,50 +265,43 @@ export default function MorphingShape() {
         maxSegmentLength: 2,
       }) as (t: number) => string;
 
-      gsap.to(path, {
+      masterTimeline.to(path, {
         duration: 1,
         ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: "#snappy-33",
-          start: "center center",
-          endTrigger: "#snappy-34",
-          end: "top 10%",
-          scrub: true,
-          scroller: scrollContainer,
-        },
         onUpdate: function () {
           const tween = this as unknown as gsap.core.Tween;
           const progress = tween.progress();
           (path as SVGPathElement).setAttribute("d", interpolator(progress));
         },
-      });
+      }, "<");
     });
 
     const moveTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-33",
-        start: "center center",
+        start: "bottom bottom",
         endTrigger: "#snappy-34",
-        end: "top 10%",
-        scrub: true,
+        end: "top top",
+        scrub: 0.5,
         scroller: scrollContainer,
       },
     });
 
+    // Delay visually (without scroll delay, use dummy animation)
+    masterTimeline.to({}, {
+      duration: 0.2, // pause to hold square shape
+    });
+
     // Animate gap reduction
-    moveTimeline.to(smallSpheresRef.current, {
+    masterTimeline.to(smallSpheresRef.current, {
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
       scale: isMobile ? 1 : isTablet ? 1 : 0.85,
       marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
       marginTop: "4rem",
       opacity: 1,
       duration: 0.2,
+      delay: 0.2,
       ease: "power1.inOut",
-    });
-
-    // Delay visually (without scroll delay, use dummy animation)
-    moveTimeline.to({}, {
-      duration: 0.2, // pause to hold square shape
     });
 
     // Then move spheres
@@ -319,11 +314,11 @@ export default function MorphingShape() {
       if (index === 3) direction = -3; // fourth original goes up
       if (index === 4) direction = -1; // fifth square up
 
-      moveTimeline.to(sphere, {
+      masterTimeline.to(sphere, {
         y: direction * offset,
         ease: "power2.inOut",
         duration: 1.6,
-      }, "<");
+      });
     });
 
     // Add the clone animation separately (4th clone → down)
@@ -331,7 +326,7 @@ export default function MorphingShape() {
       const baseOffset = clone.getBoundingClientRect().height;
       const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 2.1;
 
-      moveTimeline.fromTo(clone,
+      masterTimeline.fromTo(clone,
         {
           ease: "power2.inOut",
           y: offset,

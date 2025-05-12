@@ -87,7 +87,7 @@ const Slide2 = () => {
           id="snappy-32-text"
           className="text-lg lg:text-lg lg:w-6/12 text-[#A0A4A1] opacity-0 px-2"
         >
-          We help you identify high-impact AI opportunities and build a step-by-step AI Transformation strategy to bring them to life.
+          We help you identify high-impact AI opportunities and <br className="hidden lg:block"/>build a step-by-step AI Transformation strategy to bring them to life.
         </p>
       </div>
     </div>

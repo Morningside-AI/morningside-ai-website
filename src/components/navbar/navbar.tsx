@@ -135,7 +135,7 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
               </button>
             </div>
             <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
-              {!success ? "Tell us where you’re at" : 'We’ve got It. The next move is ours.'}
+              {!success ? "Tell us where you’re at" : 'We’ve got it. The next move is ours.'}
             </h2>
           </div>
 
