@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import Logo from "@/assets/images/morningside-assets/logo-FullWhite.svg";
@@ -64,6 +64,74 @@ const Footer = () => {
     const handleContactClick = () => {
         window.location.href = "/contact"; // This forces a full page reload
     };
+
+    useEffect(() => {
+        const footerEl = footerRef.current;
+        const masterWrapper = document.getElementById("masterAnimationWrapper");
+
+        if (footerEl && masterWrapper) {
+            ScrollTrigger.create({
+                trigger: footerEl,
+                start: "top center",
+                end: "bottom center",
+                scroller: "#page-wrapper",
+                onEnter: () => {
+                    gsap.killTweensOf(masterWrapper);
+                    gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+                },
+                onEnterBack: () => {
+                    gsap.killTweensOf(masterWrapper);
+                    gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+                },
+            });
+        }
+
+        // ✅ If the section is already in view (after resize), hide wrapper
+        const scroller = document.querySelector("#page-wrapper");
+        if (scroller && footerEl) {
+            const rect = footerEl.getBoundingClientRect();
+            const containerRect = scroller.getBoundingClientRect();
+
+            const isVisible =
+                rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+
+            if (isVisible) {
+                gsap.killTweensOf(masterWrapper);
+                gsap.set(masterWrapper, { autoAlpha: 0 });
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => {
+          ScrollTrigger.refresh();
+      
+          // Defer visibility check to the next animation frame
+          requestAnimationFrame(() => {
+            const footerEl = footerRef.current;
+            const masterWrapper = document.getElementById("masterAnimationWrapper");
+            const scroller = document.querySelector("#page-wrapper");
+      
+            if (scroller && footerEl && masterWrapper) {
+              const rect = footerEl.getBoundingClientRect();
+              const containerRect = scroller.getBoundingClientRect();
+      
+              const isVisible =
+                rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+      
+              if (isVisible) {
+                gsap.killTweensOf(masterWrapper);
+                gsap.set(masterWrapper, { autoAlpha: 0 });
+              }
+            }
+          });
+        };
+      
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+      }, []);
+      
+
 
     return (
         <>

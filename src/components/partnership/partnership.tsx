@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import { FiArrowUpRight } from "react-icons/fi";
@@ -62,6 +62,74 @@ const Partnership = () => {
 
     setIsDrawerOpen(!isDrawerOpen);
   }, [isDrawerOpen]);
+
+  useEffect(() => {
+    const centerEl = centerRef.current;
+    const masterWrapper = document.getElementById("masterAnimationWrapper");
+
+    if (centerEl && masterWrapper) {
+      ScrollTrigger.create({
+        trigger: centerEl,
+        start: "top center",
+        end: "bottom center",
+        scroller: "#page-wrapper",
+        onEnter: () => {
+          gsap.killTweensOf(masterWrapper);
+          gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+        },
+        onEnterBack: () => {
+          gsap.killTweensOf(masterWrapper);
+          gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+        },
+      });
+    }
+
+    // ✅ If the section is already in view (after resize), hide wrapper
+    const scroller = document.querySelector("#page-wrapper");
+    if (scroller && centerEl) {
+      const rect = centerEl.getBoundingClientRect();
+      const containerRect = scroller.getBoundingClientRect();
+
+      const isVisible =
+        rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+
+      if (isVisible) {
+        gsap.killTweensOf(masterWrapper);
+        gsap.set(masterWrapper, { autoAlpha: 0 });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+
+      // Defer visibility check to after layout adjustments
+      requestAnimationFrame(() => {
+        const centerEl = centerRef.current;
+        const masterWrapper = document.getElementById("masterAnimationWrapper");
+        const scroller = document.querySelector("#page-wrapper");
+
+        if (scroller && centerEl && masterWrapper) {
+          const rect = centerEl.getBoundingClientRect();
+          const containerRect = scroller.getBoundingClientRect();
+
+          const isVisible =
+            rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+
+          if (isVisible) {
+            gsap.killTweensOf(masterWrapper);
+            gsap.set(masterWrapper, { autoAlpha: 0 });
+          }
+        }
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+
 
   return (
     <>

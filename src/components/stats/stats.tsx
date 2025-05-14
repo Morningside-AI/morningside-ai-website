@@ -65,7 +65,74 @@ function Stats({ scrollContainerRef }: {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, [scrollContainerRef]);
-  ;
+
+  useEffect(() => {
+    const statsEl = statsRef.current;
+    const masterWrapper = document.getElementById("masterAnimationWrapper");
+
+    if (statsEl && masterWrapper) {
+      ScrollTrigger.create({
+        trigger: statsEl,
+        start: "top center",
+        end: "bottom center",
+        scroller: "#page-wrapper",
+        onEnter: () => {
+          gsap.killTweensOf(masterWrapper);
+          gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+        },
+        onEnterBack: () => {
+          gsap.killTweensOf(masterWrapper);
+          gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+        },
+      });
+    }
+
+    // ✅ If the section is already in view (after resize), hide wrapper
+    const scroller = document.querySelector("#page-wrapper");
+    if (scroller && statsEl) {
+      const rect = statsEl.getBoundingClientRect();
+      const containerRect = scroller.getBoundingClientRect();
+
+      const isVisible =
+        rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+
+      if (isVisible) {
+        gsap.killTweensOf(masterWrapper);
+        gsap.set(masterWrapper, { autoAlpha: 0 });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+
+      // Defer visibility check until layout has stabilized
+      requestAnimationFrame(() => {
+        const statsEl = statsRef.current;
+        const masterWrapper = document.getElementById("masterAnimationWrapper");
+        const scroller = document.querySelector("#page-wrapper");
+
+        if (scroller && statsEl && masterWrapper) {
+          const rect = statsEl.getBoundingClientRect();
+          const containerRect = scroller.getBoundingClientRect();
+
+          const isVisible =
+            rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+
+          if (isVisible) {
+            gsap.killTweensOf(masterWrapper);
+            gsap.set(masterWrapper, { autoAlpha: 0 });
+          }
+        }
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+
 
 
 
