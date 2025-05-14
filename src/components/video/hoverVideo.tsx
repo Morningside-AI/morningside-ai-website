@@ -52,32 +52,32 @@ const HoverVideo = () => {
 
     useEffect(() => {
         const handleResize = () => {
-            ScrollTrigger.refresh();
-
-            // Defer visibility check to after layout adjustments
-            requestAnimationFrame(() => {
-                const centerEl = centerRef.current;
-                const masterWrapper = document.getElementById("masterAnimationWrapper");
-                const scroller = document.querySelector("#page-wrapper");
-
-                if (scroller && centerEl && masterWrapper) {
-                    const rect = centerEl.getBoundingClientRect();
-                    const containerRect = scroller.getBoundingClientRect();
-
-                    const isVisible =
-                        rect.top < containerRect.bottom && rect.bottom > containerRect.top;
-
-                    if (isVisible) {
-                        gsap.killTweensOf(masterWrapper);
-                        gsap.set(masterWrapper, { autoAlpha: 0 });
-                    }
-                }
-            });
+          ScrollTrigger.refresh();
+    
+          // Defer visibility check to after layout adjustments
+          requestAnimationFrame(() => {
+            const centerEl = centerRef.current;
+            const masterWrapper = document.getElementById("masterAnimationWrapper");
+            const scroller = document.querySelector("#page-wrapper");
+    
+            if (scroller && centerEl && masterWrapper) {
+              const rect = centerEl.getBoundingClientRect();
+              const containerRect = scroller.getBoundingClientRect();
+    
+              const isVisible =
+                rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+    
+              if (isVisible) {
+                gsap.killTweensOf(masterWrapper);
+                gsap.set(masterWrapper, { autoAlpha: 0 });
+              }
+            }
+          });
         };
-
+    
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
-    }, []);
+      }, []);
 
 
 
