@@ -12,6 +12,28 @@ const Center = () => {
   const headingRef = useRef<HTMLDivElement>(null);
   const subTextRef = useRef<HTMLParagraphElement>(null);
 
+  useEffect(() => {
+    const centerEl = centerRef.current;
+    const masterWrapper = document.getElementById("masterAnimationWrapper");
+
+    if (centerEl && masterWrapper) {
+      ScrollTrigger.create({
+        trigger: centerEl,
+        start: "top center",
+        end: "bottom center",
+        scroller: "#page-wrapper",
+        onEnter: () => {
+          gsap.killTweensOf(masterWrapper);
+          gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+        },
+        onEnterBack: () => {
+          gsap.killTweensOf(masterWrapper);
+          gsap.to(masterWrapper, { autoAlpha: 0, duration: 0.1, ease: "none" });
+        },
+      });
+    }
+  }, []);
+
   return (
     <div
       id="center-section"

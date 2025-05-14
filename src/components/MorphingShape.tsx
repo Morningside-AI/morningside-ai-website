@@ -102,22 +102,6 @@ export default function MorphingShape() {
       },
     });
 
-    // Fade out wrapper when scrolling up past 31
-    ScrollTrigger.create({
-      trigger: "#snappy-31",
-      start: "top center",
-      end: "top center",
-      scroller: scrollContainer,
-      onLeaveBack: () => {
-        gsap.to(wrapper, {
-          autoAlpha: 0,
-          duration: 0.1,
-          ease: "none",
-        });
-      },
-    });
-
-
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
     const fromY = isMobile ? 300 : isTablet ? 250 : 400;
     const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-45vh";
@@ -415,6 +399,7 @@ export default function MorphingShape() {
   return (
     <div ref={wrapperRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-50 opacity-0"
+      id="masterAnimationWrapper"
     >
       {/* Exact SVG from step3.svg */}
       <svg
