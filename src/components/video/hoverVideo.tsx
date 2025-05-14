@@ -97,7 +97,7 @@ const HoverVideo = () => {
 
                 <div className="w-full h-fit flex flex-row items-end justify-end">
                     <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
-                        Into Morningside
+                        Coming Soon
                         <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
                     </button>
                 </div>
