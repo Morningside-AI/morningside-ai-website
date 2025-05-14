@@ -34,7 +34,7 @@ const Slide1 = () => {
           <span className="white-silver-animated-text">3-step </span>
           <span className="green-text">AI </span>
           <span className="green-text">Transformation </span>
-          <span className="white-silver-animated-text">Journey</span>
+          <span className="white-silver-animated-text">Journey.</span>
         </p>
         <div className="w-full opacity-0 flex justify-center">
           <Step3 className="w-[50vw] h-[50vw] lg:w-[35vw] lg:h-[20vw]" />
