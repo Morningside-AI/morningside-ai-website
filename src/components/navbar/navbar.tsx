@@ -134,7 +134,7 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
                 <GoX size={24} className="text-gray-600" />
               </button>
             </div>
-            <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
+            <h2 className="text-3xl md:text-4xl font-medium pt-0 pb-[1.75rem] text-left">
               {!success ? "Tell us where you’re at" : 'We’ve got it. The next move is ours.'}
             </h2>
           </div>
