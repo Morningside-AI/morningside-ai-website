@@ -20,6 +20,7 @@ export default function MorphingShape() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const smallSpheresRef = useRef<HTMLDivElement>(null);
+  const labelsRef = useRef<HTMLDivElement>(null);
   const [activeLabelIndex, setActiveLabelIndex] = useState<number | null>(null);
 
   let refreshTimeout: ReturnType<typeof setTimeout>;
@@ -80,6 +81,7 @@ export default function MorphingShape() {
     const outerCircle = document.getElementById("outerCircle");
     const innerCircle = document.getElementById("innerCircle");
     const innerCircleHighlight = document.getElementById("innerCircleHighlight");
+    const labels = labelsRef.current;
 
     if (!svg || !wrapper || !scrollContainer || !outerCircle || !innerCircle || !innerCircleHighlight) return;
 
@@ -103,9 +105,10 @@ export default function MorphingShape() {
     });
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
-    const fromY = isMobile ? 300 : isTablet ? 250 : 400;
-    const toY = isMobile ? "-40vh" : isTablet ? "-50vh" : "-45vh";
-    const fromScale = isMobile ? 1.1 : isTablet ? 1.2 : 1.4;
+
+    const fromY = isMobile ? "-75vh" : isTablet ? "-52rem" : "-52rem";
+    const toY = isMobile ? "32vh" : isTablet ? "36vh" : "20vh";
+    const fromScale = isMobile ? 1.2 : isTablet ? 1.2 : 1;
     const toScale = isMobile ? 0.35 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
       scrollTrigger: {
@@ -118,8 +121,20 @@ export default function MorphingShape() {
       },
     }).fromTo(
       svg,
-      { y: fromY, scale: fromScale },
-      { y: toY, scale: toScale, ease: "none" }
+      { bottom: fromY, scale: fromScale },
+      { bottom: toY, scale: toScale, ease: "none" }
+    ).fromTo(
+      labels,
+      {
+        opacity: 0,
+        duration: 0.2,
+        ease: "none",
+      },
+      {
+        opacity: 1,
+        duration: 0.2,
+        ease: "none",
+      }
     );
 
 
@@ -153,6 +168,7 @@ export default function MorphingShape() {
 
 
 
+    // Inside your useEffect after the first timeline
     tl.to([outerCircle, innerCircleHighlight], {
       opacity: 0,
       ease: "none",
@@ -167,6 +183,31 @@ export default function MorphingShape() {
         opacity: 1,
         duration: 0.2,
         ease: "none",
+        // Add position synchronization here
+        onStart: () => {
+          const innerCircle = document.getElementById("innerCircle");
+          const smallSpheres = smallSpheresRef.current;
+
+          if (!innerCircle || !smallSpheres) return;
+
+          // Get positions relative to viewport
+          const innerRect = innerCircle.getBoundingClientRect();
+          const wrapperRect = wrapperRef.current?.getBoundingClientRect();
+
+          if (!wrapperRect) return;
+
+          // Calculate position relative to wrapper
+          const topPosition = innerRect.top - wrapperRect.top;
+
+          // Apply position to smallSpheres
+          gsap.set(smallSpheres, {
+            position: "absolute",
+            top: topPosition + "px",
+            left: "50%",
+            xPercent: -50,
+            yPercent: -50
+          });
+        }
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
@@ -279,9 +320,9 @@ export default function MorphingShape() {
     // Animate gap reduction
     masterTimeline.to(smallSpheresRef.current, {
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
-      scale: isMobile ? 1 : isTablet ? 1 : 0.82,
+      scale: isMobile ? 1 : isTablet ? 1 : 0.88,
       marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
-      marginTop: "4rem",
+      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "4rem",
       opacity: 1,
       duration: 0.2,
       delay: 0.2,
@@ -291,7 +332,7 @@ export default function MorphingShape() {
     // Then move spheres
     smallSpheres.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 2.8 : isTablet ? baseOffset / 2.4 : baseOffset / 2.1;
+      const offset = isMobile ? baseOffset / 2.8 : isTablet ? baseOffset / 2.8 : baseOffset / 2.1;
 
       let direction = -1; // default to upward
       if (index === 1) direction = 1; // second square down
@@ -308,7 +349,7 @@ export default function MorphingShape() {
     // Add the clone animation separately (4th clone → down)
     if (clone) {
       const baseOffset = clone.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 2.1;
+      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 1.95;
 
       masterTimeline.fromTo(clone,
         {
@@ -396,6 +437,8 @@ export default function MorphingShape() {
   }, []);
 
 
+
+
   return (
     <div ref={wrapperRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-50 opacity-0"
@@ -407,7 +450,7 @@ export default function MorphingShape() {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 294 294"
         fill="none"
-        className="absolute left-1/2 -bottom-10 md:-bottom-64 lg:-bottom-[20vh] -translate-x-1/2 max-w-screen w-[90vw] md:w-[80vw] lg:w-[40vw] aspect-square"
+        className="absolute left-1/2 -translate-x-1/2 max-w-screen w-[31rem] md:w-[31rem] lg:w-[42rem] aspect-square"
       >
         <g opacity={0.8} id="outerCircle">
           <g filter="url(#a)">
@@ -426,6 +469,7 @@ export default function MorphingShape() {
           <path
             fill="url(#e)"
             d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
+            className="bg-red-500"
           />
         </g>
         <path
@@ -530,12 +574,12 @@ export default function MorphingShape() {
         </defs>
       </svg>
 
-      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 mt-10 md:mt-10 lg:-mt-4 lg:w-6/12 h-fit flex flex-row items-center justify-center gap-2 md:gap-4 lg:gap-4 left-1/2 top-[24.5%] lg:py-1 lg:px-1 -translate-x-1/2 pointer-events-none opacity-0">
+      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 lg:w-6/12 h-fit flex flex-row items-center justify-center gap-2 md:gap-4 lg:gap-4 pointer-events-none opacity-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-20"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-20"
         >
           <g>
             <path
@@ -605,7 +649,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-35"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-35"
         >
           <g>
             <path
@@ -675,7 +719,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-50"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-50"
         >
           <g>
             <path
@@ -745,7 +789,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-75"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-75"
         >
           <g>
             <path
@@ -815,7 +859,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[20%] aspect-square opacity-100"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-100"
         >
           <g>
             <path
@@ -884,7 +928,8 @@ export default function MorphingShape() {
       </div>
 
       <div
-        className="absolute left-1/2 lg:left-2 lg:top-1/2 top-[5vh] 
+        ref={labelsRef}
+        className="absolute left-1/2 lg:left-2 lg:top-1/2 bottom-[1vh] 
              -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 
              -translate-y-1/2 flex flex-row lg:flex-col lg:items-start 
              items-center justify-center lg:gap-2 gap-6 

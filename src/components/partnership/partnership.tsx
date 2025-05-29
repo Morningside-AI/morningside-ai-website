@@ -136,7 +136,7 @@ const Partnership = () => {
       <div
         id="partnership-section"
         ref={centerRef}
-        className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
+        className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 lg:gap-14 px-4 md:px-8 lg:px-12 relative"
       >
         <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
           <PartnershipMarquee />
@@ -216,7 +216,7 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
+          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-5 py-2 lg:px-10 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
             <FiArrowUpRight
               size={34}
