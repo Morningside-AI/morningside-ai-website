@@ -320,9 +320,9 @@ export default function MorphingShape() {
     // Animate gap reduction
     masterTimeline.to(smallSpheresRef.current, {
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
-      scale: isMobile ? 1 : isTablet ? 1 : 0.88,
+      scale: isMobile ? 1 : isTablet ? 1 : 0.75,
       marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
-      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "4rem",
+      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
       opacity: 1,
       duration: 0.2,
       delay: 0.2,
@@ -343,6 +343,11 @@ export default function MorphingShape() {
         y: direction * offset,
         ease: "power2.inOut",
         duration: 1.6,
+      }).to(smallSpheresRef.current, {
+        marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "4rem",
+        duration: 0.2,
+        delay: 0.2,
+        ease: "power1.inOut",
       });
     });
 
