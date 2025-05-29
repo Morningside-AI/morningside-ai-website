@@ -228,6 +228,7 @@ export default function MorphingShape() {
       y: 0,
       xPercent: -50,
       yPercent: 0,
+      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "5rem",
       scale: scaling,
       duration: 0.1,
       ease: "none",
@@ -321,8 +322,7 @@ export default function MorphingShape() {
     masterTimeline.to(smallSpheresRef.current, {
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
       scale: isMobile ? 1 : isTablet ? 1 : 0.75,
-      marginBottom: isMobile ? ".5rem" : isTablet ? "2rem" : "0rem",
-      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
+      marginBottom: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
       opacity: 1,
       duration: 0.2,
       delay: 0.2,
@@ -341,13 +341,9 @@ export default function MorphingShape() {
 
       masterTimeline.to(sphere, {
         y: direction * offset,
+        marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "5rem",
         ease: "power2.inOut",
         duration: 1.6,
-      }).to(smallSpheresRef.current, {
-        marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "4rem",
-        duration: 0.2,
-        delay: 0.2,
-        ease: "power1.inOut",
       });
     });
 
