@@ -216,7 +216,7 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-5 py-2 lg:px-10 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
+          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-9 py-3 lg:px-10 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
             <FiArrowUpRight
               size={34}
