@@ -16,7 +16,7 @@ const LABELS = [
 ];
 
 
-export default function MorphingShape() {
+export default function MobileMorphingShape() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const smallSpheresRef = useRef<HTMLDivElement>(null);
@@ -156,7 +156,8 @@ export default function MorphingShape() {
 
     // Clone the 4th sphere (index 3)
     const fourthSphere = smallSpheresArray[3] as SVGGraphicsElement;
-    const clone = fourthSphere.cloneNode(true) as SVGGraphicsElement;
+    const secondSphere = smallSpheresArray[1] as SVGGraphicsElement;
+    const clone = isMobile ? secondSphere.cloneNode(true) as SVGGraphicsElement : isTablet ? secondSphere.cloneNode(true) as SVGGraphicsElement : fourthSphere.cloneNode(true) as SVGGraphicsElement;
     clone.classList.add("clonedSphere");
     fourthSphere.parentElement?.appendChild(clone);
 
@@ -222,8 +223,8 @@ export default function MorphingShape() {
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
-    const spacing = isMobile ? 78 : isTablet ? 140 : 155;
-    const scaling = isMobile ? 0.85 : isTablet ? 0.7 : 1;
+    const spacing = isMobile ? 140 : isTablet ? 140 : 155;
+    const scaling = isMobile ? 1 : isTablet ? 0.7 : 1;
 
     tl.to(smallSpheres, {
       x: (i) => (i - centerIndex) * spacing,
@@ -235,7 +236,7 @@ export default function MorphingShape() {
       delay: 0.1,
       ease: "none",
     }).to(clone, {
-      x: (3 - centerIndex) * spacing,
+      x: isMobile ? (2 - centerIndex) * spacing : isTablet ? (2 - centerIndex) * spacing : (2 - centerIndex) * spacing,
       y: 0,
       xPercent: -50,
       yPercent: 0,
@@ -314,7 +315,13 @@ export default function MorphingShape() {
 
       let direction = -1;
       if (index === 1) direction = 1;
-      if (index === 3) direction = -3;
+      if (index === 3) {
+        if (isMobile || isTablet) {
+          direction = 1;
+        } else {
+          direction = -3;
+        }
+      }
       if (index === 4) direction = -1;
 
       // Add to parallel timeline instead of masterTimeline
@@ -346,7 +353,7 @@ export default function MorphingShape() {
           duration: 1.6,
         },
         {
-          y: offset, // move down
+          y: isMobile ? 2.5 * offset : isTablet ? 2.5 * offset : offset, // move down
           ease: "power2.inOut",
           opacity: 1,
           duration: 1.6,
@@ -566,7 +573,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-20"
+          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-20"
         >
           <g>
             <path
@@ -636,7 +643,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-35"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-35"
         >
           <g>
             <path
@@ -706,7 +713,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-50"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-50"
         >
           <g>
             <path
@@ -776,7 +783,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-75"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-75"
         >
           <g>
             <path
@@ -846,7 +853,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-100"
+          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-100"
         >
           <g>
             <path

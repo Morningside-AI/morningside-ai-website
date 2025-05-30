@@ -13,13 +13,26 @@ import SnappySection5 from "@/components/SnappySection5";
 import SnappySection6 from "@/components/SnappySection6";
 import SnappySection7 from "@/components/SnappySection7";
 import MorphingShape from "@/components/MorphingShape";
+import MobileMorphingShape from "@/components/mobileMorphingShape";
 
 export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isMobile = window.innerWidth < 640;
+  const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+  const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1440;
 
   return (
     <NewPreloaderWrapper>
-      <MorphingShape />
+      <div>
+        {
+          isMobile || isTablet ? (
+            <MobileMorphingShape />
+          ) : (
+            <MorphingShape />
+          )
+        }
+        
+      </div>
       <div
         id="page-wrapper"
         ref={scrollContainerRef}

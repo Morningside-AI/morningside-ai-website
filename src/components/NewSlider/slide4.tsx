@@ -75,7 +75,7 @@ const Slide4 = () => {
         <Step3 className="w-[35vw] h-[50vh] lg:w-[35vw] lg:h-[28vw]" />
       </div>
 
-      <div className="fixed w-11/12 lg:w-full bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 text-center pointer-events-none z-50">
+      <div className="fixed w-11/12 lg:w-full bottom-5 md:bottom-10 lg:bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 text-center pointer-events-none z-50">
         <p
           ref={titleRef}
           id="snappy-34-title"
