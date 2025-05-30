@@ -106,16 +106,16 @@ export default function MorphingShape() {
 
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
 
-    const fromY = isMobile ? "-75vh" : isTablet ? "-52rem" : "-52rem";
+    const fromY = isMobile ? "-75vh" : isTablet ? "-52rem" : "-48rem";
     const toY = isMobile ? "32vh" : isTablet ? "36vh" : "14vh";
     const fromScale = isMobile ? 1.2 : isTablet ? 1.2 : 1;
     const toScale = isMobile ? 0.55 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-31",
-        start: "top center",
+        start: "top 90%",
         endTrigger: "#snappy-32",
-        end: "top 10%",
+        end: "top top",
         scrub: true,
         scroller: scrollContainer,
       },
@@ -123,8 +123,18 @@ export default function MorphingShape() {
       svg,
       { bottom: fromY, scale: fromScale },
       { bottom: toY, scale: toScale, ease: "none" }
-    )
-    .fromTo(
+    );
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: "#snappy-32",
+        start: "top 90%",
+        endTrigger: "#snappy-32",
+        end: "top top",
+        scrub: true,
+        scroller: scrollContainer,
+      },
+    }).fromTo(
       labels,
       {
         opacity: 0,
