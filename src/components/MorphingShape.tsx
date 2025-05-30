@@ -107,9 +107,9 @@ export default function MorphingShape() {
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
 
     const fromY = isMobile ? "-75vh" : isTablet ? "-52rem" : "-52rem";
-    const toY = isMobile ? "32vh" : isTablet ? "36vh" : "20vh";
+    const toY = isMobile ? "32vh" : isTablet ? "36vh" : "14vh";
     const fromScale = isMobile ? 1.2 : isTablet ? 1.2 : 1;
-    const toScale = isMobile ? 0.35 : isTablet ? 0.6 : 0.4;
+    const toScale = isMobile ? 0.55 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-31",
@@ -123,7 +123,8 @@ export default function MorphingShape() {
       svg,
       { bottom: fromY, scale: fromScale },
       { bottom: toY, scale: toScale, ease: "none" }
-    ).fromTo(
+    )
+    .fromTo(
       labels,
       {
         opacity: 0,
@@ -211,8 +212,8 @@ export default function MorphingShape() {
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
-    const spacing = isMobile ? 70 : isTablet ? 140 : 165;
-    const scaling = isMobile ? 0.7 : isTablet ? 0.7 : 1;
+    const spacing = isMobile ? 78 : isTablet ? 140 : 155;
+    const scaling = isMobile ? 0.85 : isTablet ? 0.7 : 1;
 
     tl.to(smallSpheres, {
       x: (i) => (i - centerIndex) * spacing,
@@ -228,7 +229,7 @@ export default function MorphingShape() {
       y: 0,
       xPercent: -50,
       yPercent: 0,
-      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "5rem",
+      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
       scale: scaling,
       duration: 0.1,
       ease: "none",
@@ -268,40 +269,6 @@ export default function MorphingShape() {
       });
     });
 
-
-    circlePaths.forEach((path) => {
-      const interpolator = flubber.interpolate(originalShape, squareShape, {
-        maxSegmentLength: 2,
-      }) as (t: number) => string;
-
-
-      masterTimeline.to(path, {
-        duration: 1,
-        ease: "power2.inOut",
-        onUpdate: function () {
-          const tween = this as unknown as gsap.core.Tween;
-          const progress = tween.progress();
-          (path as SVGPathElement).setAttribute("d", interpolator(progress));
-        },
-      });
-    });
-
-    highlightPaths.forEach((path) => {
-      const interpolator = flubber.interpolate(originalShape, squareShape, {
-        maxSegmentLength: 2,
-      }) as (t: number) => string;
-
-      masterTimeline.to(path, {
-        duration: 1,
-        ease: "power2.inOut",
-        onUpdate: function () {
-          const tween = this as unknown as gsap.core.Tween;
-          const progress = tween.progress();
-          (path as SVGPathElement).setAttribute("d", interpolator(progress));
-        },
-      }, "<");
-    });
-
     const moveTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-33",
@@ -320,9 +287,7 @@ export default function MorphingShape() {
 
     // Animate gap reduction
     masterTimeline.to(smallSpheresRef.current, {
-      gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px", // Tailwind's gap-5 ≈ 1.25rem
-      scale: isMobile ? 1 : isTablet ? 1 : 0.75,
-      marginBottom: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
+      gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px",
       opacity: 1,
       duration: 0.2,
       delay: 0.2,
@@ -330,27 +295,38 @@ export default function MorphingShape() {
     });
 
     // Then move spheres
+    // Create a new timeline for parallel animations
+    const spheresMoveTimeline = gsap.timeline();
+
     smallSpheres.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 2.8 : isTablet ? baseOffset / 2.8 : baseOffset / 2.1;
+      const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 2.8 : baseOffset / 3;
 
-      let direction = -1; // default to upward
-      if (index === 1) direction = 1; // second square down
-      if (index === 3) direction = -3; // fourth original goes up
-      if (index === 4) direction = -1; // fifth square up
+      let direction = -1;
+      if (index === 1) direction = 1;
+      if (index === 3) direction = -3;
+      if (index === 4) direction = -1;
 
-      masterTimeline.to(sphere, {
-        y: direction * offset,
-        marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "5rem",
-        ease: "power2.inOut",
-        duration: 1.6,
-      });
+      // Add to parallel timeline instead of masterTimeline
+      spheresMoveTimeline.to(
+        sphere,
+        {
+          y: direction * offset,
+          marginTop: "0rem",
+          ease: "power2.inOut",
+          duration: 1.6,
+        },
+        "<" // Start at same time as previous animation
+      );
     });
+
+    // Add the parallel timeline to masterTimeline
+    masterTimeline.add(spheresMoveTimeline);
 
     // Add the clone animation separately (4th clone → down)
     if (clone) {
       const baseOffset = clone.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 1.95;
+      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 3;
 
       masterTimeline.fromTo(clone,
         {
