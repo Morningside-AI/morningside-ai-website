@@ -570,7 +570,7 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-35"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-35"
         >
           <g>
             <path
@@ -640,7 +640,7 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-50"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-50"
         >
           <g>
             <path
@@ -710,7 +710,7 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-75"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-75"
         >
           <g>
             <path
