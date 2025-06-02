@@ -224,8 +224,8 @@ export default function MorphingShape({
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
-    const spacing = isMobile ? 100 : isTablet ? 140 : 155;
-    const scaling = isMobile ? 1 : isTablet ? 0.7 : 1;
+    const spacing = isMobile ? 100 : isTablet ? 155 : 155;
+    const scaling = isMobile ? 1 : isTablet ? 1 : 1;
 
     // Position 3 original spheres: center stays still
     tl.to(smallSpheresArray, {
@@ -309,7 +309,7 @@ export default function MorphingShape({
     // Animate original 3 spheres
     smallSpheresArray.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 2.8 : baseOffset / 3;
+      const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 3 : baseOffset / 3;
 
       // Direction logic:
       // 0 → down, 1 → up, 2 → down
@@ -334,20 +334,20 @@ export default function MorphingShape({
 
       clonesArray.forEach((cloneSphere, index) => {
         const baseOffset = clone.getBoundingClientRect().height;
-        const offset = isMobile ? baseOffset : isTablet ? baseOffset / 2.8 : baseOffset / 3;
+        const offset = isMobile ? baseOffset : isTablet ? baseOffset : baseOffset / 3;
         const deeperOffset = offset * 2;
 
         spheresMoveTimeline.fromTo(
           cloneSphere,
           {
-            ease: "none",
+            ease: "power2.inOut",
             y: offset,
             opacity: 0,
             duration: 1.6,
           },
           {
             y: offset, // move down
-            ease: "none",
+            ease: "power2.inOut",
             opacity: 1,
             duration: 1.6,
           },
@@ -565,12 +565,12 @@ export default function MorphingShape({
         </defs>
       </svg>
 
-      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 lg:w-6/12 h-fit flex flex-row items-center justify-center gap-2 md:gap-4 lg:gap-4 pointer-events-none opacity-0">
+      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 lg:w-6/12 md:bg-red-700 h-fit flex flex-row items-center justify-center gap-2 md:gap-8 lg:gap-4 pointer-events-none opacity-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-35"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-35"
         >
           <g>
             <path
@@ -640,7 +640,7 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-50"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-50"
         >
           <g>
             <path
@@ -710,7 +710,7 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-75"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-75"
         >
           <g>
             <path
