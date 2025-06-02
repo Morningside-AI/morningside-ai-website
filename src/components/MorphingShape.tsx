@@ -251,7 +251,7 @@ export default function MorphingShape({
     const masterTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-33",
-        start: "center center",
+        start: "center 60%",
         endTrigger: "#snappy-34",
         end: "top 10%",
         scrub: true,
