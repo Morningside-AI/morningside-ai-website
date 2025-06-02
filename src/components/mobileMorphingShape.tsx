@@ -396,8 +396,8 @@ export default function MorphingShape({
     ].forEach(({ trigger, labelIndex }) => {
       ScrollTrigger.create({
         trigger,
-        start: "top center",
-        end: "bottom center",
+        start: "top bottom",
+        end: "bottom bottom",
         scroller: scrollContainer,
         onEnter: () => setActiveLabelIndex(labelIndex),
         onEnterBack: () => setActiveLabelIndex(labelIndex),
