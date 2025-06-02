@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import NewPreloaderWrapper from "@/components/generic/NewPreloaderWrapper";
 import SnappySection1 from "@/components/SnappySection1";
 import SnappySection2 from "@/components/SnappySection2";
@@ -14,25 +14,20 @@ import SnappySection6 from "@/components/SnappySection6";
 import SnappySection7 from "@/components/SnappySection7";
 import MorphingShape from "@/components/MorphingShape";
 import MobileMorphingShape from "@/components/mobileMorphingShape";
+import useDeviceDetect from "@/utils/useDeviceDetect";
 
 export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const isMobile = window.innerWidth < 640;
-  const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
-  const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1440;
+
+  const { isMobile, isTablet } = useDeviceDetect();
 
   return (
     <NewPreloaderWrapper>
-      <div>
-        {
-          isMobile || isTablet ? (
-            <MobileMorphingShape />
-          ) : (
-            <MorphingShape />
-          )
-        }
-        
-      </div>
+      {!isMobile && !isTablet ? (
+        <MorphingShape isMobile={false} isTablet={false} />
+      ) : (
+        <MobileMorphingShape isMobile={isMobile} isTablet={isTablet} />
+      )}
       <div
         id="page-wrapper"
         ref={scrollContainerRef}
@@ -70,5 +65,5 @@ export default function Home() {
         </div>
       </div>
     </NewPreloaderWrapper>
-  );
+  )
 }

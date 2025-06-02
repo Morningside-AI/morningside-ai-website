@@ -16,7 +16,13 @@ const LABELS = [
 ];
 
 
-export default function MobileMorphingShape() {
+export default function MorphingShape({
+  isMobile,
+  isTablet
+}: {
+  isMobile: boolean;
+  isTablet: boolean;
+}) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const smallSpheresRef = useRef<HTMLDivElement>(null);
@@ -71,10 +77,6 @@ export default function MobileMorphingShape() {
 
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 640;
-    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
-    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1440;
-
     const scrollContainer = document.querySelector("#page-wrapper");
     const svg = svgRef.current;
     const wrapper = wrapperRef.current;
@@ -107,7 +109,7 @@ export default function MobileMorphingShape() {
     // Scroll animation from snappy-31 → snappy-32 (move & scale only)
 
     const fromY = isMobile ? "-75vh" : isTablet ? "-52rem" : "-48rem";
-    const toY = isMobile ? "32vh" : isTablet ? "36vh" : "14vh";
+    const toY = isMobile ? "36vh" : isTablet ? "36vh" : "14vh";
     const fromScale = isMobile ? 1.2 : isTablet ? 1.2 : 1;
     const toScale = isMobile ? 0.55 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
@@ -151,21 +153,19 @@ export default function MobileMorphingShape() {
 
     // appearance of small spheres ONLY from 32 → 33
     const smallSpheres = document.querySelectorAll(".smallSphere");
-
     const smallSpheresArray = Array.from(smallSpheres);
 
-    // Clone the 4th sphere (index 3)
-    const fourthSphere = smallSpheresArray[3] as SVGGraphicsElement;
-    const secondSphere = smallSpheresArray[1] as SVGGraphicsElement;
-    const clone = isMobile ? secondSphere.cloneNode(true) as SVGGraphicsElement : isTablet ? secondSphere.cloneNode(true) as SVGGraphicsElement : fourthSphere.cloneNode(true) as SVGGraphicsElement;
+    const middleSphere = smallSpheresArray[1] as SVGGraphicsElement;
+    const clone = middleSphere.cloneNode(true) as SVGGraphicsElement;
     clone.classList.add("clonedSphere");
-    fourthSphere.parentElement?.appendChild(clone);
+    middleSphere.parentElement?.appendChild(clone);
 
+    // Set up cloned sphere
     gsap.set(clone, {
-      scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
       opacity: 0,
       yPercent: 0,
     });
+
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -194,6 +194,7 @@ export default function MobileMorphingShape() {
       .to(smallSpheresRef.current, {
         opacity: 1,
         duration: 0.2,
+        scale: 1.25,
         ease: "none",
         // Add position synchronization here
         onStart: () => {
@@ -223,11 +224,17 @@ export default function MobileMorphingShape() {
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
-    const spacing = isMobile ? 140 : isTablet ? 140 : 155;
+    const spacing = isMobile ? 100 : isTablet ? 140 : 155;
     const scaling = isMobile ? 1 : isTablet ? 0.7 : 1;
 
-    tl.to(smallSpheres, {
-      x: (i) => (i - centerIndex) * spacing,
+    // Position 3 original spheres: center stays still
+    tl.to(smallSpheresArray, {
+      x: (i) => {
+        if (i === 0) return -spacing;
+        if (i === 1) return 0;
+        if (i === 2) return spacing;
+        return 0;
+      },
       y: 0,
       xPercent: -50,
       yPercent: 0,
@@ -235,16 +242,8 @@ export default function MobileMorphingShape() {
       duration: 0.4,
       delay: 0.1,
       ease: "none",
-    }).to(clone, {
-      x: isMobile ? (2 - centerIndex) * spacing : isTablet ? (2 - centerIndex) * spacing : (2 - centerIndex) * spacing,
-      y: 0,
-      xPercent: -50,
-      yPercent: 0,
-      marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
-      scale: scaling,
-      duration: 0.1,
-      ease: "none",
     });
+
 
 
     const masterTimeline = gsap.timeline({
@@ -305,26 +304,17 @@ export default function MobileMorphingShape() {
       ease: "power1.inOut",
     });
 
-    // Then move spheres
-    // Create a new timeline for parallel animations
     const spheresMoveTimeline = gsap.timeline();
 
-    smallSpheres.forEach((sphere, index) => {
+    // Animate original 3 spheres
+    smallSpheresArray.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
       const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 2.8 : baseOffset / 3;
 
-      let direction = -1;
-      if (index === 1) direction = 1;
-      if (index === 3) {
-        if (isMobile || isTablet) {
-          direction = 1;
-        } else {
-          direction = -3;
-        }
-      }
-      if (index === 4) direction = -1;
+      // Direction logic:
+      // 0 → down, 1 → up, 2 → down
+      const direction = index === 1 ? -1 : 1;
 
-      // Add to parallel timeline instead of masterTimeline
       spheresMoveTimeline.to(
         sphere,
         {
@@ -333,33 +323,41 @@ export default function MobileMorphingShape() {
           ease: "power2.inOut",
           duration: 1.6,
         },
-        "<" // Start at same time as previous animation
+        "<"
       );
     });
 
-    // Add the parallel timeline to masterTimeline
+    // Animate clone further downward
+    if (clone) {
+      const clones = document.querySelectorAll(".clonedSphere");
+      const clonesArray = Array.from(clones);
+
+      clonesArray.forEach((cloneSphere, index) => {
+        const baseOffset = clone.getBoundingClientRect().height;
+        const offset = isMobile ? baseOffset : isTablet ? baseOffset / 2.8 : baseOffset / 3;
+        const deeperOffset = offset * 2;
+
+        spheresMoveTimeline.fromTo(
+          cloneSphere,
+          {
+            ease: "none",
+            y: offset,
+            opacity: 0,
+            duration: 1.6,
+          },
+          {
+            y: offset, // move down
+            ease: "none",
+            opacity: 1,
+            duration: 1.6,
+          },
+        );
+      })
+    }
+
+    // Add to master timeline
     masterTimeline.add(spheresMoveTimeline);
 
-    // Add the clone animation separately (4th clone → down)
-    if (clone) {
-      const baseOffset = clone.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 3;
-
-      masterTimeline.fromTo(clone,
-        {
-          ease: "power2.inOut",
-          y: offset,
-          opacity: 0,
-          duration: 1.6,
-        },
-        {
-          y: isMobile ? 2.5 * offset : isTablet ? 2.5 * offset : offset, // move down
-          ease: "power2.inOut",
-          opacity: 1,
-          duration: 1.6,
-        }
-      );
-    }
 
 
     ScrollTrigger.create({
@@ -408,7 +406,7 @@ export default function MobileMorphingShape() {
       });
     });
 
-  }, []);
+  }, [isMobile, isTablet]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -463,7 +461,6 @@ export default function MobileMorphingShape() {
           <path
             fill="url(#e)"
             d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
-            className="bg-red-500"
           />
         </g>
         <path
@@ -573,7 +570,7 @@ export default function MobileMorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-20"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-35"
         >
           <g>
             <path
@@ -643,7 +640,7 @@ export default function MobileMorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-35"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-50"
         >
           <g>
             <path
@@ -713,147 +710,7 @@ export default function MobileMorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-50"
-        >
-          <g>
-            <path
-              fill="url(#e)"
-              d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
-              className="morph-shape"
-            />
-          </g>
-          <path
-            stroke="url(#f)"
-            strokeWidth={2.5}
-            d="M225.75 147c0-44.045-35.705-79.75-79.75-79.75S66.25 102.955 66.25 147s35.705 79.75 79.75 79.75 79.75-35.705 79.75-79.75Z"
-            className="morph-shape-highlight"
-          />
-          <defs>
-            <linearGradient
-              id="b"
-              x1={147}
-              x2={147}
-              y1={0}
-              y2={294}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#fff" />
-              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
-              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient
-              id="c"
-              x1={147}
-              x2={147}
-              y1={0}
-              y2={294}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FDFFFE" />
-              <stop offset={0.4} stopColor="#549876" />
-              <stop offset={1} stopColor="#fff" />
-            </linearGradient>
-            <linearGradient
-              id="e"
-              x1={146}
-              x2={146}
-              y1={66}
-              y2={228}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#fff" />
-              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
-              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient
-              id="f"
-              x1={146}
-              x2={146}
-              y1={66}
-              y2={228}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FDFFFE" />
-              <stop offset={0.4} stopColor="#549876" />
-              <stop offset={1} stopColor="#fff" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="64 64 166 166"
-          fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-75"
-        >
-          <g>
-            <path
-              fill="url(#e)"
-              d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
-              className="morph-shape"
-            />
-          </g>
-          <path
-            stroke="url(#f)"
-            strokeWidth={2.5}
-            d="M225.75 147c0-44.045-35.705-79.75-79.75-79.75S66.25 102.955 66.25 147s35.705 79.75 79.75 79.75 79.75-35.705 79.75-79.75Z"
-            className="morph-shape-highlight"
-          />
-          <defs>
-            <linearGradient
-              id="b"
-              x1={147}
-              x2={147}
-              y1={0}
-              y2={294}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#fff" />
-              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
-              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient
-              id="c"
-              x1={147}
-              x2={147}
-              y1={0}
-              y2={294}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FDFFFE" />
-              <stop offset={0.4} stopColor="#549876" />
-              <stop offset={1} stopColor="#fff" />
-            </linearGradient>
-            <linearGradient
-              id="e"
-              x1={146}
-              x2={146}
-              y1={66}
-              y2={228}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#fff" />
-              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
-              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient
-              id="f"
-              x1={146}
-              x2={146}
-              y1={66}
-              y2={228}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FDFFFE" />
-              <stop offset={0.4} stopColor="#549876" />
-              <stop offset={1} stopColor="#fff" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="64 64 166 166"
-          fill="none"
-          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[8.5rem] lg:w-[9.5rem] aspect-square opacity-100"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-75"
         >
           <g>
             <path

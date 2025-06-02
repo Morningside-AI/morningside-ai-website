@@ -16,7 +16,13 @@ const LABELS = [
 ];
 
 
-export default function MorphingShape() {
+export default function MorphingShape({
+  isMobile,
+  isTablet
+}: {
+  isMobile: boolean;
+  isTablet: boolean;
+}) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const smallSpheresRef = useRef<HTMLDivElement>(null);
@@ -71,10 +77,6 @@ export default function MorphingShape() {
 
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 640;
-    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
-    const isSmallLaptop = window.innerWidth >= 1024 && window.innerWidth <= 1440;
-
     const scrollContainer = document.querySelector("#page-wrapper");
     const svg = svgRef.current;
     const wrapper = wrapperRef.current;
@@ -235,7 +237,7 @@ export default function MorphingShape() {
       delay: 0.1,
       ease: "none",
     }).to(clone, {
-      x: (3 - centerIndex) * spacing,
+      x: isMobile || isTablet ? (1 - centerIndex) * spacing : (3 - centerIndex) * spacing,
       y: 0,
       xPercent: -50,
       yPercent: 0,
@@ -400,8 +402,9 @@ export default function MorphingShape() {
         onLeaveBack: () => setActiveLabelIndex(null),
       });
     });
+  
 
-  }, []);
+  }, [isMobile, isTablet]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -456,7 +459,6 @@ export default function MorphingShape() {
           <path
             fill="url(#e)"
             d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
-            className="bg-red-500"
           />
         </g>
         <path
@@ -566,7 +568,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-20"
+          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-20"
         >
           <g>
             <path
@@ -846,7 +848,7 @@ export default function MorphingShape() {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-100"
+          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-100"
         >
           <g>
             <path
