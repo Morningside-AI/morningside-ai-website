@@ -104,33 +104,33 @@ const Footer = () => {
 
     useEffect(() => {
         const handleResize = () => {
-          ScrollTrigger.refresh();
-      
-          // Defer visibility check to the next animation frame
-          requestAnimationFrame(() => {
-            const footerEl = footerRef.current;
-            const masterWrapper = document.getElementById("masterAnimationWrapper");
-            const scroller = document.querySelector("#page-wrapper");
-      
-            if (scroller && footerEl && masterWrapper) {
-              const rect = footerEl.getBoundingClientRect();
-              const containerRect = scroller.getBoundingClientRect();
-      
-              const isVisible =
-                rect.top < containerRect.bottom && rect.bottom > containerRect.top;
-      
-              if (isVisible) {
-                gsap.killTweensOf(masterWrapper);
-                gsap.set(masterWrapper, { autoAlpha: 0 });
-              }
-            }
-          });
+            ScrollTrigger.refresh();
+
+            // Defer visibility check to the next animation frame
+            requestAnimationFrame(() => {
+                const footerEl = footerRef.current;
+                const masterWrapper = document.getElementById("masterAnimationWrapper");
+                const scroller = document.querySelector("#page-wrapper");
+
+                if (scroller && footerEl && masterWrapper) {
+                    const rect = footerEl.getBoundingClientRect();
+                    const containerRect = scroller.getBoundingClientRect();
+
+                    const isVisible =
+                        rect.top < containerRect.bottom && rect.bottom > containerRect.top;
+
+                    if (isVisible) {
+                        gsap.killTweensOf(masterWrapper);
+                        gsap.set(masterWrapper, { autoAlpha: 0 });
+                    }
+                }
+            });
         };
-      
+
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
-      }, []);
-      
+    }, []);
+
 
 
     return (
@@ -154,7 +154,7 @@ const Footer = () => {
                         <Logo className="w-48 h-0 lg:h-10 mt-0 lg:mt-4 hidden lg:block" />
                     </div>
 
-                    <div className="w-full h-fit flex lg:flex-row flex-col-reverse lg:items-baseline-last justify-between tracking-wider text-sm relative gap-8 lg:gap-0">
+                    <div className="w-full hidden lg:flex h-fit lg:flex-row flex-col-reverse lg:items-baseline-last justify-between tracking-wider text-sm relative gap-8 lg:gap-0">
                         <div className="flex flex-col w-full lg:w-1/3 gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
                             <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
                             <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">
@@ -197,22 +197,67 @@ const Footer = () => {
                             </Link>
                         </div>
                     </div>
+
+                    <div className="w-full flex lg:hidden h-fit lg:flex-row flex-col lg:items-baseline-last justify-between tracking-wider text-sm relative gap-8 lg:gap-0">
+                        <div className="flex flex-col w-full lg:w-1/3 gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
+                            <p className="whitespace-pre-wrap font-bold text-[#D9D9D9] uppercase">Contact</p>
+                            <Link href="https://mail.google.com/mail/?view=cm&to=info@morningside.ai&su=Morningside%20AI%20Contact%20Request&body=Hi%0A%0AI%20am%20reaching%20out%20from%20the%20Morningside%20AI%20website" target="_blank" className="w-full cursor-pointer decoration-0">
+                                <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
+                            </Link>
+                        </div>
+                        <div className="w-full lg:w-1/3 flex flex-col justify-end lg:items-end gap-2 lg:gap-4 order-3 md:order-1 text-left footer-follow">
+                            <p className="whitespace-pre-wrap text-[#D9D9D9] uppercase">Follow</p>
+                            <Link href="https://www.linkedin.com/company/morningside-ai/posts/?feedView=all" target="_blank" className="w-fit cursor-pointer hover:opacity-80">
+                                <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:text-white/70">Linkedin</p>
+                            </Link>
+                            <Link href="https://www.youtube.com/@LiamOttley" target="_blank" className="w-fit cursor-pointer hover:opacity-80">
+                                <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:text-white/70">Youtube</p>
+                            </Link>
+                        </div>
+                        <div className="flex flex-col w-full lg:w-1/3 gap-1 lg:gap-2 order-3 md:order-1 footer-contact">
+                            <div className="flex flex-row gap-2 relative z-10">
+                                <button onClick={toggleDrawer} className="flex cursor-pointer items-center gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black whitespace-nowrap">
+                                    Get In Touch
+                                    <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
+                                </button>
+                                <Link href="https://tally.so/r/wbYr52" target="_blank" className="w-full cursor-pointer">
+                                    <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black whitespace-nowrap">
+                                        Explore Careers
+                                        <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="w-full lg:w-1/3 flex flex-col lg:flex-row items-start lg:items-end lg:justify-center gap-2 lg:gap-4 order-3 lg:order-1">
+                            <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:opacity-70">
+                                <Link href="/terms-and-conditions" target="_blank" className="w-full cursor-pointer">
+                                    Terms & Conditions
+                                </Link>
+                            </p>
+                            <p className="whitespace-pre-wrap font-medium text-[#D9D9D9] uppercase hover:opacity-70">
+                                <Link href="/privacy-policy" target="_blank" className="w-full cursor-pointer ">
+                                    Privacy Policy
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Drawer Overlay */}
             <div
                 ref={overlayRef}
-                className="fixed inset-0 bg-black/70 backdrop-blur-[2px] opacity-0 pointer-events-none z-40 transition-opacity"
+                className="fixed inset-0 bg-[#1C1B1C]/80 backdrop-blur-[2px] opacity-0 pointer-events-none z-40 transition-opacity"
                 onClick={toggleDrawer}
             />
 
             {/* Drawer Component */}
             <div
                 ref={drawerRef}
-                className="fixed right-0 md:right-0 top-0 md:top-[2.5vh] h-[92vh] md:h-[95vh] lg:h-[95vh] w-full lg:w-[40vw] px-2 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
+                className="fixed right-0 md:right-0 top-0 md:top-[0vh] h-[95vh] md:h-[100vh] lg:h-[100vh] w-full lg:w-[40vw] px-2 pb-4 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
             >
-                <div className="shadow-2xl rounded-xl w-[96%] md:w-[97%] lg:w-full h-11/12 bg-[#EDECE4] overflow-hidden">
+                <div className="shadow-2xl rounded-xl w-[96%] md:w-[98%] lg:w-full h-[90%] bg-[#EDECE4] overflow-hidden">
                     {/* Drawer Header */}
                     <div className="flex flex-col px-4 md:px-6 py-2">
                         <div className="flex flex-row justify-end">
@@ -223,7 +268,7 @@ const Footer = () => {
                                 <GoX size={24} className="text-gray-600" />
                             </button>
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
+                        <h2 className="text-3xl md:text-4xl font-medium pt-0 pb-[1.75rem] text-left">
                             {!success ? "Tell us where you’re at" : 'We’ve got it. The next move is ours.'}
                         </h2>
                     </div>
@@ -234,7 +279,7 @@ const Footer = () => {
                             {!success ? (
                                 <>
                                     <ContactForm setSuccess={setSuccess} />
-                                    <div className="h-[80px] w-full"></div>
+                                    <div className="h-[100px] w-full"></div>
                                 </>
                             ) : (
                                 <div className="flex flex-col">

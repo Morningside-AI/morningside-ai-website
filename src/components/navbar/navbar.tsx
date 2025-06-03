@@ -114,16 +114,16 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
       {/* Drawer Overlay */}
       <div
         ref={overlayRef}
-        className="fixed inset-0 bg-black/70 backdrop-blur-[2px] opacity-0 pointer-events-none z-40 transition-opacity"
+        className="fixed inset-0 bg-[#1C1B1C]/80 backdrop-blur-[2px] opacity-0 pointer-events-none z-40 transition-opacity"
         onClick={toggleDrawer}
       />
 
       {/* Drawer Component */}
       <div
         ref={drawerRef}
-        className="fixed right-0 md:right-0 top-0 md:top-[2.5vh] h-[92vh] md:h-[95vh] lg:h-[95vh] w-full lg:w-[40vw] px-2 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
+        className="fixed right-0 md:right-0 top-0 md:top-[0vh] h-[95vh] md:h-[100vh] lg:h-[100vh] w-full lg:w-[40vw] px-2 pb-4 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
       >
-        <div className="shadow-2xl rounded-xl w-[96%] md:w-[97%] lg:w-full h-11/12 bg-[#EDECE4] overflow-hidden">
+        <div className="shadow-2xl rounded-xl w-[96%] md:w-[98%] lg:w-full h-[90%] bg-[#EDECE4] overflow-hidden">
           {/* Drawer Header */}
           <div className="flex flex-col px-4 md:px-6 py-2">
             <div className="flex flex-row justify-end">
@@ -134,7 +134,7 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
                 <GoX size={24} className="text-gray-600" />
               </button>
             </div>
-            <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
+            <h2 className="text-3xl md:text-4xl font-medium pt-0 pb-[1.75rem] text-left">
               {!success ? "Tell us where you’re at" : 'We’ve got it. The next move is ours.'}
             </h2>
           </div>
@@ -145,7 +145,7 @@ const Navbar = ({ isConctactPage = false }: NavbarProps) => {
               {!success ? (
                 <>
                   <ContactForm setSuccess={setSuccess} />
-                  <div className="h-[80px] w-full"></div>
+                  <div className="h-[100px] w-full"></div>
                 </>
               ) : (
                 <div className="flex flex-col">

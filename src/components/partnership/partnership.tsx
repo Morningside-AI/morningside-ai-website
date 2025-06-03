@@ -136,7 +136,7 @@ const Partnership = () => {
       <div
         id="partnership-section"
         ref={centerRef}
-        className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 px-4 md:px-8 lg:px-12 relative"
+        className="box-border w-full h-[100dvh] min-h-[100dvh] flex flex-col snap-always snap-center will-change-transform justify-center items-center text-white tracking-[-0.04em] leading-[90%] gap-8 lg:gap-14 px-4 md:px-8 lg:px-12 relative"
       >
         <div className="absolute top-0 left-0 w-full z-10 pt-8 flex flex-col items-center justify-center">
           <PartnershipMarquee />
@@ -216,7 +216,7 @@ const Partnership = () => {
           ref={buttonRef}
           className="w-full flex flex-row items-center justify-center"
         >
-          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-5 py-2 lg:px-8 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
+          <div onClick={toggleDrawer} className="flex cursor-pointer mt-3 items-center gap-1 px-9 py-3 lg:px-10 lg:py-4 border-2 border-white rounded-full text-white bg-transparent hover:bg-[#EDECE4] hover:text-black transition-all duration-300">
             <p className="text-3xl lg:text-4xl">Let&apos;s Partner Up</p>
             <FiArrowUpRight
               size={34}
@@ -230,16 +230,16 @@ const Partnership = () => {
       {/* Drawer Overlay */}
       <div
         ref={overlayRef}
-        className="fixed inset-0 bg-black/70 backdrop-blur-[2px] opacity-0 pointer-events-none z-40 transition-opacity"
+        className="fixed inset-0 bg-[#1C1B1C]/80 opacity-0 pointer-events-none z-40 transition-opacity"
         onClick={toggleDrawer}
       />
 
       {/* Drawer Component */}
       <div
         ref={drawerRef}
-        className="fixed right-0 md:right-0 top-0 md:top-[2.5vh] h-[92vh] md:h-[95vh] lg:h-[95vh] w-full lg:w-[40vw] px-2 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
+        className="fixed right-0 md:right-0 top-0 md:top-[0vh] h-[95vh] md:h-[100vh] lg:h-[100vh] w-full lg:w-[40vw] px-2 pb-4 flex flex-row items-center justify-center text-black transform translate-x-full z-50"
       >
-        <div className="shadow-2xl rounded-xl w-[96%] md:w-[97%] lg:w-full h-11/12 bg-[#EDECE4] overflow-hidden">
+        <div className="shadow-2xl rounded-xl w-[96%] md:w-[98%] lg:w-full h-[90%] bg-[#EDECE4] overflow-hidden">
           {/* Drawer Header */}
           <div className="flex flex-col px-4 md:px-6 py-2">
             <div className="flex flex-row justify-end">
@@ -250,7 +250,7 @@ const Partnership = () => {
                 <GoX size={24} className="text-gray-600" />
               </button>
             </div>
-            <h2 className="text-3xl md:text-4xl font-medium pt-2 pb-2 text-left">
+            <h2 className="text-3xl md:text-4xl font-medium pt-0 pb-[1.75rem] text-left">
               {!success ? "Tell us where you’re at" : 'We’ve got it. The next move is ours.'}
             </h2>
           </div>
@@ -261,7 +261,7 @@ const Partnership = () => {
               {!success ? (
                 <>
                   <ContactForm setSuccess={setSuccess} />
-                  <div className="h-[80px] w-full"></div>
+                  <div className="h-[100px] w-full"></div>
                 </>
               ) : (
                 <div className="flex flex-col">
