@@ -570,76 +570,6 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-35"
-        >
-          <g>
-            <path
-              fill="url(#e)"
-              d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
-              className="morph-shape"
-            />
-          </g>
-          <path
-            stroke="url(#f)"
-            strokeWidth={2.5}
-            d="M225.75 147c0-44.045-35.705-79.75-79.75-79.75S66.25 102.955 66.25 147s35.705 79.75 79.75 79.75 79.75-35.705 79.75-79.75Z"
-            className="morph-shape-highlight"
-          />
-          <defs>
-            <linearGradient
-              id="b"
-              x1={147}
-              x2={147}
-              y1={0}
-              y2={294}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#fff" />
-              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
-              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient
-              id="c"
-              x1={147}
-              x2={147}
-              y1={0}
-              y2={294}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FDFFFE" />
-              <stop offset={0.4} stopColor="#549876" />
-              <stop offset={1} stopColor="#fff" />
-            </linearGradient>
-            <linearGradient
-              id="e"
-              x1={146}
-              x2={146}
-              y1={66}
-              y2={228}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#fff" />
-              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
-              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient
-              id="f"
-              x1={146}
-              x2={146}
-              y1={66}
-              y2={228}
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#FDFFFE" />
-              <stop offset={0.4} stopColor="#549876" />
-              <stop offset={1} stopColor="#fff" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="64 64 166 166"
-          fill="none"
           className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-50"
         >
           <g>
@@ -710,7 +640,77 @@ export default function MorphingShape({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-75"
+          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-75"
+        >
+          <g>
+            <path
+              fill="url(#e)"
+              d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
+              className="morph-shape"
+            />
+          </g>
+          <path
+            stroke="url(#f)"
+            strokeWidth={2.5}
+            d="M225.75 147c0-44.045-35.705-79.75-79.75-79.75S66.25 102.955 66.25 147s35.705 79.75 79.75 79.75 79.75-35.705 79.75-79.75Z"
+            className="morph-shape-highlight"
+          />
+          <defs>
+            <linearGradient
+              id="b"
+              x1={147}
+              x2={147}
+              y1={0}
+              y2={294}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#fff" />
+              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
+              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
+            </linearGradient>
+            <linearGradient
+              id="c"
+              x1={147}
+              x2={147}
+              y1={0}
+              y2={294}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#FDFFFE" />
+              <stop offset={0.4} stopColor="#549876" />
+              <stop offset={1} stopColor="#fff" />
+            </linearGradient>
+            <linearGradient
+              id="e"
+              x1={146}
+              x2={146}
+              y1={66}
+              y2={228}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#fff" />
+              <stop offset={0.6} stopColor="#4CAA7D" stopOpacity={0.1} />
+              <stop offset={1} stopColor="#E1FFF1" stopOpacity={0.5} />
+            </linearGradient>
+            <linearGradient
+              id="f"
+              x1={146}
+              x2={146}
+              y1={66}
+              y2={228}
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#FDFFFE" />
+              <stop offset={0.4} stopColor="#549876" />
+              <stop offset={1} stopColor="#fff" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="64 64 166 166"
+          fill="none"
+          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[22%] md:w-[20%] lg:w-[9.5rem] aspect-square opacity-100"
         >
           <g>
             <path
