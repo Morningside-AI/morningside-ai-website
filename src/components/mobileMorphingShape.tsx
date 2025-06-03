@@ -460,15 +460,19 @@ export default function MorphingShape({
         <g filter="url(#d)" id="innerCircle">
           <path
             fill="url(#e)"
+            transform="translate(147 147) scale(0.8) translate(-147 -147)"
             d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
           />
+
         </g>
         <path
           id="innerCircleHighlight"
           stroke="url(#f)"
-          strokeWidth={2.5}
+          stroke-width="2.5"
+          transform="translate(147 147) scale(0.8) translate(-147 -147)"
           d="M225.75 147c0-44.045-35.705-79.75-79.75-79.75S66.25 102.955 66.25 147s35.705 79.75 79.75 79.75 79.75-35.705 79.75-79.75Z"
         />
+
         <defs>
           <linearGradient
             id="b"
