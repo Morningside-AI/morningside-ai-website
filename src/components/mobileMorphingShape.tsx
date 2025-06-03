@@ -111,7 +111,7 @@ export default function MorphingShape({
     const fromY = isMobile ? "-75vh" : isTablet ? "-52rem" : "-48rem";
     const toY = isMobile ? "36vh" : isTablet ? "36vh" : "14vh";
     const fromScale = isMobile ? 1.2 : isTablet ? 1.2 : 1;
-    const toScale = isMobile ? 0.55 : isTablet ? 0.6 : 0.4;
+    const toScale = isMobile ? 0.42 : isTablet ? 0.6 : 0.4;
     gsap.timeline({
       scrollTrigger: {
         trigger: "#snappy-31",
@@ -460,19 +460,15 @@ export default function MorphingShape({
         <g filter="url(#d)" id="innerCircle">
           <path
             fill="url(#e)"
-            transform="translate(147 147) scale(0.8) translate(-147 -147)"
             d="M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z"
           />
-
         </g>
         <path
           id="innerCircleHighlight"
           stroke="url(#f)"
-          stroke-width="2.5"
-          transform="translate(147 147) scale(0.8) translate(-147 -147)"
+          strokeWidth={2.5}
           d="M225.75 147c0-44.045-35.705-79.75-79.75-79.75S66.25 102.955 66.25 147s35.705 79.75 79.75 79.75 79.75-35.705 79.75-79.75Z"
         />
-
         <defs>
           <linearGradient
             id="b"
