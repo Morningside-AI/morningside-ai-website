@@ -118,7 +118,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: 1.25,
+        scrub: 0.4,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -133,7 +133,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: 1.25,
+        scrub: 0.3,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -173,7 +173,7 @@ export default function MorphingShape({
         start: "top top",
         endTrigger: "#snappy-33",
         end: "+=100%",
-        scrub: 1.25,
+        scrub: 0.3,
         scroller: scrollContainer,
       },
     });
@@ -252,7 +252,7 @@ export default function MorphingShape({
         start: "center 70%",
         endTrigger: "#snappy-34",
         end: "top 10%",
-        scrub: 1.25,
+        scrub: 0.3,
         scroller: scrollContainer,
       },
     });
@@ -273,7 +273,7 @@ export default function MorphingShape({
           trigger: "#snappy-34",
           start: "top bottom", // or adjust as needed
           end: "top center",
-          scrub: 1.25,
+          scrub: 0.3,
           scroller: scrollContainer,
         },
       });
@@ -285,7 +285,7 @@ export default function MorphingShape({
         start: "bottom bottom",
         endTrigger: "#snappy-34",
         end: "top top",
-        scrub: 0.5,
+        scrub: 0.3,
         scroller: scrollContainer,
       },
     });
@@ -300,11 +300,49 @@ export default function MorphingShape({
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px",
       opacity: 1,
       duration: 0.2,
+      delay: 0.2,
       ease: "power1.inOut",
     });
 
     const spheresMoveTimeline = gsap.timeline();
 
+    circlePaths.forEach((path) => {
+      const interpolator = flubber.interpolate(originalShape, squareShape, {
+        maxSegmentLength: 2,
+      }) as (t: number) => string;
+
+
+      moveTimeline.to(path, {
+        duration: 1,
+        ease: "none",
+        onUpdate: function () {
+          const tween = this as unknown as gsap.core.Tween;
+          const progress = tween.progress();
+          (path as SVGPathElement).setAttribute("d", interpolator(progress));
+        },
+      });
+    });
+
+    highlightPaths.forEach((path) => {
+      const interpolator = flubber.interpolate(originalShape, squareShape, {
+        maxSegmentLength: 2,
+      }) as (t: number) => string;
+
+      moveTimeline.to(path, {
+        duration: 1,
+        ease: "none",
+        onUpdate: function () {
+          const tween = this as unknown as gsap.core.Tween;
+          const progress = tween.progress();
+          (path as SVGPathElement).setAttribute("d", interpolator(progress));
+        },
+      });
+    }, '<');
+
+
+    spheresMoveTimeline.to({}, {
+      duration: 0.2, // pause to hold square shape
+    });
     // Animate original 3 spheres
     smallSpheresArray.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
@@ -314,7 +352,7 @@ export default function MorphingShape({
       // 0 → down, 1 → up, 2 → down
       const direction = index === 1 ? -1 : 1;
 
-      spheresMoveTimeline.to(
+      moveTimeline.to(
         sphere,
         {
           y: direction * offset,
@@ -336,7 +374,7 @@ export default function MorphingShape({
         const offset = isMobile ? baseOffset : isTablet ? baseOffset : baseOffset / 3;
         const deeperOffset = offset * 2;
 
-        spheresMoveTimeline.fromTo(
+        moveTimeline.fromTo(
           cloneSphere,
           {
             ease: "power2.inOut",

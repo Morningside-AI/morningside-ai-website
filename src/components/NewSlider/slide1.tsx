@@ -49,7 +49,7 @@ const Slide1 = () => {
     gsap.fromTo(
       [title],
       { opacity: 0 },
-      { opacity: 1, duration: 0.6, delay: 0.3, ease: "sine.inOut", }
+      { opacity: 1, duration: 0.7, delay: 0.4, ease: "sine.inOut", }
     );
   };
 
