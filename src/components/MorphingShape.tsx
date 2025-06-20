@@ -118,7 +118,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: true,
+        scrub: 1.7,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -133,7 +133,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: true,
+        scrub: 1.7,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -166,6 +166,7 @@ export default function MorphingShape({
       scale: isMobile ? 0.7 : isTablet ? 0.6 : 1,
       opacity: 0,
       yPercent: 0,
+      y: 0
     });
 
     const tl = gsap.timeline({
@@ -174,7 +175,7 @@ export default function MorphingShape({
         start: "top top",
         endTrigger: "#snappy-33",
         end: "+=100%",
-        scrub: true,
+        scrub: 1.7,
         scroller: scrollContainer,
       },
     });
@@ -242,7 +243,7 @@ export default function MorphingShape({
       xPercent: -50,
       yPercent: 0,
       marginTop: isMobile ? "0rem" : isTablet ? "0rem" : "0rem",
-      scale: scaling,
+      scale: 0.85,
       duration: 0.1,
       ease: "none",
     });
@@ -254,7 +255,7 @@ export default function MorphingShape({
         start: "center 60%",
         endTrigger: "#snappy-34",
         end: "top 10%",
-        scrub: true,
+        scrub: 1.5,
         scroller: scrollContainer,
       },
     });
@@ -275,7 +276,7 @@ export default function MorphingShape({
           trigger: "#snappy-34",
           start: "top bottom", // or adjust as needed
           end: "top center",
-          scrub: true,
+          scrub: 1.5,
           scroller: scrollContainer,
         },
       });
@@ -287,7 +288,7 @@ export default function MorphingShape({
         start: "bottom bottom",
         endTrigger: "#snappy-34",
         end: "top top",
-        scrub: 0.5,
+        scrub: 1.2,
         scroller: scrollContainer,
       },
     });
@@ -302,7 +303,6 @@ export default function MorphingShape({
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px",
       opacity: 1,
       duration: 0.2,
-      delay: 0.2,
       ease: "power1.inOut",
     });
 
@@ -310,9 +310,46 @@ export default function MorphingShape({
     // Create a new timeline for parallel animations
     const spheresMoveTimeline = gsap.timeline();
 
+    circlePaths.forEach((path) => {
+      const interpolator = flubber.interpolate(originalShape, squareShape, {
+        maxSegmentLength: 2,
+      }) as (t: number) => string;
+
+
+      moveTimeline.to(path, {
+        duration: 1,
+        ease: "none",
+        onUpdate: function () {
+          const tween = this as unknown as gsap.core.Tween;
+          const progress = tween.progress();
+          (path as SVGPathElement).setAttribute("d", interpolator(progress));
+        },
+      });
+    });
+
+    highlightPaths.forEach((path) => {
+      const interpolator = flubber.interpolate(originalShape, squareShape, {
+        maxSegmentLength: 2,
+      }) as (t: number) => string;
+
+      moveTimeline.to(path, {
+        duration: 1,
+        ease: "none",
+        onUpdate: function () {
+          const tween = this as unknown as gsap.core.Tween;
+          const progress = tween.progress();
+          (path as SVGPathElement).setAttribute("d", interpolator(progress));
+        },
+      });
+    }, '<');
+
+    moveTimeline.to({}, {
+      duration: 0.2, // pause to hold square shape
+    });
+
     smallSpheres.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 2.8 : baseOffset / 3;
+      const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 2.8 : baseOffset / 2.6;
 
       let direction = -1;
       if (index === 1) direction = 1;
@@ -320,27 +357,26 @@ export default function MorphingShape({
       if (index === 4) direction = -1;
 
       // Add to parallel timeline instead of masterTimeline
-      spheresMoveTimeline.to(
+      moveTimeline.to(
         sphere,
         {
           y: direction * offset,
           marginTop: "0rem",
           ease: "power2.inOut",
           duration: 1.6,
+          scale: 0.85
         },
-        "<" // Start at same time as previous animation
       );
     });
 
-    // Add the parallel timeline to masterTimeline
-    masterTimeline.add(spheresMoveTimeline);
+    
 
     // Add the clone animation separately (4th clone → down)
     if (clone) {
       const baseOffset = clone.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 3;
+      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 2.6;
 
-      masterTimeline.fromTo(clone,
+      moveTimeline.fromTo(clone,
         {
           ease: "power2.inOut",
           y: offset,
@@ -355,6 +391,9 @@ export default function MorphingShape({
         }
       );
     }
+
+    // Add the parallel timeline to masterTimeline
+    masterTimeline.add(spheresMoveTimeline);
 
 
     ScrollTrigger.create({

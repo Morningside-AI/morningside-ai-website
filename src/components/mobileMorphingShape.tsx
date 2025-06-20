@@ -118,7 +118,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: true,
+        scrub: 1.25,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -133,7 +133,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: true,
+        scrub: 1.25,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -173,7 +173,7 @@ export default function MorphingShape({
         start: "top top",
         endTrigger: "#snappy-33",
         end: "+=100%",
-        scrub: true,
+        scrub: 1.25,
         scroller: scrollContainer,
       },
     });
@@ -252,7 +252,7 @@ export default function MorphingShape({
         start: "center 70%",
         endTrigger: "#snappy-34",
         end: "top 10%",
-        scrub: true,
+        scrub: 1.25,
         scroller: scrollContainer,
       },
     });
@@ -273,7 +273,7 @@ export default function MorphingShape({
           trigger: "#snappy-34",
           start: "top bottom", // or adjust as needed
           end: "top center",
-          scrub: true,
+          scrub: 1.25,
           scroller: scrollContainer,
         },
       });
@@ -300,7 +300,6 @@ export default function MorphingShape({
       gap: isMobile ? "0.1rem" : isTablet ? "0.1rem" : "0px",
       opacity: 1,
       duration: 0.2,
-      delay: 0.2,
       ease: "power1.inOut",
     });
 
@@ -351,6 +350,7 @@ export default function MorphingShape({
             opacity: 1,
             duration: 1.6,
           },
+          ">"
         );
       })
     }
