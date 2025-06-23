@@ -382,7 +382,6 @@ export default function MorphingShape({
             opacity: 1,
             duration: 1.6,
           },
-          "spheresMove"  
         );
       })
     }
