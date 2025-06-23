@@ -306,39 +306,33 @@ export default function MorphingShape({
 
     const spheresMoveTimeline = gsap.timeline();
 
-    circlePaths.forEach((path) => {
-      const interpolator = flubber.interpolate(originalShape, squareShape, {
+    for (let i = 0; i < circlePaths.length; i++) {
+      const circlePath = circlePaths[i] as SVGPathElement;
+      const highlightPath = highlightPaths[i] as SVGPathElement;
+    
+      const circleInterpolator = flubber.interpolate(originalShape, squareShape, {
         maxSegmentLength: 2,
       }) as (t: number) => string;
-
-
-      moveTimeline.to(path, {
-        duration: 1,
-        ease: "none",
-        onUpdate: function () {
-          const tween = this as unknown as gsap.core.Tween;
-          const progress = tween.progress();
-          (path as SVGPathElement).setAttribute("d", interpolator(progress));
-        },
-      });
-    });
-
-    highlightPaths.forEach((path) => {
-      const interpolator = flubber.interpolate(originalShape, squareShape, {
+    
+      const highlightInterpolator = flubber.interpolate(originalShape, squareShape, {
         maxSegmentLength: 2,
       }) as (t: number) => string;
-
-      moveTimeline.to(path, {
-        duration: 1,
-        ease: "none",
-        onUpdate: function () {
-          const tween = this as unknown as gsap.core.Tween;
-          const progress = tween.progress();
-          (path as SVGPathElement).setAttribute("d", interpolator(progress));
+    
+      moveTimeline.to(
+        {},
+        {
+          duration: 1,
+          ease: "none",
+          onUpdate: function () {
+            const tween = this as unknown as gsap.core.Tween;
+            const progress = tween.progress();
+            circlePath.setAttribute("d", circleInterpolator(progress));
+            highlightPath.setAttribute("d", highlightInterpolator(progress));
+          },
         },
-      });
-    }, '<');
-
+        0 // 👈 ensures all paths morph together in perfect sync
+      );
+    }
 
     spheresMoveTimeline.to({}, {
       duration: 0.2, // pause to hold square shape
@@ -360,7 +354,7 @@ export default function MorphingShape({
           ease: "power2.inOut",
           duration: 1.6,
         },
-        "<"
+        "spheresMove"  
       );
     });
 
@@ -388,7 +382,7 @@ export default function MorphingShape({
             opacity: 1,
             duration: 1.6,
           },
-          ">"
+          "spheresMove"  
         );
       })
     }
