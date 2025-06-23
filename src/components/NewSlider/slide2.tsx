@@ -20,7 +20,8 @@ const Slide2 = () => {
     const title = titleRef.current;
     const text = textRef.current;
 
-    gsap.set([title, text], { opacity: 0, x: 100 });
+    gsap.set([title], { opacity: 0, y: 50 });
+    gsap.set([text], { opacity: 0 });
 
     const trigger = ScrollTrigger.create({
       trigger: slide2Ref.current,
@@ -35,7 +36,8 @@ const Slide2 = () => {
 
     const handleScroll = () => {
       if (!trigger.isActive) {
-        gsap.set([title, text], { opacity: 0, x: 100 });
+        gsap.set([title], { opacity: 0, y: 50 });
+        gsap.set([text], { opacity: 0 });
       }
     };
 
@@ -48,18 +50,30 @@ const Slide2 = () => {
 
   const animateIn = (title: HTMLElement, text: HTMLElement) => {
     gsap.fromTo(
-      [title, text],
-      { opacity: 0, x: 100 },
-      { opacity: 1, x: 0, duration: 0.4, delay: 0.06, ease: "none" }
+      [title],
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 0.4, delay: 0.06, ease: "none" }
+    );
+    gsap.fromTo(
+      [text],
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5, delay: 0.1, ease: "none" }
     );
   };
 
   const animateOut = (title: HTMLElement, text: HTMLElement) => {
-    gsap.to([title, text], {
+    gsap.to([title], {
       opacity: 0,
-      x: 100,
+      y: 50,
       duration: 0.2,
       delay: 0.03,
+      ease: "none",
+    });
+
+    gsap.to([text], {
+      opacity: 0,
+      duration: 0.3,
+      delay: 0.1,
       ease: "none",
     });
   };
