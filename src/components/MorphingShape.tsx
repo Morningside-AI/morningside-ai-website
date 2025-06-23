@@ -359,9 +359,10 @@ export default function MorphingShape({
           y: direction * offset,
           marginTop: "0rem",
           ease: "power2.inOut",
-          duration: 1.6,
-          scale: 0.85
+          duration: 2.5,
+          scale: 0.85,
         },
+        "spheresMove"        // all share the same label => simultaneous
       );
     });
 
@@ -372,19 +373,21 @@ export default function MorphingShape({
       const baseOffset = clone.getBoundingClientRect().height;
       const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 2.6;
 
-      moveTimeline.fromTo(clone,
+      moveTimeline.fromTo(
+        clone,
         {
-          ease: "power2.inOut",
           y: offset,
           opacity: 0,
-          duration: 1.6,
+          ease: "power2.inOut",
+          duration: 2.5,
         },
         {
-          y: offset, // move down
-          ease: "power2.inOut",
+          y: offset,
           opacity: 1,
-          duration: 1.6,
-        }
+          ease: "power2.inOut",
+          duration: 2.5,
+        },
+        "spheresMove"        // start together with the rest
       );
     }
 
