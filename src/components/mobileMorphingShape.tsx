@@ -118,7 +118,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: 0.4,
+        scrub: 0.5,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -133,7 +133,7 @@ export default function MorphingShape({
         start: "top 90%",
         endTrigger: "#snappy-32",
         end: "top top",
-        scrub: 0.3,
+        scrub: 0.4,
         scroller: scrollContainer,
       },
     }).fromTo(
@@ -173,7 +173,7 @@ export default function MorphingShape({
         start: "top top",
         endTrigger: "#snappy-33",
         end: "+=100%",
-        scrub: 0.3,
+        scrub: 0.4,
         scroller: scrollContainer,
       },
     });
@@ -252,7 +252,7 @@ export default function MorphingShape({
         start: "center 70%",
         endTrigger: "#snappy-34",
         end: "top 10%",
-        scrub: 0.3,
+        scrub: 0.4,
         scroller: scrollContainer,
       },
     });
@@ -273,7 +273,7 @@ export default function MorphingShape({
           trigger: "#snappy-34",
           start: "top bottom", // or adjust as needed
           end: "top center",
-          scrub: 0.3,
+          scrub: 0.4,
           scroller: scrollContainer,
         },
       });
@@ -285,7 +285,7 @@ export default function MorphingShape({
         start: "bottom bottom",
         endTrigger: "#snappy-34",
         end: "top top",
-        scrub: 0.3,
+        scrub: 0.4,
         scroller: scrollContainer,
       },
     });
@@ -597,7 +597,7 @@ export default function MorphingShape({
         </defs>
       </svg>
 
-      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 lg:w-6/12 md:bg-red-700 h-fit flex flex-row items-center justify-center gap-2 md:gap-8 lg:gap-4 pointer-events-none opacity-0">
+      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 lg:w-6/12 h-fit flex flex-row items-center justify-center gap-2 md:gap-8 lg:gap-4 pointer-events-none opacity-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
