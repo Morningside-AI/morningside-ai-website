@@ -136,10 +136,10 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                     <Label name="Project budget" field="project_budget" />
                     <Field as="select" name="project_budget" className="border">
                         <option value="">Select budget range</option>
-                        <option value="<10K>">Less than $10K</option>
-                        <option value="10K-50K">$10K-$50K</option>
-                        <option value="51K-100K">$50K-$100K</option>
-                        <option value=">100K">More than $100K</option>
+                        <option value="Less than $10K">Less than $10K</option>
+                        <option value="$10K-$50K">$10K-$50K</option>
+                        <option value="$50K-$100K">$50K-$100K</option>
+                        <option value="More than $100K">More than $100K</option>
                     </Field>
                     <Error name="project_budget" />
                 </div>
