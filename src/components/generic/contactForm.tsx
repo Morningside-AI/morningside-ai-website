@@ -151,7 +151,7 @@ const ContactForm = ({ setSuccess }: { setSuccess: (val: boolean) => void }) => 
                         <option value="">Select service</option>
                         <option value="Identifying">Identifying AI opportunities</option>
                         <option value="Educating">Educating your team on AI</option>
-                        <option value="Developping">Developing custom AI solutions</option>
+                        <option value="Developing">Developing custom AI solutions</option>
                     </Field>
                     <Error name="services_needed" />
                 </div>
