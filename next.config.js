@@ -11,12 +11,12 @@ const config = {
 
       {
         source: "/careers",
-        destination: "https://tally.so/r/wbYr52",
+        destination: "https://bit.ly/mai-website",
         permanent: true,
       },
       {
         source: "/jobs",
-        destination: "https://tally.so/r/wbYr52",
+        destination: "https://bit.ly/mai-website",
         permanent: true,
       },
     ];

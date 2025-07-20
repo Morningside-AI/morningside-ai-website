@@ -156,7 +156,7 @@ const ContactFooter = () => {
                                 Get In Touch
                                 <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
                             </button>
-                            <Link href="https://tally.so/r/wbYr52" target="_blank" className="w-full cursor-pointer">
+                            <Link href="https://bit.ly/mai-website" target="_blank" className="w-full cursor-pointer">
                                 <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                     Explore Careers
                                     <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />

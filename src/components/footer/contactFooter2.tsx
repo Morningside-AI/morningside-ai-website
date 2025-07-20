@@ -22,7 +22,7 @@ const ContactFooter2 = () => {
                             <p className="whitespace-pre-wrap text-white cursor-pointer hover:text-white/80 my-2">info@morningside.ai</p>
                         </Link>
                         <div className="flex flex-row gap-2 relative z-10 sm:mb-0 md:mb-16 lg:mb-10">
-                            <Link href="https://tally.so/r/wbYr52" target="_blank" className="w-full cursor-pointer">
+                            <Link href="https://bit.ly/mai-website" target="_blank" className="w-full cursor-pointer">
                                 <button className="flex items-center cursor-pointer gap-1 px-4 py-2 border border-white rounded-full text-white bg-transparent hover:bg-white hover:text-black whitespace-nowrap">
                                     Explore Careers
                                     <GoArrowUpRight size={18} strokeWidth={1} className="mt-1 transition-all duration-300" />
