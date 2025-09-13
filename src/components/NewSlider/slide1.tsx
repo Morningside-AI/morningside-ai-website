@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,17 +10,70 @@ import Step3 from "@/assets/images/animation/entrance.svg";
 gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 const Slide1 = () => {
-  const centerRef = useRef<HTMLDivElement>(null);
+  const slide1Ref = useRef(null);
+  const titleRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const scrollContainer = document.querySelector("#page-wrapper");
+    if (!scrollContainer || !titleRef.current || !slide1Ref.current) return;
+
+    const title = titleRef.current;
+
+    gsap.set([title], { opacity: 0 });
+
+    const trigger = ScrollTrigger.create({
+      trigger: slide1Ref.current,
+      start: "top center",
+      end: "bottom center",
+      scroller: scrollContainer,
+      onEnter: () => animateIn(title),
+      onLeave: () => animateOut(title),
+      onEnterBack: () => animateIn(title),
+      onLeaveBack: () => animateOut(title),
+    });
+
+    const handleScroll = () => {
+      if (!trigger.isActive) {
+        gsap.set([title], { opacity: 0 });
+      }
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll);
+    return () => {
+      trigger.kill();
+      scrollContainer.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const animateIn = (title: HTMLElement) => {
+    gsap.fromTo(
+      [title],
+      { opacity: 0 },
+      { opacity: 1, duration: 0.7, delay: 0.4, ease: "sine.inOut", }
+    );
+  };
+
+  const animateOut = (title: HTMLElement) => {
+    gsap.to([title], {
+      opacity: 0,
+      duration: 0.4,
+      delay: 0.03,
+      ease: "sine.inOut",
+    });
+  };
+
+
 
   return (
     <div
       id="center-section"
-      ref={centerRef}
+      ref={slide1Ref}
       className="box-border gap-8 w-full h-[100dvh] min-h-[100dvh] flex flex-col will-change-transform justify-center items-center text-white leading-normal tracking-normal"
     >
       <div className="w-full flex-col items-center justify-center gap-12 px-4 md:px-8 lg:px-12 mx-auto">
         <p
           className="text-2xl md:text-5xl w-full text-center leading-tight whitespace-pre-wrap"
+          ref={titleRef}
         >
           <span className="white-silver-animated-text">We </span>
           <span className="white-silver-animated-text1">spend </span>
