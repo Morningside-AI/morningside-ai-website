@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
-import * as flubber from "flubber";
 import "@/styles/fonts.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -15,10 +14,9 @@ const LABELS = [
   { title: "DEVELOP", index: 3, targetId: "snappy-34" },
 ];
 
-
 export default function MorphingShape({
   isMobile,
-  isTablet
+  isTablet,
 }: {
   isMobile: boolean;
   isTablet: boolean;
@@ -40,7 +38,8 @@ export default function MorphingShape({
     if (scrollContainer && target) {
       const containerRect = scrollContainer.getBoundingClientRect();
       const targetRect = target.getBoundingClientRect();
-      const scrollOffset = targetRect.top - containerRect.top + scrollContainer.scrollTop;
+      const scrollOffset =
+        targetRect.top - containerRect.top + scrollContainer.scrollTop;
 
       gsap.to(scrollContainer, {
         scrollTop: scrollOffset,
@@ -52,10 +51,16 @@ export default function MorphingShape({
             ScrollTrigger.refresh();
 
             // 🔥 Force-hide all slide text/title elements
-            const allTitles = document.querySelectorAll('[id^="snappy-"][id$="-title"]');
-            const allTexts = document.querySelectorAll('[id^="snappy-"][id$="-text"]');
-            allTitles.forEach((el) => (el as HTMLElement).style.opacity = "0");
-            allTexts.forEach((el) => (el as HTMLElement).style.opacity = "0");
+            const allTitles = document.querySelectorAll(
+              '[id^="snappy-"][id$="-title"]',
+            );
+            const allTexts = document.querySelectorAll(
+              '[id^="snappy-"][id$="-text"]',
+            );
+            allTitles.forEach(
+              (el) => ((el as HTMLElement).style.opacity = "0"),
+            );
+            allTexts.forEach((el) => ((el as HTMLElement).style.opacity = "0"));
 
             // Optional: re-trigger visibility for the active section's text/title
             const visibleTitle = document.querySelector(`#${targetId}-title`);
@@ -68,13 +73,11 @@ export default function MorphingShape({
                 ease: "power2.out",
               });
             }
-
           }, 100);
         },
       });
     }
   };
-
 
   useEffect(() => {
     const scrollContainer = document.querySelector("#page-wrapper");
@@ -82,10 +85,20 @@ export default function MorphingShape({
     const wrapper = wrapperRef.current;
     const outerCircle = document.getElementById("outerCircle");
     const innerCircle = document.getElementById("innerCircle");
-    const innerCircleHighlight = document.getElementById("innerCircleHighlight");
+    const innerCircleHighlight = document.getElementById(
+      "innerCircleHighlight",
+    );
     const labels = labelsRef.current;
 
-    if (!svg || !wrapper || !scrollContainer || !outerCircle || !innerCircle || !innerCircleHighlight) return;
+    if (
+      !svg ||
+      !wrapper ||
+      !scrollContainer ||
+      !outerCircle ||
+      !innerCircle ||
+      !innerCircleHighlight
+    )
+      return;
 
     // Initial state
     gsap.set(wrapper, { autoAlpha: 0 });
@@ -112,44 +125,47 @@ export default function MorphingShape({
     const toY = isMobile ? "32vh" : isTablet ? "36vh" : "14vh";
     const fromScale = isMobile ? 1.2 : isTablet ? 1.2 : 1;
     const toScale = isMobile ? 0.55 : isTablet ? 0.6 : 0.4;
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: "#snappy-31",
-        start: "top 90%",
-        endTrigger: "#snappy-32",
-        end: "top top",
-        scrub: true,
-        scroller: scrollContainer,
-      },
-    }).fromTo(
-      svg,
-      { bottom: fromY, scale: fromScale },
-      { bottom: toY, scale: toScale, ease: "none" }
-    );
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: "#snappy-31",
+          start: "top 90%",
+          endTrigger: "#snappy-32",
+          end: "top top",
+          scrub: true,
+          scroller: scrollContainer,
+        },
+      })
+      .fromTo(
+        svg,
+        { bottom: fromY, scale: fromScale },
+        { bottom: toY, scale: toScale, ease: "none" },
+      );
 
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: "#snappy-32",
-        start: "top 90%",
-        endTrigger: "#snappy-32",
-        end: "top top",
-        scrub: true,
-        scroller: scrollContainer,
-      },
-    }).fromTo(
-      labels,
-      {
-        opacity: 0,
-        duration: 0.2,
-        ease: "none",
-      },
-      {
-        opacity: 1,
-        duration: 0.2,
-        ease: "none",
-      }
-    );
-
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: "#snappy-32",
+          start: "top 90%",
+          endTrigger: "#snappy-32",
+          end: "top top",
+          scrub: true,
+          scroller: scrollContainer,
+        },
+      })
+      .fromTo(
+        labels,
+        {
+          opacity: 0,
+          duration: 0.2,
+          ease: "none",
+        },
+        {
+          opacity: 1,
+          duration: 0.2,
+          ease: "none",
+        },
+      );
 
     // appearance of small spheres ONLY from 32 → 33
     const smallSpheres = document.querySelectorAll(".smallSphere");
@@ -178,8 +194,6 @@ export default function MorphingShape({
         scroller: scrollContainer,
       },
     });
-
-
 
     // Inside your useEffect after the first timeline
     tl.to([outerCircle, innerCircleHighlight], {
@@ -218,9 +232,9 @@ export default function MorphingShape({
             top: topPosition + "px",
             left: "50%",
             xPercent: -50,
-            yPercent: -50
+            yPercent: -50,
           });
-        }
+        },
       });
 
     const centerIndex = Math.floor(smallSpheres.length / 2);
@@ -237,7 +251,10 @@ export default function MorphingShape({
       delay: 0.1,
       ease: "none",
     }).to(clone, {
-      x: isMobile || isTablet ? (1 - centerIndex) * spacing : (3 - centerIndex) * spacing,
+      x:
+        isMobile || isTablet
+          ? (1 - centerIndex) * spacing
+          : (3 - centerIndex) * spacing,
       y: 0,
       xPercent: -50,
       yPercent: 0,
@@ -246,7 +263,6 @@ export default function MorphingShape({
       duration: 0.1,
       ease: "none",
     });
-
 
     const masterTimeline = gsap.timeline({
       scrollTrigger: {
@@ -260,10 +276,13 @@ export default function MorphingShape({
     });
 
     const circlePaths = document.querySelectorAll(".smallSphere .morph-shape");
-    const highlightPaths = document.querySelectorAll(".smallSphere .morph-shape-highlight");
+    const highlightPaths = document.querySelectorAll(
+      ".smallSphere .morph-shape-highlight",
+    );
 
     // Original `d` values from your circles:
-    const originalShape = "M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z";
+    const originalShape =
+      "M227 147c0-44.735-36.265-81-81-81s-81 36.265-81 81 36.265 81 81 81 81-36.265 81-81Z";
     const squareShape = `M78,66 H216 C222.627,66 228,71.373 228,78 V216 C228,222.627 222.627,228 216,228 H78 C71.373,228 66,222.627 66,216 V78 C66,71.373 71.373,66 78,66 Z`;
 
     smallSpheres.forEach((sphere) => {
@@ -293,9 +312,12 @@ export default function MorphingShape({
     });
 
     // Delay visually (without scroll delay, use dummy animation)
-    masterTimeline.to({}, {
-      duration: 0.2, // pause to hold square shape
-    });
+    masterTimeline.to(
+      {},
+      {
+        duration: 0.2, // pause to hold square shape
+      },
+    );
 
     // Animate gap reduction
     masterTimeline.to(smallSpheresRef.current, {
@@ -312,7 +334,11 @@ export default function MorphingShape({
 
     smallSpheres.forEach((sphere, index) => {
       const baseOffset = sphere.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 3 : isTablet ? baseOffset / 2.8 : baseOffset / 3;
+      const offset = isMobile
+        ? baseOffset / 3
+        : isTablet
+          ? baseOffset / 2.8
+          : baseOffset / 3;
 
       let direction = -1;
       if (index === 1) direction = 1;
@@ -328,7 +354,7 @@ export default function MorphingShape({
           ease: "power2.inOut",
           duration: 1.6,
         },
-        "<" // Start at same time as previous animation
+        "<", // Start at same time as previous animation
       );
     });
 
@@ -338,9 +364,14 @@ export default function MorphingShape({
     // Add the clone animation separately (4th clone → down)
     if (clone) {
       const baseOffset = clone.getBoundingClientRect().height;
-      const offset = isMobile ? baseOffset / 1.9 : isTablet ? baseOffset / 1.5 : baseOffset / 3;
+      const offset = isMobile
+        ? baseOffset / 1.9
+        : isTablet
+          ? baseOffset / 1.5
+          : baseOffset / 3;
 
-      masterTimeline.fromTo(clone,
+      masterTimeline.fromTo(
+        clone,
         {
           ease: "power2.inOut",
           y: offset,
@@ -352,10 +383,9 @@ export default function MorphingShape({
           ease: "power2.inOut",
           opacity: 1,
           duration: 1.6,
-        }
+        },
       );
     }
-
 
     ScrollTrigger.create({
       trigger: "#snappy-4",
@@ -402,8 +432,6 @@ export default function MorphingShape({
         onLeaveBack: () => setActiveLabelIndex(null),
       });
     });
-  
-
   }, [isMobile, isTablet]);
 
   useEffect(() => {
@@ -426,22 +454,25 @@ export default function MorphingShape({
     };
   }, []);
 
-
-
-
   return (
-    <div ref={wrapperRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-50 opacity-0"
+    <div
+      ref={wrapperRef}
+      className="pointer-events-none fixed top-0 left-0 z-50 h-full w-full opacity-0"
       id="masterAnimationWrapper"
     >
       {/* Exact SVG from step3.svg */}
       <svg
+        role="img"
+        aria-labelledby="title-hero"
         ref={svgRef}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 294 294"
         fill="none"
-        className="absolute left-1/2 -translate-x-1/2 max-w-screen w-[31rem] md:w-[31rem] lg:w-[42rem] aspect-square"
+        className="absolute left-1/2 aspect-square w-[31rem] max-w-screen -translate-x-1/2 md:w-[31rem] lg:w-[42rem]"
       >
+        <title id="title-hero">
+          Animated morphing sphere sequence for Identify, Educate, and Develop
+        </title>
         <g opacity={0.8} id="outerCircle">
           <g filter="url(#a)">
             <path
@@ -526,7 +557,11 @@ export default function MorphingShape({
             filterUnits="userSpaceOnUse"
           >
             <feFlood floodOpacity={0} result="BackgroundImageFix" />
-            <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+            <feBlend
+              in="SourceGraphic"
+              in2="BackgroundImageFix"
+              result="shape"
+            />
             <feColorMatrix
               in="SourceAlpha"
               result="hardAlpha"
@@ -548,7 +583,11 @@ export default function MorphingShape({
             filterUnits="userSpaceOnUse"
           >
             <feFlood floodOpacity={0} result="BackgroundImageFix" />
-            <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+            <feBlend
+              in="SourceGraphic"
+              in2="BackgroundImageFix"
+              result="shape"
+            />
             <feColorMatrix
               in="SourceAlpha"
               result="hardAlpha"
@@ -563,12 +602,17 @@ export default function MorphingShape({
         </defs>
       </svg>
 
-      <div ref={smallSpheresRef} className="absolute w-10/12 md:w-11/12 lg:w-6/12 h-fit flex flex-row items-center justify-center gap-2 md:gap-4 lg:gap-4 pointer-events-none opacity-0">
+      <div
+        ref={smallSpheresRef}
+        className="pointer-events-none absolute flex h-fit w-10/12 flex-row items-center justify-center gap-2 opacity-0 md:w-11/12 md:gap-4 lg:w-6/12 lg:gap-4"
+      >
         <svg
+          aria-hidden="true"
+          focusable="false"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-20"
+          className="smallSphere absolute top-1/2 left-1/2 hidden aspect-square w-[25%] -translate-x-1/2 opacity-20 lg:block lg:w-[9.5rem]"
         >
           <g>
             <path
@@ -635,11 +679,17 @@ export default function MorphingShape({
           </defs>
         </svg>
         <svg
+          role="img"
+          aria-labelledby="title-identify"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-35"
+          className="smallSphere absolute top-1/2 left-1/2 aspect-square w-[25%] -translate-x-1/2 opacity-35 lg:w-[9.5rem]"
         >
+          <title id="title-identify">
+            Target icon representing Morningside identifying high-impact AI
+            opportunities for clients
+          </title>
           <g>
             <path
               fill="url(#e)"
@@ -705,11 +755,17 @@ export default function MorphingShape({
           </defs>
         </svg>
         <svg
+          role="img"
+          aria-labelledby="title-educate"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-50"
+          className="smallSphere absolute top-1/2 left-1/2 aspect-square w-[25%] -translate-x-1/2 opacity-50 lg:w-[9.5rem]"
         >
+          <title id="title-educate">
+            Five expanding circle icons representing Morningside educating teams
+            to adopt AI effectively.
+          </title>
           <g>
             <path
               fill="url(#e)"
@@ -775,11 +831,17 @@ export default function MorphingShape({
           </defs>
         </svg>
         <svg
+          role="img"
+          aria-labelledby="title-develop"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere absolute left-1/2  top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-75"
+          className="smallSphere absolute top-1/2 left-1/2 aspect-square w-[25%] -translate-x-1/2 opacity-75 lg:w-[9.5rem]"
         >
+          <title id="title-develop">
+            Six circle icons representing Morningside developing and deploying
+            an AI solution.
+          </title>
           <g>
             <path
               fill="url(#e)"
@@ -845,10 +907,12 @@ export default function MorphingShape({
           </defs>
         </svg>
         <svg
+          aria-hidden="true"
+          focusable="false"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="64 64 166 166"
           fill="none"
-          className="smallSphere hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 w-[25%] lg:w-[9.5rem] aspect-square opacity-100"
+          className="smallSphere absolute top-1/2 left-1/2 hidden aspect-square w-[25%] -translate-x-1/2 opacity-100 lg:block lg:w-[9.5rem]"
         >
           <g>
             <path
@@ -918,22 +982,12 @@ export default function MorphingShape({
 
       <div
         ref={labelsRef}
-        className="absolute left-1/2 lg:left-2 lg:top-1/2 bottom-[1vh] 
-             -translate-x-1/2 lg:-translate-x-0 lg:-translate-y-1/2 
-             -translate-y-1/2 flex flex-row lg:flex-col lg:items-start 
-             items-center justify-center lg:gap-2 gap-6 
-             px-4 md:px-8 lg:px-12 mx-auto 
-             pointer-events-auto z-[999]"
+        className="pointer-events-auto absolute bottom-[1vh] left-1/2 z-[999] mx-auto flex -translate-x-1/2 -translate-y-1/2 flex-row items-center justify-center gap-6 px-4 md:px-8 lg:top-1/2 lg:left-2 lg:-translate-x-0 lg:-translate-y-1/2 lg:flex-col lg:items-start lg:gap-2 lg:px-12"
       >
         {LABELS.map((label, index) => (
           <button
             key={label.title}
-            className={`
-              text-left 
-              ${index === 0 ? "hidden" : ""} 
-              transition-colors duration-300
-              ${activeLabelIndex === index ? "text-white" : "text-gray-500"}
-            `}
+            className={`text-left ${index === 0 ? "hidden" : ""} transition-colors duration-300 ${activeLabelIndex === index ? "text-white" : "text-gray-500"} `}
             style={{
               fontFamily: "DM-Mono-Light, monospace",
             }}

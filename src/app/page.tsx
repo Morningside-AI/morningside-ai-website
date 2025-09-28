@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import NewPreloaderWrapper from "@/components/generic/NewPreloaderWrapper";
 import SnappySection1 from "@/components/SnappySection1";
 import SnappySection2 from "@/components/SnappySection2";
@@ -10,7 +10,6 @@ import SnappySection33 from "@/components/SnappySection33";
 import SnappySection34 from "@/components/SnappySection34";
 import SnappySection4 from "@/components/SnappySection4";
 import SnappySection5 from "@/components/SnappySection5";
-import SnappySection6 from "@/components/SnappySection6";
 import SnappySection7 from "@/components/SnappySection7";
 import MorphingShape from "@/components/MorphingShape";
 import MobileMorphingShape from "@/components/mobileMorphingShape";

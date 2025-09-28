@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
-import * as flubber from "flubber";
 import "@/styles/fonts.css";
 
 gsap.registerPlugin(ScrollTrigger);

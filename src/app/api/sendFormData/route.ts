@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-// Define the structure of the expected form data
 interface FormData {
   name: string;
   email: string;
@@ -18,19 +17,15 @@ interface FormData {
 
 export async function POST(request: Request) {
   try {
-    // Type assertion here: assert the response of `request.json()` is of type `FormData`
     const formData = (await request.json()) as FormData;
 
-    const response = await fetch(
-      "https://hook.eu2.make.com/4f3im7u1wpj0hxy5y2gind6wgopjqdq8",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    const response = await fetch(`${process.env.MAKE_WEBHOOK_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(formData),
+    });
 
     if (!response.ok) {
       return NextResponse.json(

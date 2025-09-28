@@ -1,9 +1,10 @@
-import AnimatedMeshBackground from "@/components/generic/AnimatedMeshBackground";
 import "@/styles/globals.css";
 import "@/styles/fonts.css";
 import { type Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
+import MeshBackgroundClient from "@/components/MeshbackgroundClient";
+import { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Morningside AI | AI Transformation",
   description:
@@ -34,24 +35,26 @@ export default function RootLayout({
         className="relative w-screen bg-black"
         style={{ fontFamily: "DM-Sans" }}
       >
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-BKZSTVGK4M"
-        />
-        <Script
-          id="gtag-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-BKZSTVGK4M');
-    `,
-          }}
-        />
+        <Suspense fallback={null}>
+          <Script
+            strategy="afterInteractive"
+            src="https://www.googletagmanager.com/gtag/js?id=G-BKZSTVGK4M"
+          />
+          <Script
+            id="gtag-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+             window.dataLayer = window.dataLayer || [];
+             function gtag(){dataLayer.push(arguments);}
+             gtag('js', new Date());
+             gtag('config', 'G-BKZSTVGK4M');
+           `,
+            }}
+          />
+        </Suspense>
         <Analytics />
-        <AnimatedMeshBackground />
+        <MeshBackgroundClient />
         {children}
       </body>
     </html>
